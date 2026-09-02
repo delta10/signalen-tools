@@ -1,18 +1,21 @@
-import { Link, Outlet } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
+import { AppSidebar } from "@/components/layout/app-sidebar.tsx";
+import { AppHeader } from "@/components/layout/app-header.tsx";
 
 export function RootLayout() {
   return (
-    <div className="min-h-svh bg-background text-foreground">
-      <header className="border-b">
-        <nav className="mx-auto flex max-w-5xl items-center gap-4 px-6 py-4">
-          <Link to="/" className="font-heading text-lg font-semibold">
-            Signalen Tools
-          </Link>
-        </nav>
-      </header>
-      <main>
-        <Outlet />
-      </main>
-    </div>
+      <div className="grid min-h-screen grid-cols-[180px_1fr] grid-rows-[auto_1fr] bg-muted lg:grid-cols-[220px_1fr]">
+          <aside className="row-span-2 p-4 pr-0">
+              <AppSidebar />
+          </aside>
+
+          <header className="p-4 pb-0">
+              <AppHeader />
+          </header>
+
+          <main className="m-4 min-w-0 overflow-auto rounded-lg bg-background p-6">
+              <Outlet />
+          </main>
+      </div>
   )
 }
