@@ -1,6 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
-import {RoutingExpressionsPage} from "@/routes/-components/routing-expressions-page.tsx";
+import {createFileRoute, Outlet} from '@tanstack/react-router'
 
 export const Route = createFileRoute('/routing-expressions')({
-  component: RoutingExpressionsPage,
+  component: () => <Outlet />,
+  staticData: {
+    breadcrumb: {
+      label: "Routing Expressions",
+      to: "/routing-expressions",
+    },
+  },
 })
