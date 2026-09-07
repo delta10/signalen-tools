@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RoutingExpressionsRouteImport } from './routes/routing-expressions'
+import { Route as RoutingExpressionsIndexRouteImport } from './routes/routing-expressions.index'
+import { Route as RoutingExpressionsCreateRouteImport } from './routes/routing-expressions.create'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +24,56 @@ const RoutingExpressionsRoute = RoutingExpressionsRouteImport.update({
   path: '/routing-expressions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoutingExpressionsIndexRoute = RoutingExpressionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RoutingExpressionsRoute,
+} as any)
+const RoutingExpressionsCreateRoute =
+  RoutingExpressionsCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => RoutingExpressionsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/routing-expressions': typeof RoutingExpressionsRoute
+  '/routing-expressions': typeof RoutingExpressionsRouteWithChildren
+  '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
+  '/routing-expressions/': typeof RoutingExpressionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/routing-expressions': typeof RoutingExpressionsRoute
+  '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
+  '/routing-expressions': typeof RoutingExpressionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/routing-expressions': typeof RoutingExpressionsRoute
+  '/routing-expressions': typeof RoutingExpressionsRouteWithChildren
+  '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
+  '/routing-expressions/': typeof RoutingExpressionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/routing-expressions'
+  fullPaths:
+    | '/'
+    | '/routing-expressions'
+    | '/routing-expressions/create'
+    | '/routing-expressions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/routing-expressions'
-  id: '__root__' | '/' | '/routing-expressions'
+  to: '/' | '/routing-expressions/create' | '/routing-expressions'
+  id:
+    | '__root__'
+    | '/'
+    | '/routing-expressions'
+    | '/routing-expressions/create'
+    | '/routing-expressions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  RoutingExpressionsRoute: typeof RoutingExpressionsRoute
+  RoutingExpressionsRoute: typeof RoutingExpressionsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +92,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutingExpressionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/routing-expressions/': {
+      id: '/routing-expressions/'
+      path: '/'
+      fullPath: '/routing-expressions/'
+      preLoaderRoute: typeof RoutingExpressionsIndexRouteImport
+      parentRoute: typeof RoutingExpressionsRoute
+    }
+    '/routing-expressions/create': {
+      id: '/routing-expressions/create'
+      path: '/create'
+      fullPath: '/routing-expressions/create'
+      preLoaderRoute: typeof RoutingExpressionsCreateRouteImport
+      parentRoute: typeof RoutingExpressionsRoute
+    }
   }
 }
 
+interface RoutingExpressionsRouteChildren {
+  RoutingExpressionsCreateRoute: typeof RoutingExpressionsCreateRoute
+  RoutingExpressionsIndexRoute: typeof RoutingExpressionsIndexRoute
+}
+
+const RoutingExpressionsRouteChildren: RoutingExpressionsRouteChildren = {
+  RoutingExpressionsCreateRoute: RoutingExpressionsCreateRoute,
+  RoutingExpressionsIndexRoute: RoutingExpressionsIndexRoute,
+}
+
+const RoutingExpressionsRouteWithChildren =
+  RoutingExpressionsRoute._addFileChildren(RoutingExpressionsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RoutingExpressionsRoute: RoutingExpressionsRoute,
+  RoutingExpressionsRoute: RoutingExpressionsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
