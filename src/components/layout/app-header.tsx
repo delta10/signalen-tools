@@ -11,13 +11,6 @@ import {Fragment} from "react";
 export function AppHeader() {
     const matches = useMatches();
 
-    console.log(
-        matches.map((match) => ({
-            id: match.id,
-            pathname: match.pathname,
-            breadcrumb: match.staticData.breadcrumb,
-        })))
-
     const breadcrumbMatches = matches.filter(
         (match) => match.staticData?.breadcrumb
     )
