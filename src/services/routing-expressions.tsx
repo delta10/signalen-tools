@@ -1,13 +1,7 @@
 import routingExpressions from "@/data/RoutingExpression-2026-09-08.json"
+import type {RoutingExpression} from "@/types/routing-expressions.ts";
 
-{/* Can be fetched later */}
-export type RoutingExpression = {
-    _expression: string
-    _department: string
-    _user: string
-    order: string
-    is_active: string
-}
+{/* Endpoint(s) can eventually be fetched here */}
 export async function getRoutingExpressions(): Promise<RoutingExpression[]> {
     return routingExpressions
 }

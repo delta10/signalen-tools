@@ -5,32 +5,32 @@ import { IconFlask } from '@tabler/icons-react';
 import { IconCheck } from '@tabler/icons-react';
 import { IconX } from '@tabler/icons-react';
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
-import {getRoutingExpressions, type RoutingExpression} from "@/services/routing-expressions.tsx";
+import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {useEffect, useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {type Department, getDepartments} from "@/services/departments.tsx";
+import {getDepartments} from "@/services/departments.tsx";
+import {convertDepartmentName, convertRoutingExpressionToCategories} from "@/utils/routing-expressions.ts";
+import type {Department, Expression, RoutingExpression} from "@/types/routing-expressions.ts";
+import {getExpressions} from "@/services/expressions.tsx";
+import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
 
 export function RoutingExpressionsPage() {
     const [routingExpressions, setRoutingExpressions] = useState<RoutingExpression[]>([]);
     const [departments, setDepartments] = useState<Department[]>([])
+    const [expressions, setExpressions] = useState<Expression[]>([])
+
     const [isLoading, setIsLoading] = useState(true);
-
-    {/* Helper function for decoding department name */}
-    function convertDepartmentName(departmentCode: string, departments: Department[]) {
-        const department = departments.find(
-            (department) => department.code === departmentCode
-        )
-
-        return department?.name ?? departmentCode
-    }
 
     useEffect(() => {
         async function loadRoutingExpressions() {
             const routingData = await getRoutingExpressions()
             const departmentData = await getDepartments();
+            const expressionData = await getExpressions()
 
             setRoutingExpressions(routingData)
             setDepartments(departmentData)
+            setExpressions(expressionData)
+
             setIsLoading(false)
         }
 
@@ -79,29 +79,20 @@ export function RoutingExpressionsPage() {
                         {routingExpressions.map((routingExpression) => (
                             <TableRow key={routingExpression._expression}>
                                 <TableCell>{routingExpression.order}</TableCell>
-
                                 <TableCell>{routingExpression._expression}</TableCell>
-
                                 <TableCell>
                                     {/* Types */}
                                 </TableCell>
-
-                                <TableCell>
-                                    {/* Categorieen */}
-                                </TableCell>
-
+                                    <ExpandableCategoryList categories={convertRoutingExpressionToCategories(routingExpression, expressions)}/>
                                 <TableCell>
                                     {/* Gebieden */}
                                 </TableCell>
-
                                 <TableCell>
                                     {/* Vraag */}
                                 </TableCell>
-
                                 <TableCell>
-                                    {convertDepartmentName(routingExpression._department, departments)}
+                                    {convertDepartmentName(routingExpression._department, departments)} ({routingExpression._department})
                                 </TableCell>
-
                                 <TableCell>
                                     {routingExpression.is_active === "1"
                                         ? <IconCheck className={"text-green-600"} />
