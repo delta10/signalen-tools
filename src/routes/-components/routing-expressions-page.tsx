@@ -9,27 +9,36 @@ import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {useEffect, useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getDepartments} from "@/services/departments.tsx";
-import {convertDepartmentName, convertRoutingExpressionToCategories} from "@/utils/routing-expressions.ts";
-import type {Department, Expression, RoutingExpression} from "@/types/routing-expressions.ts";
+import {
+    convertDepartmentName,
+    convertRoutingExpressionToCategories, getRoutingExpressionAreaName,
+    getRoutingExpressionTypes, routingTypeLabels
+} from "@/utils/routing-expressions.ts";
+import type {Area, Department, Expression, RoutingExpression} from "@/types/routing-expressions.ts";
 import {getExpressions} from "@/services/expressions.tsx";
 import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
+import {Badge} from "@/components/ui/badge.tsx";
+import {getAreas} from "@/services/areas.tsx";
 
 export function RoutingExpressionsPage() {
     const [routingExpressions, setRoutingExpressions] = useState<RoutingExpression[]>([]);
     const [departments, setDepartments] = useState<Department[]>([])
     const [expressions, setExpressions] = useState<Expression[]>([])
+    const [areas, setAreas] = useState<Area[]>([])
 
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function loadRoutingExpressions() {
             const routingData = await getRoutingExpressions()
-            const departmentData = await getDepartments();
+            const departmentData = await getDepartments()
             const expressionData = await getExpressions()
+            const areaData = await getAreas()
 
             setRoutingExpressions(routingData)
             setDepartments(departmentData)
             setExpressions(expressionData)
+            setAreas(areaData)
 
             setIsLoading(false)
         }
@@ -81,11 +90,15 @@ export function RoutingExpressionsPage() {
                                 <TableCell>{routingExpression.order}</TableCell>
                                 <TableCell>{routingExpression._expression}</TableCell>
                                 <TableCell>
-                                    {/* Types */}
+                                    {getRoutingExpressionTypes(routingExpression, expressions).map((type) => (
+                                        <Badge variant={type} className={"my-2"}>
+                                            {routingTypeLabels[type]}
+                                        </Badge>
+                                    ))}
                                 </TableCell>
                                     <ExpandableCategoryList categories={convertRoutingExpressionToCategories(routingExpression, expressions)}/>
                                 <TableCell>
-                                    {/* Gebieden */}
+                                    {getRoutingExpressionAreaName(routingExpression, expressions, areas) ?? "-"}
                                 </TableCell>
                                 <TableCell>
                                     {/* Vraag */}

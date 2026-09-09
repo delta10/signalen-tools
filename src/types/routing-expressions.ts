@@ -19,3 +19,10 @@ export type Department = {
     "can_direct": string,
     "categories": string
 }
+
+export type Area = {
+    "name": string,
+    "code": string,
+    "_type": string,
+    "geometry": string,
+}
