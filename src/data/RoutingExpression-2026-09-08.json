@@ -1,0 +1,121 @@
+[
+  {
+    "_expression": "sub:Banken",
+    "_department": "VER",
+    "_user": "jan.peter.franssen@hltsamen.nl",
+    "order": "0",
+    "is_active": "1"
+  },
+  {
+    "_expression": "sub:Overig Wegen, verkeer en straatmeubilair",
+    "_department": "WEG",
+    "_user": "gert.pietersen@hltsamen.nl",
+    "order": "0",
+    "is_active": "1"
+  },
+  {
+    "_expression": "sub:Verkeersborden",
+    "_department": "VER",
+    "_user": "",
+    "order": "0",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Verf of graffiti",
+    "_department": "K01",
+    "_user": "",
+    "order": "10",
+    "is_active": "0"
+  },
+  {
+    "_expression": "sub:Test 1",
+    "_department": "K01",
+    "_user": "",
+    "order": "10",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Afval_Textielcontainer_Q",
+    "_department": "K01",
+    "_user": "",
+    "order": "10",
+    "is_active": "0"
+  },
+  {
+    "_expression": "sub:Fiets",
+    "_department": "HB",
+    "_user": "",
+    "order": "10",
+    "is_active": "1"
+  },
+  {
+    "_expression": "sub:Eikenprocessierups",
+    "_department": "RXM",
+    "_user": "",
+    "order": "10",
+    "is_active": "1"
+  },
+  {
+    "_expression": "grafitti",
+    "_department": "Ba4",
+    "_user": "",
+    "order": "11",
+    "is_active": "0"
+  },
+  {
+    "_expression": "Veghel",
+    "_department": "Ba3",
+    "_user": "",
+    "order": "11",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Erp",
+    "_department": "Ba4",
+    "_user": "",
+    "order": "12",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Afvalbak",
+    "_department": "AFV",
+    "_user": "",
+    "order": "14",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Q_AFV_K01",
+    "_department": "K01",
+    "_user": "",
+    "order": "15",
+    "is_active": "0"
+  },
+  {
+    "_expression": "Uden",
+    "_department": "Ba2",
+    "_user": "",
+    "order": "15",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Sint Oedenrode",
+    "_department": "Ba5",
+    "_user": "",
+    "order": "15",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Schijndel",
+    "_department": "Ba6",
+    "_user": "",
+    "order": "15",
+    "is_active": "1"
+  },
+  {
+    "_expression": "Heeswijk Dinther",
+    "_department": "Ba1",
+    "_user": "",
+    "order": "15",
+    "is_active": "1"
+  }
+]
