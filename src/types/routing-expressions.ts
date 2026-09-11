@@ -26,3 +26,11 @@ export type Area = {
     "_type": string,
     "geometry": string,
 }
+
+export type Questions = {
+    "key": string,
+    "field_type": string,
+    "meta": string,
+    "required": string,
+    "categories": string
+}

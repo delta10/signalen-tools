@@ -1,9 +1,9 @@
-import type {Area, Department, Expression, RoutingExpression} from "@/types/routing-expressions.ts"
+import type {Area, Department, Expression, Questions, RoutingExpression} from "@/types/routing-expressions.ts"
 
 {/* THIS FILE CONTAINS HELPER FUNCTIONS TO STRUCTURE THE DATA SPREAD ACROSS MULTIPLE SOURCES */}
 
-{/* Helper function for converting department name from code to something readable */}
-export function convertDepartmentName(departmentCode: string, departments: Department[]) {
+{/* Helper function to convert a department code to a readable department name */}
+export function getDepartmentName(departmentCode: string, departments: Department[]) {
     const department = departments.find(
         (department) => department.code === departmentCode
     )
@@ -18,8 +18,8 @@ export function convertDepartmentName(departmentCode: string, departments: Depar
     )
 }
 
-{/* Helper function for extracting categories from Expression */}
-export function convertRoutingExpressionToCategories(routingExpression: RoutingExpression, expressions: Expression[]): string[] {
+{/* Helper function to get all categories used by a Routing Expression */}
+export function getRoutingExpressionCategories(routingExpression: RoutingExpression, expressions: Expression[]): string[] {
     const expression = expressions.find(
         (expression) =>
             expression.name === routingExpression._expression
@@ -32,13 +32,13 @@ export function convertRoutingExpressionToCategories(routingExpression: RoutingE
     return extractCategories(expression.code)
 }
 
-{/* Now extract in something readable */}
+{/* ...then extract category values from Expression code */}
 export function extractCategories(code: string): string[] {
     return [...code.matchAll(/sub\s*==\s*"([^"]+)"/g)]
         .map((match) => match[1])
 }
 
-{/* Helper function for identifying Routing Expression Type in expressions in: "Gebied", "Categorie", "Vraag" */}
+{/* Helper function to identify the types used by a Routing Expression */}
 type RoutingType = "area" | "question" | "category"
 
 export const routingTypeLabels: Record<RoutingType, string> = {
@@ -73,7 +73,7 @@ export function getRoutingExpressionTypes(routingExpression: RoutingExpression, 
     return types
 }
 
-{/* Helper function for extracting area code from Expression */}
+{/* Helper function to extract the area code used by a Routing Expression */}
 export function getRoutingExpressionAreaCode(routingExpression: RoutingExpression, expressions: Expression[]) {
     const expression = expressions.find(
         (expression) => expression.name === routingExpression._expression
@@ -90,7 +90,7 @@ export function getRoutingExpressionAreaCode(routingExpression: RoutingExpressio
     return match?.[1] ?? null
 }
 
-{/* Now convert that name to something readable by extracting from Area */}
+{/* ...then convert that code to a readable area name */}
 export function getRoutingExpressionAreaName(routingExpression: RoutingExpression, expressions: Expression[], areas: Area[]) {
     const areaCode = getRoutingExpressionAreaCode(routingExpression, expressions)
 
@@ -103,4 +103,47 @@ export function getRoutingExpressionAreaName(routingExpression: RoutingExpressio
     )
 
     return area?.name ?? areaCode
+}
+
+{/* Helper function to extract and format question and answer conditions from a Routing Expression */}
+export function getRoutingExpressionQuestionsAnswers(routingExpression: RoutingExpression, expressions: Expression[], questions: Questions[]) {
+    const expression = expressions.find(
+        (expression) => expression.name === routingExpression._expression
+    )
+    if (!expression) {
+        return []
+    }
+
+    const matches = expression.code.matchAll(
+        /([A-Za-z0-9_]+)\s*==\s*"([^"]+)"/g
+    )
+
+    const groupedAnswers: Record<string, string[]> = {}
+
+    for (const match of matches) {
+        const questionKey = match[1]
+        const rawAnswer = match[2]
+
+        const question = questions.find(
+            (question) => question.key === questionKey
+        )
+        if (!question) {
+            continue
+        }
+
+        const meta = JSON.parse(question.meta)
+
+        const answer =
+            meta.values?.[rawAnswer] ?? rawAnswer
+
+        if (!groupedAnswers[questionKey]) {
+            groupedAnswers[questionKey] = []
+        }
+        groupedAnswers[questionKey].push(answer)
+    }
+
+    return Object.entries(groupedAnswers).map(
+        ([questionKey, answers]) =>
+            `${questionKey} = ${answers.join(", ")}`
+    )
 }

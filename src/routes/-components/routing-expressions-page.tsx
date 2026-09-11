@@ -9,21 +9,20 @@ import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {useEffect, useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getDepartments} from "@/services/departments.tsx";
-import {
-    convertDepartmentName,
-    convertRoutingExpressionToCategories, getRoutingExpressionAreaName,
-    getRoutingExpressionTypes, routingTypeLabels
-} from "@/utils/routing-expressions.ts";
-import type {Area, Department, Expression, RoutingExpression} from "@/types/routing-expressions.ts";
+import {getDepartmentName, getRoutingExpressionAreaName, getRoutingExpressionQuestionsAnswers, getRoutingExpressionTypes, routingTypeLabels} from "@/utils/routing-expressions.ts";
+import type {Area, Department, Expression, Questions, RoutingExpression} from "@/types/routing-expressions.ts";
 import {getExpressions} from "@/services/expressions.tsx";
 import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
 import {Badge} from "@/components/ui/badge.tsx";
 import {getAreas} from "@/services/areas.tsx";
+import {getQuestions} from "@/services/questions-answers.tsx";
+import {getRoutingExpressionCategories} from "@/utils/routing-expressions.ts";
 
 export function RoutingExpressionsPage() {
     const [routingExpressions, setRoutingExpressions] = useState<RoutingExpression[]>([]);
     const [departments, setDepartments] = useState<Department[]>([])
     const [expressions, setExpressions] = useState<Expression[]>([])
+    const [questions, setQuestions] = useState<Questions[]>([])
     const [areas, setAreas] = useState<Area[]>([])
 
     const [isLoading, setIsLoading] = useState(true);
@@ -34,11 +33,13 @@ export function RoutingExpressionsPage() {
             const departmentData = await getDepartments()
             const expressionData = await getExpressions()
             const areaData = await getAreas()
+            const questionsData = await getQuestions()
 
             setRoutingExpressions(routingData)
             setDepartments(departmentData)
             setExpressions(expressionData)
             setAreas(areaData)
+            setQuestions(questionsData)
 
             setIsLoading(false)
         }
@@ -49,6 +50,22 @@ export function RoutingExpressionsPage() {
     if(isLoading) {
         return(
             <Skeleton className={"h-12"} />
+        )
+    }
+
+    if (routingExpressions.length === 0) {
+        return (
+            <div className="h-full flex flex-col">
+                <h1>Routing Expressions</h1>
+                <div className="flex flex-col items-center justify-center gap-4 flex-1">
+                    <p>Er zijn nog geen routeerregels aangemaakt.</p>
+                    <Button className="rounded-sm" size="lg" asChild>
+                        <Link to="/routing-expressions/create" className="flex items-center gap-1">
+                            <IconPlus data-icon="inline-start" /> Routing Expression Toevoegen
+                        </Link>
+                    </Button>
+                </div>
+            </div>
         )
     }
 
@@ -96,15 +113,22 @@ export function RoutingExpressionsPage() {
                                         </Badge>
                                     ))}
                                 </TableCell>
-                                    <ExpandableCategoryList categories={convertRoutingExpressionToCategories(routingExpression, expressions)}/>
+                                    <ExpandableCategoryList categories={getRoutingExpressionCategories(routingExpression, expressions)}/>
                                 <TableCell>
                                     {getRoutingExpressionAreaName(routingExpression, expressions, areas) ?? "-"}
                                 </TableCell>
                                 <TableCell>
-                                    {/* Vraag */}
+                                    {getRoutingExpressionQuestionsAnswers(routingExpression, expressions, questions).length > 0
+                                        ? getRoutingExpressionQuestionsAnswers(routingExpression, expressions, questions)
+                                            .map((questionAnswer) => (
+                                            <div key={questionAnswer}>
+                                                {questionAnswer}
+                                            </div>
+                                        ))
+                                        : "-"}
                                 </TableCell>
                                 <TableCell>
-                                    {convertDepartmentName(routingExpression._department, departments)} ({routingExpression._department})
+                                    {getDepartmentName(routingExpression._department, departments)} ({routingExpression._department})
                                 </TableCell>
                                 <TableCell>
                                     {routingExpression.is_active === "1"

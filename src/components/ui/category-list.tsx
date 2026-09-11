@@ -12,7 +12,7 @@ export function ExpandableCategoryList({categories,}: { categories: string[] }) 
             {visibleCategories.join(", ")}
 
             {categories.length > 3 && (
-                <button type="button" onClick={() => setShowAll(!showAll)} className="ml-2 px-2 rounded-lg hover:bg-secondary hover:cursor-pointer">
+                <button type="button" onClick={() => setShowAll(!showAll)} className="ml-2 px-2 rounded-lg font-medium hover:bg-secondary hover:cursor-pointer">
                     {showAll
                         ? "Minder tonen"
                         : `+${categories.length - 3} meer`}
