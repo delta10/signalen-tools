@@ -4,7 +4,7 @@ import { AppHeader } from "@/components/layout/app-header.tsx";
 
 export function RootLayout() {
   return (
-      <div className="grid min-h-screen grid-cols-[180px_1fr] grid-rows-[auto_1fr] bg-muted lg:grid-cols-[220px_1fr]">
+      <div className="grid min-h-screen grid-cols-[16rem_minmax(0,1fr)] grid-rows-[auto_1fr] bg-muted">
           <aside className="row-span-2 p-4 pr-0">
               <AppSidebar />
           </aside>
