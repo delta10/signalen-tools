@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Straatverlichting:S",
+    "code": "sub == \"Straatverlichting\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Straatverlichting_anders:Q",
+    "code": "Straatverlichting_type_melding == \"Anders\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Dumping gevaarlijk afval",
+    "code": "sub == \"Dumping gevaarlijk afval & asbest\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Eikenprocessierups",
+    "code": "sub == \"Eikenprocessierups\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Verkeersborden",
+    "code": "sub == \"Verkeersborden\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Bewegwijzering",
+    "code": "sub == \"Bewegwijzering\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Fiets",
+    "code": "sub == \"Fiets\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Heeswijk Dinther",
+    "code": "location in areas.\"district\".\"WK172105\" and (\r\nsub == \"Afvalbak\" or\r\nsub == \"Bank\" or\r\nsub == \"Banken\" or\r\nsub == \"Beplanting\" or\r\nsub == \"Bewegwijzering\" or\r\nsub == \"Bladeren\" or\r\nsub == \"Bomen\" or\r\nsub == \"Boom\" or\r\nsub == \"Boot\" or\r\nsub == \"Boven- en ondergrondse containers\" or\r\nsub == \"Brug\" or\r\nsub == \"Bushalte\" or\r\nsub == \"Bushokje\" or\r\nsub == \"Civiele kunstwerken\" or\r\nsub == \"Container\" or\r\nsub == \"Dood dier\" or\r\nsub == \"Drijfvuil\" or\r\nsub == \"Drugsoverlast\" or\r\nsub == \"Dumping\" or\r\nsub == \"Eikenprocessierups\" or\r\nsub == \"Fiets\" or\r\nsub == \"Fietsoverlast\" or\r\nsub == \"Fysieke leefomgeving (bouwen, wonen en gebruik)\" or\r\nsub == \"Geluid\" or\r\nsub == \"Geluidsoverlast\" or\r\nsub == \"Gevaarlijk afval\" or\r\nsub == \"Gladheidsbestrijding\" or\r\nsub == \"Graffiti\" or\r\nsub == \"Hond\" or\r\nsub == \"Hondenoverlast\" or\r\nsub == \"Horeca en evenement\" or\r\nsub == \"Kabels en leidingen\" or\r\nsub == \"Kademuur\" or\r\nsub == \"Kast\" or\r\nsub == \"Kasten\" or\r\nsub == \"Klacht inzamelaar\" or\r\nsub == \"Kliko\" or\r\nsub == \"Laadpaal\" or\r\nsub == \"Laadpalen\" or\r\nsub == \"Maaien\" or\r\nsub == \"Mankement put\" or\r\nsub == \"Minicontainer\" or\r\nsub == \"Onderhoud straat, fietspad en stoep\" or\r\nsub == \"Onderhoud straten, fietspaden en stoepen\" or\r\nsub == \"Ongedierte\" or\r\nsub == \"Onkruid\" or\r\nsub == \"Onveilige verkeerssituatie\" or\r\nsub == \"overig\" or\r\nsub == \"Overig Afval\" or\r\nsub == \"Overig Civiele Constructie\" or\r\nsub == \"Overig Civiele Constructies\" or\r\nsub == \"Overig Omgevingsrecht\" or\r\nsub == \"Overig Openbaar groen en water\" or\r\nsub == \"Overig Overlast Dier\" or\r\nsub == \"Overig Overlast in de openbare ruimte\" or\r\nsub == \"Overig Overlast Openbare Ruimte\" or\r\nsub == \"Overig Overlast van dieren\" or\r\nsub == \"Overig Riolering\" or\r\nsub == \"Overig Wegen, verkeer en straatmeubilair\" or\r\nsub == \"Overlast bedrijven en horeca\" or\r\nsub == \"Overlast dak- en thuislozen\" or\r\nsub == \"Overlast personen\" or\r\nsub == \"Paal\" or\r\nsub == \"Palen\" or\r\nsub == \"Parkeeroverlast\" or\r\nsub == \"Parkeren\" or\r\nsub == \"Persoon\" or\r\nsub == \"Plaagdier\" or\r\nsub == \"Riool\" or\r\nsub == \"Rioollucht\" or\r\nsub == \"Scooter\" or\r\nsub == \"Scooteroverlast\" or\r\nsub == \"Sloot\" or\r\nsub == \"Sloten\" or\r\nsub == \"Sluis\" or\r\nsub == \"Snoeien\" or\r\nsub == \"Speelvoorziening\" or\r\nsub == \"Straatverlichting\" or\r\nsub == \"Veeg en zwerfvuil\" or\r\nsub == \"Verkeersbord\" or\r\nsub == \"Verkeersborden\" or\r\nsub == \"Verkeerslicht\" or\r\nsub == \"Verkeerslichten\" or\r\nsub == \"Verstopping riool\" or\r\nsub == \"Vogeloverlast\" or\r\nsub == \"Vuurwerkoverlast\" or\r\nsub == \"Wadi\" or\r\nsub == \"Wateroverlast\" or\r\nsub == \"Waterpunten\" or\r\nsub == \"Wegmarkering\" or\r\nsub == \"Zwerfvuil\"\r\n)",
+    "_type": "routing"
+  },
+  {
+    "name": "Erp",
+    "code": "location in areas.\"district\".\"WK194801\" and ( sub == \"Afvalbak\" or sub == \"Bank\" or sub == \"Banken\" or sub == \"Beplanting\" or sub == \"Bewegwijzering\" or sub == \"Bladeren\" or sub == \"Bomen\" or sub == \"Boom\" or sub == \"Boot\" or sub == \"Boven- en ondergrondse containers\" or sub == \"Brug\" or sub == \"Bushalte\" or sub == \"Bushokje\" or sub == \"Civiele kunstwerken\" or sub == \"Container\" or sub == \"Dood dier\" or sub == \"Drijfvuil\" or sub == \"Drugsoverlast\" or sub == \"Dumping\" or sub == \"Eikenprocessierups\" or sub == \"Fiets\" or sub == \"Fietsoverlast\" or sub == \"Fysieke leefomgeving (bouwen, wonen en gebruik)\" or sub == \"Geluid\" or sub == \"Geluidsoverlast\" or sub == \"Gevaarlijk afval\" or sub == \"Gladheidsbestrijding\" or sub == \"Graffiti\" or sub == \"Hond\" or sub == \"Hondenoverlast\" or sub == \"Horeca en evenement\" or sub == \"Kabels en leidingen\" or sub == \"Kademuur\" or sub == \"Kast\" or sub == \"Kasten\" or sub == \"Klacht inzamelaar\" or sub == \"Kliko\" or sub == \"Laadpaal\" or sub == \"Laadpalen\" or sub == \"Maaien\" or sub == \"Mankement put\" or sub == \"Minicontainer\" or sub == \"Onderhoud straat, fietspad en stoep\" or sub == \"Onderhoud straten, fietspaden en stoepen\" or sub == \"Ongedierte\" or sub == \"Onkruid\" or sub == \"Onveilige verkeerssituatie\" or sub == \"overig\" or sub == \"Overig Afval\" or sub == \"Overig Civiele Constructie\" or sub == \"Overig Civiele Constructies\" or sub == \"Overig Omgevingsrecht\" or sub == \"Overig Openbaar groen en water\" or sub == \"Overig Overlast Dier\" or sub == \"Overig Overlast in de openbare ruimte\" or sub == \"Overig Overlast Openbare Ruimte\" or sub == \"Overig Overlast van dieren\" or sub == \"Overig Riolering\" or sub == \"Overig Wegen, verkeer en straatmeubilair\" or sub == \"Overlast bedrijven en horeca\" or sub == \"Overlast dak- en thuislozen\" or sub == \"Overlast personen\" or sub == \"Paal\" or sub == \"Palen\" or sub == \"Parkeeroverlast\" or sub == \"Parkeren\" or sub == \"Persoon\" or sub == \"Plaagdier\" or sub == \"Riool\" or sub == \"Rioollucht\" or sub == \"Scooter\" or sub == \"Scooteroverlast\" or sub == \"Sloot\" or sub == \"Sloten\" or sub == \"Sluis\" or sub == \"Snoeien\" or sub == \"Speelvoorziening\" or sub == \"Straatverlichting\" or sub == \"Veeg en zwerfvuil\" or sub == \"Verkeersbord\" or sub == \"Verkeersborden\" or sub == \"Verkeerslicht\" or sub == \"Verkeerslichten\" or sub == \"Verstopping riool\" or sub == \"Vogeloverlast\" or sub == \"Vuurwerkoverlast\" or sub == \"Wadi\" or sub == \"Wateroverlast\" or sub == \"Waterpunten\" or sub == \"Wegmarkering\" or sub == \"Zwerfvuil\" )",
+    "_type": "routing"
+  },
+  {
+    "name": "Schijndel",
+    "code": "location in areas.\"district\".\"WK194802\" and ( sub == \"Afvalbak\" or sub == \"Bank\" or sub == \"Banken\" or sub == \"Beplanting\" or sub == \"Bewegwijzering\" or sub == \"Bladeren\" or sub == \"Bomen\" or sub == \"Boom\" or sub == \"Boot\" or sub == \"Boven- en ondergrondse containers\" or sub == \"Brug\" or sub == \"Bushalte\" or sub == \"Bushokje\" or sub == \"Civiele kunstwerken\" or sub == \"Container\" or sub == \"Dood dier\" or sub == \"Drijfvuil\" or sub == \"Drugsoverlast\" or sub == \"Dumping\" or sub == \"Eikenprocessierups\" or sub == \"Fiets\" or sub == \"Fietsoverlast\" or sub == \"Fysieke leefomgeving (bouwen, wonen en gebruik)\" or sub == \"Geluid\" or sub == \"Geluidsoverlast\" or sub == \"Gevaarlijk afval\" or sub == \"Gladheidsbestrijding\" or sub == \"Graffiti\" or sub == \"Hond\" or sub == \"Hondenoverlast\" or sub == \"Horeca en evenement\" or sub == \"Kabels en leidingen\" or sub == \"Kademuur\" or sub == \"Kast\" or sub == \"Kasten\" or sub == \"Klacht inzamelaar\" or sub == \"Kliko\" or sub == \"Laadpaal\" or sub == \"Laadpalen\" or sub == \"Maaien\" or sub == \"Mankement put\" or sub == \"Minicontainer\" or sub == \"Onderhoud straat, fietspad en stoep\" or sub == \"Onderhoud straten, fietspaden en stoepen\" or sub == \"Ongedierte\" or sub == \"Onkruid\" or sub == \"Onveilige verkeerssituatie\" or sub == \"overig\" or sub == \"Overig Afval\" or sub == \"Overig Civiele Constructie\" or sub == \"Overig Civiele Constructies\" or sub == \"Overig Omgevingsrecht\" or sub == \"Overig Openbaar groen en water\" or sub == \"Overig Overlast Dier\" or sub == \"Overig Overlast in de openbare ruimte\" or sub == \"Overig Overlast Openbare Ruimte\" or sub == \"Overig Overlast van dieren\" or sub == \"Overig Riolering\" or sub == \"Overig Wegen, verkeer en straatmeubilair\" or sub == \"Overlast bedrijven en horeca\" or sub == \"Overlast dak- en thuislozen\" or sub == \"Overlast personen\" or sub == \"Paal\" or sub == \"Palen\" or sub == \"Parkeeroverlast\" or sub == \"Parkeren\" or sub == \"Persoon\" or sub == \"Plaagdier\" or sub == \"Riool\" or sub == \"Rioollucht\" or sub == \"Scooter\" or sub == \"Scooteroverlast\" or sub == \"Sloot\" or sub == \"Sloten\" or sub == \"Sluis\" or sub == \"Snoeien\" or sub == \"Speelvoorziening\" or sub == \"Straatverlichting\" or sub == \"Veeg en zwerfvuil\" or sub == \"Verkeersbord\" or sub == \"Verkeersborden\" or sub == \"Verkeerslicht\" or sub == \"Verkeerslichten\" or sub == \"Verstopping riool\" or sub == \"Vogeloverlast\" or sub == \"Vuurwerkoverlast\" or sub == \"Wadi\" or sub == \"Wateroverlast\" or sub == \"Waterpunten\" or sub == \"Wegmarkering\" or sub == \"Zwerfvuil\" )",
+    "_type": "routing"
+  },
+  {
+    "name": "Sint Oedenrode",
+    "code": "location in areas.\"district\".\"WK194803\" and ( sub == \"Afvalbak\" or sub == \"Bank\" or sub == \"Banken\" or sub == \"Beplanting\" or sub == \"Bewegwijzering\" or sub == \"Bladeren\" or sub == \"Bomen\" or sub == \"Boom\" or sub == \"Boot\" or sub == \"Boven- en ondergrondse containers\" or sub == \"Brug\" or sub == \"Bushalte\" or sub == \"Bushokje\" or sub == \"Civiele kunstwerken\" or sub == \"Container\" or sub == \"Dood dier\" or sub == \"Drijfvuil\" or sub == \"Drugsoverlast\" or sub == \"Dumping\" or sub == \"Eikenprocessierups\" or sub == \"Fiets\" or sub == \"Fietsoverlast\" or sub == \"Fysieke leefomgeving (bouwen, wonen en gebruik)\" or sub == \"Geluid\" or sub == \"Geluidsoverlast\" or sub == \"Gevaarlijk afval\" or sub == \"Gladheidsbestrijding\" or sub == \"Graffiti\" or sub == \"Hond\" or sub == \"Hondenoverlast\" or sub == \"Horeca en evenement\" or sub == \"Kabels en leidingen\" or sub == \"Kademuur\" or sub == \"Kast\" or sub == \"Kasten\" or sub == \"Klacht inzamelaar\" or sub == \"Kliko\" or sub == \"Laadpaal\" or sub == \"Laadpalen\" or sub == \"Maaien\" or sub == \"Mankement put\" or sub == \"Minicontainer\" or sub == \"Onderhoud straat, fietspad en stoep\" or sub == \"Onderhoud straten, fietspaden en stoepen\" or sub == \"Ongedierte\" or sub == \"Onkruid\" or sub == \"Onveilige verkeerssituatie\" or sub == \"overig\" or sub == \"Overig Afval\" or sub == \"Overig Civiele Constructie\" or sub == \"Overig Civiele Constructies\" or sub == \"Overig Omgevingsrecht\" or sub == \"Overig Openbaar groen en water\" or sub == \"Overig Overlast Dier\" or sub == \"Overig Overlast in de openbare ruimte\" or sub == \"Overig Overlast Openbare Ruimte\" or sub == \"Overig Overlast van dieren\" or sub == \"Overig Riolering\" or sub == \"Overig Wegen, verkeer en straatmeubilair\" or sub == \"Overlast bedrijven en horeca\" or sub == \"Overlast dak- en thuislozen\" or sub == \"Overlast personen\" or sub == \"Paal\" or sub == \"Palen\" or sub == \"Parkeeroverlast\" or sub == \"Parkeren\" or sub == \"Persoon\" or sub == \"Plaagdier\" or sub == \"Riool\" or sub == \"Rioollucht\" or sub == \"Scooter\" or sub == \"Scooteroverlast\" or sub == \"Sloot\" or sub == \"Sloten\" or sub == \"Sluis\" or sub == \"Snoeien\" or sub == \"Speelvoorziening\" or sub == \"Straatverlichting\" or sub == \"Veeg en zwerfvuil\" or sub == \"Verkeersbord\" or sub == \"Verkeersborden\" or sub == \"Verkeerslicht\" or sub == \"Verkeerslichten\" or sub == \"Verstopping riool\" or sub == \"Vogeloverlast\" or sub == \"Vuurwerkoverlast\" or sub == \"Wadi\" or sub == \"Wateroverlast\" or sub == \"Waterpunten\" or sub == \"Wegmarkering\" or sub == \"Zwerfvuil\" )",
+    "_type": "routing"
+  },
+  {
+    "name": "Veghel",
+    "code": "location in areas.\"district\".\"WK194804\" and ( sub == \"Afvalbak\" or sub == \"Bank\" or sub == \"Banken\" or sub == \"Beplanting\" or sub == \"Bewegwijzering\" or sub == \"Bladeren\" or sub == \"Bomen\" or sub == \"Boom\" or sub == \"Boot\" or sub == \"Boven- en ondergrondse containers\" or sub == \"Brug\" or sub == \"Bushalte\" or sub == \"Bushokje\" or sub == \"Civiele kunstwerken\" or sub == \"Container\" or sub == \"Dood dier\" or sub == \"Drijfvuil\" or sub == \"Drugsoverlast\" or sub == \"Dumping\" or sub == \"Eikenprocessierups\" or sub == \"Fiets\" or sub == \"Fietsoverlast\" or sub == \"Fysieke leefomgeving (bouwen, wonen en gebruik)\" or sub == \"Geluid\" or sub == \"Geluidsoverlast\" or sub == \"Gevaarlijk afval\" or sub == \"Gladheidsbestrijding\" or sub == \"Graffiti\" or sub == \"Hond\" or sub == \"Hondenoverlast\" or sub == \"Horeca en evenement\" or sub == \"Kabels en leidingen\" or sub == \"Kademuur\" or sub == \"Kast\" or sub == \"Kasten\" or sub == \"Klacht inzamelaar\" or sub == \"Kliko\" or sub == \"Laadpaal\" or sub == \"Laadpalen\" or sub == \"Maaien\" or sub == \"Mankement put\" or sub == \"Minicontainer\" or sub == \"Onderhoud straat, fietspad en stoep\" or sub == \"Onderhoud straten, fietspaden en stoepen\" or sub == \"Ongedierte\" or sub == \"Onkruid\" or sub == \"Onveilige verkeerssituatie\" or sub == \"overig\" or sub == \"Overig Afval\" or sub == \"Overig Civiele Constructie\" or sub == \"Overig Civiele Constructies\" or sub == \"Overig Omgevingsrecht\" or sub == \"Overig Openbaar groen en water\" or sub == \"Overig Overlast Dier\" or sub == \"Overig Overlast in de openbare ruimte\" or sub == \"Overig Overlast Openbare Ruimte\" or sub == \"Overig Overlast van dieren\" or sub == \"Overig Riolering\" or sub == \"Overig Wegen, verkeer en straatmeubilair\" or sub == \"Overlast bedrijven en horeca\" or sub == \"Overlast dak- en thuislozen\" or sub == \"Overlast personen\" or sub == \"Paal\" or sub == \"Palen\" or sub == \"Parkeeroverlast\" or sub == \"Parkeren\" or sub == \"Persoon\" or sub == \"Plaagdier\" or sub == \"Riool\" or sub == \"Rioollucht\" or sub == \"Scooter\" or sub == \"Scooteroverlast\" or sub == \"Sloot\" or sub == \"Sloten\" or sub == \"Sluis\" or sub == \"Snoeien\" or sub == \"Speelvoorziening\" or sub == \"Straatverlichting\" or sub == \"Veeg en zwerfvuil\" or sub == \"Verkeersbord\" or sub == \"Verkeersborden\" or sub == \"Verkeerslicht\" or sub == \"Verkeerslichten\" or sub == \"Verstopping riool\" or sub == \"Vogeloverlast\" or sub == \"Vuurwerkoverlast\" or sub == \"Wadi\" or sub == \"Wateroverlast\" or sub == \"Waterpunten\" or sub == \"Wegmarkering\" or sub == \"Zwerfvuil\" )",
+    "_type": "routing"
+  },
+  {
+    "name": "Uden",
+    "code": "location in areas.\"district\".\"WK199101\" and ( sub == \"Afvalbak\" or sub == \"Bank\" or sub == \"Banken\" or sub == \"Beplanting\" or sub == \"Bewegwijzering\" or sub == \"Bladeren\" or sub == \"Bomen\" or sub == \"Boom\" or sub == \"Boot\" or sub == \"Boven- en ondergrondse containers\" or sub == \"Brug\" or sub == \"Bushalte\" or sub == \"Bushokje\" or sub == \"Civiele kunstwerken\" or sub == \"Container\" or sub == \"Dood dier\" or sub == \"Drijfvuil\" or sub == \"Drugsoverlast\" or sub == \"Dumping\" or sub == \"Eikenprocessierups\" or sub == \"Fiets\" or sub == \"Fietsoverlast\" or sub == \"Fysieke leefomgeving (bouwen, wonen en gebruik)\" or sub == \"Geluid\" or sub == \"Geluidsoverlast\" or sub == \"Gevaarlijk afval\" or sub == \"Gladheidsbestrijding\" or sub == \"Graffiti\" or sub == \"Hond\" or sub == \"Hondenoverlast\" or sub == \"Horeca en evenement\" or sub == \"Kabels en leidingen\" or sub == \"Kademuur\" or sub == \"Kast\" or sub == \"Kasten\" or sub == \"Klacht inzamelaar\" or sub == \"Kliko\" or sub == \"Laadpaal\" or sub == \"Laadpalen\" or sub == \"Maaien\" or sub == \"Mankement put\" or sub == \"Minicontainer\" or sub == \"Onderhoud straat, fietspad en stoep\" or sub == \"Onderhoud straten, fietspaden en stoepen\" or sub == \"Ongedierte\" or sub == \"Onkruid\" or sub == \"Onveilige verkeerssituatie\" or sub == \"overig\" or sub == \"Overig Afval\" or sub == \"Overig Civiele Constructie\" or sub == \"Overig Civiele Constructies\" or sub == \"Overig Omgevingsrecht\" or sub == \"Overig Openbaar groen en water\" or sub == \"Overig Overlast Dier\" or sub == \"Overig Overlast in de openbare ruimte\" or sub == \"Overig Overlast Openbare Ruimte\" or sub == \"Overig Overlast van dieren\" or sub == \"Overig Riolering\" or sub == \"Overig Wegen, verkeer en straatmeubilair\" or sub == \"Overlast bedrijven en horeca\" or sub == \"Overlast dak- en thuislozen\" or sub == \"Overlast personen\" or sub == \"Paal\" or sub == \"Palen\" or sub == \"Parkeeroverlast\" or sub == \"Parkeren\" or sub == \"Persoon\" or sub == \"Plaagdier\" or sub == \"Riool\" or sub == \"Rioollucht\" or sub == \"Scooter\" or sub == \"Scooteroverlast\" or sub == \"Sloot\" or sub == \"Sloten\" or sub == \"Sluis\" or sub == \"Snoeien\" or sub == \"Speelvoorziening\" or sub == \"Straatverlichting\" or sub == \"Veeg en zwerfvuil\" or sub == \"Verkeersbord\" or sub == \"Verkeersborden\" or sub == \"Verkeerslicht\" or sub == \"Verkeerslichten\" or sub == \"Verstopping riool\" or sub == \"Vogeloverlast\" or sub == \"Vuurwerkoverlast\" or sub == \"Wadi\" or sub == \"Wateroverlast\" or sub == \"Waterpunten\" or sub == \"Wegmarkering\" or sub == \"Zwerfvuil\" )",
+    "_type": "routing"
+  },
+  {
+    "name": "Afvalbak",
+    "code": "sub == \"Afvalbak\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Q_AFV_K01",
+    "code": "Onderwerp == \"De textielcontainer is beschadigd\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Afval_Textielcontainer_Q",
+    "code": "Textielcontainer_type_melding == \"De textielcontainer is beschadigd\" or  Textielcontainer_type_melding == \"Anders\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Test 1",
+    "code": "sub == \"test 1\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Dood dier Uden",
+    "code": "sub == \"dood dier\" and location in areas.\"district\".\"Uden\"",
+    "_type": "routing"
+  },
+  {
+    "name": "Verf of graffiti",
+    "code": "(sub == \"Verf\" or sub == \"graffiti\") and location in areas. \"district\". \"Heusden\"",
+    "_type": "routing"
+  },
+  {
+    "name": "grafitti",
+    "code": "(sub == \"grafitti\" or sub == \"geluidsoverlast\") and location areas. \"district\". \"IJsselstein\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Overig Wegen, verkeer en straatmeubilair",
+    "code": "sub == \"Overig Wegen, verkeer en straatmeubilair\"",
+    "_type": "routing"
+  },
+  {
+    "name": "sub:Banken",
+    "code": "sub == \"Banken\"",
+    "_type": "routing"
+  }
+]

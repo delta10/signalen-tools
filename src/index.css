@@ -37,6 +37,7 @@ body {
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -59,9 +60,10 @@ body {
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #D2303C;
+  --primary-hover: #AC2029;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: #FFF1F1;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -130,5 +132,21 @@ body {
   }
   html {
     @apply font-sans;
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-semibold
+  }
+
+  h1 {
+    @apply text-xl lg:text-2xl
+  }
+
+  h2 {
+    @apply text-lg lg:text-xl
+  }
+
+  h3 {
+    @apply text-base lg:text-lg
   }
 }

@@ -10,33 +10,86 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RoutingExpressionsRouteImport } from './routes/routing-expressions'
+import { Route as RoutingExpressionsIndexRouteImport } from './routes/routing-expressions.index'
+import { Route as RoutingExpressionsCreateRouteImport } from './routes/routing-expressions.create'
+import { Route as RoutingExpressionsSimulateRouteImport } from './routes/routing-expressions.simulate'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoutingExpressionsRoute = RoutingExpressionsRouteImport.update({
+  id: '/routing-expressions',
+  path: '/routing-expressions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoutingExpressionsIndexRoute = RoutingExpressionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RoutingExpressionsRoute,
+} as any)
+const RoutingExpressionsCreateRoute =
+  RoutingExpressionsCreateRouteImport.update({
+    id: '/create',
+    path: '/create',
+    getParentRoute: () => RoutingExpressionsRoute,
+  } as any)
+const RoutingExpressionsSimulateRoute =
+  RoutingExpressionsSimulateRouteImport.update({
+    id: '/simulate',
+    path: '/simulate',
+    getParentRoute: () => RoutingExpressionsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/routing-expressions': typeof RoutingExpressionsRouteWithChildren
+  '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
+  '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
+  '/routing-expressions/': typeof RoutingExpressionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
+  '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
+  '/routing-expressions': typeof RoutingExpressionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/routing-expressions': typeof RoutingExpressionsRouteWithChildren
+  '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
+  '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
+  '/routing-expressions/': typeof RoutingExpressionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/routing-expressions'
+    | '/routing-expressions/create'
+    | '/routing-expressions/simulate'
+    | '/routing-expressions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/routing-expressions/create'
+    | '/routing-expressions/simulate'
+    | '/routing-expressions'
+  id:
+    | '__root__'
+    | '/'
+    | '/routing-expressions'
+    | '/routing-expressions/create'
+    | '/routing-expressions/simulate'
+    | '/routing-expressions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RoutingExpressionsRoute: typeof RoutingExpressionsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +101,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/routing-expressions': {
+      id: '/routing-expressions'
+      path: '/routing-expressions'
+      fullPath: '/routing-expressions'
+      preLoaderRoute: typeof RoutingExpressionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/routing-expressions/': {
+      id: '/routing-expressions/'
+      path: '/'
+      fullPath: '/routing-expressions/'
+      preLoaderRoute: typeof RoutingExpressionsIndexRouteImport
+      parentRoute: typeof RoutingExpressionsRoute
+    }
+    '/routing-expressions/create': {
+      id: '/routing-expressions/create'
+      path: '/create'
+      fullPath: '/routing-expressions/create'
+      preLoaderRoute: typeof RoutingExpressionsCreateRouteImport
+      parentRoute: typeof RoutingExpressionsRoute
+    }
+    '/routing-expressions/simulate': {
+      id: '/routing-expressions/simulate'
+      path: '/simulate'
+      fullPath: '/routing-expressions/simulate'
+      preLoaderRoute: typeof RoutingExpressionsSimulateRouteImport
+      parentRoute: typeof RoutingExpressionsRoute
+    }
   }
 }
 
+interface RoutingExpressionsRouteChildren {
+  RoutingExpressionsCreateRoute: typeof RoutingExpressionsCreateRoute
+  RoutingExpressionsSimulateRoute: typeof RoutingExpressionsSimulateRoute
+  RoutingExpressionsIndexRoute: typeof RoutingExpressionsIndexRoute
+}
+
+const RoutingExpressionsRouteChildren: RoutingExpressionsRouteChildren = {
+  RoutingExpressionsCreateRoute: RoutingExpressionsCreateRoute,
+  RoutingExpressionsSimulateRoute: RoutingExpressionsSimulateRoute,
+  RoutingExpressionsIndexRoute: RoutingExpressionsIndexRoute,
+}
+
+const RoutingExpressionsRouteWithChildren =
+  RoutingExpressionsRoute._addFileChildren(RoutingExpressionsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RoutingExpressionsRoute: RoutingExpressionsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
