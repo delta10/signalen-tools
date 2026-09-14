@@ -9,7 +9,7 @@ import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {useEffect, useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getDepartments} from "@/services/departments.tsx";
-import {getDepartmentName, getRoutingExpressionAreaName, getRoutingExpressionQuestionsAnswers, getRoutingExpressionTypes, routingTypeLabels} from "@/utils/routing-expressions.ts";
+import {getDepartmentName, getRoutingExpressionAreaNames, getRoutingExpressionQuestionsAnswers, getRoutingExpressionTypes, routingTypeLabels} from "@/utils/routing-expressions.ts";
 import type {Area, Department, Expression, Questions, RoutingExpression} from "@/types/routing-expressions.ts";
 import {getExpressions} from "@/services/expressions.tsx";
 import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
@@ -80,8 +80,8 @@ export function RoutingExpressionsPage() {
                         </Link>
                     </Button>
                     <Button className={"rounded-sm lg:order-1"} variant={"secondary"} size={"lg"} asChild>
-                        <Link to={"/routing-expressions/test"} className={"flex items-center gap-1"}>
-                            <IconFlask data-icon={"inline-start"} /> Routing Testen
+                        <Link to={"/routing-expressions/simulate"} className={"flex items-center gap-1"}>
+                            <IconFlask data-icon={"inline-start"} /> Routing simuleren
                         </Link>
                     </Button>
                 </div>
@@ -115,7 +115,7 @@ export function RoutingExpressionsPage() {
                                 </TableCell>
                                     <ExpandableCategoryList categories={getRoutingExpressionCategories(routingExpression, expressions)}/>
                                 <TableCell>
-                                    {getRoutingExpressionAreaName(routingExpression, expressions, areas) ?? "-"}
+                                    {getRoutingExpressionAreaNames(routingExpression, expressions, areas).join(", ") || "-"}
                                 </TableCell>
                                 <TableCell>
                                     {getRoutingExpressionQuestionsAnswers(routingExpression, expressions, questions).length > 0
@@ -128,7 +128,7 @@ export function RoutingExpressionsPage() {
                                         : "-"}
                                 </TableCell>
                                 <TableCell>
-                                    {getDepartmentName(routingExpression._department, departments)} ({routingExpression._department})
+                                    {getDepartmentName(routingExpression._department, departments)}
                                 </TableCell>
                                 <TableCell>
                                     {routingExpression.is_active === "1"

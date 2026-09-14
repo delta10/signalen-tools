@@ -8,21 +8,13 @@ export function getDepartmentName(departmentCode: string, departments: Departmen
         (department) => department.code === departmentCode
     )
 
-    if (!department) {
-        return departmentCode
-    }
-
-    return department.name.replace(
-        new RegExp(`\\s*\\(${departmentCode}\\)$`),
-        ""
-    )
+    return department?.name ?? departmentCode
 }
 
 {/* Helper function to get all categories used by a Routing Expression */}
 export function getRoutingExpressionCategories(routingExpression: RoutingExpression, expressions: Expression[]): string[] {
     const expression = expressions.find(
-        (expression) =>
-            expression.name === routingExpression._expression
+        (expression) => expression.name === routingExpression._expression
     )
 
     if (!expression) {
@@ -48,9 +40,7 @@ export const routingTypeLabels: Record<RoutingType, string> = {
 }
 
 export function getRoutingExpressionTypes(routingExpression: RoutingExpression, expressions: Expression[]): RoutingType[] {
-    const expression = expressions.find(
-        (expression) => expression.name === routingExpression._expression
-    )
+    const expression = getExpressionFromRoutingExpression(routingExpression, expressions);
 
     if (!expression) {
         return []
@@ -66,7 +56,7 @@ export function getRoutingExpressionTypes(routingExpression: RoutingExpression, 
         types.push("category")
     }
 
-    if (expression.code.includes("Onderwerp ==") || expression.code.includes("_type_melding ==")) {
+    if (hasQuestion(expression.code)) {
         types.push("question")
     }
 
@@ -74,42 +64,49 @@ export function getRoutingExpressionTypes(routingExpression: RoutingExpression, 
 }
 
 {/* Helper function to extract the area code used by a Routing Expression */}
-export function getRoutingExpressionAreaCode(routingExpression: RoutingExpression, expressions: Expression[]) {
-    const expression = expressions.find(
-        (expression) => expression.name === routingExpression._expression
-    )
+type RoutingArea = {
+    type: string
+    code: string
+}
 
+export function getRoutingExpressionAreas(routingExpression: RoutingExpression, expressions: Expression[]): RoutingArea[] {
+    const expression = getExpressionFromRoutingExpression(routingExpression, expressions);
     if (!expression) {
-        return null
+        return []
     }
 
-    const match = expression.code.match(
-        /areas\."district"\."([^"]+)"/
-    )
+    const matches = [
+        ...expression.code.matchAll(
+            /areas\.\s*"([^"]+)"\.\s*"([^"]+)"/g
+        )
+    ]
 
-    return match?.[1] ?? null
+    return matches.map((match) => ({
+        type: match[1],
+        code: match[2],
+    }))
 }
 
 {/* ...then convert that code to a readable area name */}
-export function getRoutingExpressionAreaName(routingExpression: RoutingExpression, expressions: Expression[], areas: Area[]) {
-    const areaCode = getRoutingExpressionAreaCode(routingExpression, expressions)
-
-    if (!areaCode) {
-        return null
-    }
-
-    const area = areas.find(
-        (area) => area.code === areaCode
+export function getRoutingExpressionAreaNames(routingExpression: RoutingExpression, expressions: Expression[], areas: Area[]): string[] {
+    const routingAreas = getRoutingExpressionAreas(
+        routingExpression,
+        expressions
     )
 
-    return area?.name ?? areaCode
+    return routingAreas.map((routingArea) => {
+        const area = areas.find(
+            (area) =>
+                area.code === routingArea.code || area.name === routingArea.code
+        )
+
+        return area?.name ?? routingArea.code
+    })
 }
 
 {/* Helper function to extract and format question and answer conditions from a Routing Expression */}
 export function getRoutingExpressionQuestionsAnswers(routingExpression: RoutingExpression, expressions: Expression[], questions: Questions[]) {
-    const expression = expressions.find(
-        (expression) => expression.name === routingExpression._expression
-    )
+    const expression = getExpressionFromRoutingExpression(routingExpression, expressions);
     if (!expression) {
         return []
     }
@@ -145,5 +142,27 @@ export function getRoutingExpressionQuestionsAnswers(routingExpression: RoutingE
     return Object.entries(groupedAnswers).map(
         ([questionKey, answers]) =>
             `${questionKey} = ${answers.join(", ")}`
+    )
+}
+
+{/* Helper function to identify possible questions in string */}
+function hasQuestion(expressionCode: string): boolean {
+    const comparisonRegex =
+        /([A-Za-z_][A-Za-z0-9_]*)\s*==\s*"[^"]+"/g
+
+    const comparisons = [
+        ...expressionCode.matchAll(comparisonRegex)
+    ]
+
+    return comparisons.some(
+        (match) => match[1] !== "sub"
+    )
+}
+
+{/* Helper function to find connection in Expression & Routing Expression */}
+function getExpressionFromRoutingExpression(routingExpression: RoutingExpression, expressions: Expression[]): Expression | undefined {
+    return expressions.find(
+        (expression) =>
+            expression.name === routingExpression._expression
     )
 }
