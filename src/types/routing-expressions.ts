@@ -1,3 +1,5 @@
+import type {RoutingType} from "@/utils/routing-expressions.ts";
+
 export type RoutingExpression = {
     _expression: string
     _department: string
@@ -33,4 +35,15 @@ export type Questions = {
     "meta": string,
     "required": string,
     "categories": string
+}
+
+export type RoutingExpressionTableRow = {
+    order: string
+    name: string
+    types: RoutingType[]
+    categories: string[]
+    areas: string[]
+    questionAnswers: string[]
+    department: string
+    isActive: boolean
 }

@@ -2,20 +2,15 @@ import {Button} from "@/components/ui/button.tsx";
 import {Link} from "@tanstack/react-router";
 import { IconPlus } from '@tabler/icons-react';
 import { IconFlask } from '@tabler/icons-react';
-import { IconCheck } from '@tabler/icons-react';
-import { IconX } from '@tabler/icons-react';
-import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
 import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getDepartments} from "@/services/departments.tsx";
-import {getDepartmentName, getRoutingExpressionAreaNames, getRoutingExpressionQuestionsAnswers, getRoutingExpressionTypes, routingTypeLabels} from "@/utils/routing-expressions.ts";
 import {getExpressions} from "@/services/expressions.tsx";
-import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
-import {Badge} from "@/components/ui/badge.tsx";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
-import {getRoutingExpressionCategories} from "@/utils/routing-expressions.ts";
 import {useQuery} from "@tanstack/react-query";
+import {mapRoutingExpressionsToTableRows} from "@/utils/routing-expressions-mapper.ts";
+import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
 
 export function RoutingExpressionsPage() {
     const { data: routingExpressions = [], isLoading: isRoutingExpressionsLoading, error: routingExpressionsError,} = useQuery(
@@ -50,6 +45,14 @@ export function RoutingExpressionsPage() {
             queryKey: ["areas"],
             queryFn: getAreas,
         }
+    )
+
+    const tableData = mapRoutingExpressionsToTableRows(
+        routingExpressions,
+        expressions,
+        areas,
+        questions,
+        departments
     )
 
     const isLoading = isRoutingExpressionsLoading || isDepartmentsLoading || isExpressionsLoading || isQuestionsLoading || isAreasLoading
@@ -111,58 +114,7 @@ export function RoutingExpressionsPage() {
                 </div>
             </div>
             <div className={"py-6"}>
-                <Table className={"bg-muted"}>
-                    <TableCaption>Routing Expressions</TableCaption>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="rounded-tl-lg">Order</TableHead>
-                            <TableHead>Naam</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Categorie</TableHead>
-                            <TableHead>Gebied</TableHead>
-                            <TableHead>Aanvullende vraag/Antwoord</TableHead>
-                            <TableHead>Routering</TableHead>
-                            <TableHead className="rounded-tr-lg">Actief</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {routingExpressions.map((routingExpression) => (
-                            <TableRow key={routingExpression._expression}>
-                                <TableCell>{routingExpression.order}</TableCell>
-                                <TableCell>{routingExpression._expression}</TableCell>
-                                <TableCell>
-                                    {getRoutingExpressionTypes(routingExpression, expressions).map((type) => (
-                                        <Badge variant={type} className={"my-2"}>
-                                            {routingTypeLabels[type]}
-                                        </Badge>
-                                    ))}
-                                </TableCell>
-                                    <ExpandableCategoryList categories={getRoutingExpressionCategories(routingExpression, expressions)}/>
-                                <TableCell>
-                                    {getRoutingExpressionAreaNames(routingExpression, expressions, areas).join(", ") || "-"}
-                                </TableCell>
-                                <TableCell>
-                                    {getRoutingExpressionQuestionsAnswers(routingExpression, expressions, questions).length > 0
-                                        ? getRoutingExpressionQuestionsAnswers(routingExpression, expressions, questions)
-                                            .map((questionAnswer) => (
-                                            <div key={questionAnswer}>
-                                                {questionAnswer}
-                                            </div>
-                                        ))
-                                        : "-"}
-                                </TableCell>
-                                <TableCell>
-                                    {getDepartmentName(routingExpression._department, departments)}
-                                </TableCell>
-                                <TableCell>
-                                    {routingExpression.is_active === "1"
-                                        ? <IconCheck className={"text-green-600"} />
-                                        : <IconX className={"text-red-600"} />}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <RoutingExpressionsTable tableData={tableData} />
             </div>
         </div>
     )

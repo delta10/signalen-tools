@@ -31,7 +31,7 @@ export function extractCategories(code: string): string[] {
 }
 
 {/* Helper function to identify the types used by a Routing Expression */}
-type RoutingType = "area" | "question" | "category"
+export type RoutingType = "area" | "question" | "category"
 
 export const routingTypeLabels: Record<RoutingType, string> = {
     area: "Gebied",
