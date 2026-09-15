@@ -5,11 +5,13 @@ import {Badge} from "@/components/ui/badge.tsx";
 import {routingTypeLabels} from "@/utils/routing-expressions.ts";
 import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
 import {IconCheck, IconX} from "@tabler/icons-react";
-import type { ColumnDef } from "@tanstack/react-table"
-import {tableFeatures, useTable,} from "@tanstack/react-table"
+import {type ColumnDef, columnFilteringFeature} from "@tanstack/react-table"
+import {tableFeatures, useTable, createFilteredRowModel, filterFn_includesString, globalFilteringFeature,} from "@tanstack/react-table"
 
 type RoutingExpressionsTableProps = {
-    tableData: RoutingExpressionTableRow[]
+    tableData: RoutingExpressionTableRow[],
+    globalFilter: string,
+    onGlobalFilterChange: (value: string) => void
 }
 
 const columns: ColumnDef<typeof features, RoutingExpressionTableRow>[] = [
@@ -87,9 +89,16 @@ const columns: ColumnDef<typeof features, RoutingExpressionTableRow>[] = [
     },
 ]
 
-const features = tableFeatures({})
-export function RoutingExpressionsTable({ tableData }: RoutingExpressionsTableProps ) {
-    const table = useTable({features, data: tableData, columns})
+const features = tableFeatures({
+    columnFilteringFeature,
+    globalFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns: {
+        includesString: filterFn_includesString
+    }
+})
+export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange }: RoutingExpressionsTableProps ) {
+    const table = useTable({features, data: tableData, columns, globalFilterFn: "includesString", state: {globalFilter}, onGlobalFilterChange})
     return(
         <>
             <Table className={"bg-muted"}>
