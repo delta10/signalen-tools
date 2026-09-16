@@ -4,7 +4,7 @@ import {RoutingExpressionsCreatePage} from "@/routes/-components/routing-express
 export const Route = createFileRoute('/routing-expressions/create')({
   staticData: {
     breadcrumb: {
-      label: "Create",
+      label: "Toevoegen",
       to: "/routing-expressions/create",
     },
   },

@@ -1,0 +1,135 @@
+[
+  {
+    "code": "AFV",
+    "name": "Afval",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, textielcontainer|True|True, test2|True|True"
+  },
+  {
+    "code": "Ba4",
+    "name": "Balie Erp",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping-2|True|True, dumping|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "Ba1",
+    "name": "Balie Heeswijk-Dinther",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping-2|True|True, dumping|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, overig|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "Ba6",
+    "name": "Balie Schijndel",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping-2|True|True, dumping|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "Ba5",
+    "name": "Balie Sint Oedenrode",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping-2|True|True, dumping|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "Ba2",
+    "name": "Balie Uden",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping-2|True|True, dumping|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "Ba3",
+    "name": "Balie Veghel",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping-2|True|True, dumping|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "HB",
+    "name": "Handhaver buitendienst (HB)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, dumping|True|True, afvalbakken|True|True, overig-afval|True|True, zwerfvuil|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, verkeersborden|True|True, verkeerslichten|True|True, fiets|True|True"
+  },
+  {
+    "code": "HS",
+    "name": "Handhaver senior (HS)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True"
+  },
+  {
+    "code": "KCC",
+    "name": "Klant Contact Centrum (KCC)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "dumping|False|True, afvalbakken|True|True, overig-afval|True|True, zwerfvuil|True|True, verkeersborden|False|True, overig-wegen-verkeer-en-straatmeubilair|True|True, verkeerslichten|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-personen|True|True, vuurwerkoverlast|True|True"
+  },
+  {
+    "code": "K01",
+    "name": "Klussenbus 01",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "bladeren|True|True, boven-en-ondergrondse-containers2|True|True, drijfvuil|True|True, dumping|True|True, afvalbakken|True|True, kliko|True|True, overig-afval|True|True, zwerfvuil|True|True, banken|True|True, bewegwijzering|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kasten|True|True, laadpalen|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, palen|True|True, speelvoorziening|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, straatverlichting|True|True, verkeersborden|True|True, verkeerslichten|True|True, waterpunten|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloten|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, textielcontainer|True|True"
+  },
+  {
+    "code": "K02",
+    "name": "Klussenbus 02",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "bladeren|True|True, boven-en-ondergrondse-containers2|True|True, drijfvuil|True|True, dumping|True|True, afvalbakken|True|True, kliko|True|True, overig-afval|True|True, zwerfvuil|True|True, banken|True|True, bewegwijzering|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kasten|True|True, laadpalen|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, palen|True|True, speelvoorziening|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, straatverlichting|True|True, verkeersborden|True|True, verkeerslichten|True|True, waterpunten|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloten|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True"
+  },
+  {
+    "code": "K03",
+    "name": "Klussenbus 03",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "bladeren|True|True, boven-en-ondergrondse-containers2|True|True, drijfvuil|True|True, dumping|True|True, afvalbakken|True|True, kliko|True|True, overig-afval|True|True, zwerfvuil|True|True, banken|True|True, bewegwijzering|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kasten|True|True, laadpalen|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, palen|True|True, speelvoorziening|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, straatverlichting|True|True, verkeersborden|True|True, verkeerslichten|True|True, waterpunten|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloten|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True"
+  },
+  {
+    "code": "OVL",
+    "name": "Openbare verlichting (OVL)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "straatverlichting|True|True"
+  },
+  {
+    "code": "RXM",
+    "name": "RxMission",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "eikenprocessierups|True|True"
+  },
+  {
+    "code": "BEH",
+    "name": "Team Beheer (BEH)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "afvalbak|True|True, bladeren|True|True, boven-en-ondergrondse-containers2|True|True, container|True|True, drijfvuil|True|True, dumping|True|True, dumping-2|True|True, gevaarlijk-afval|True|True, afvalbakken|True|True, kliko|True|True, minicontainer|True|True, overig-afval|True|True, textielcontainer|True|True, test2|True|True, textielcontainer-2|True|True, veeg-en-zwerfvuil|True|True, zwerfvuil|True|True, brug|True|True, kademuur|True|True, overig-civiele-constructie|True|True, sluis|True|True, civiele-kunstwerken|True|True, overig-civiele-constructies|True|True, fysieke-leefomgeving-bouwen-wonen-en-gebruik|True|True, overig-omgevingsrecht|True|True, beplanting|True|True, bomen|True|True, boom|True|True, brug|True|True, kademuur|True|True, maaien|True|True, onkruid|True|True, overig-openbaar-groen-en-water|True|True, sloot|True|True, sloten|True|True, sluis|True|True, snoeien|True|True, wadi|True|True, overig|True|True, dood-dier|True|True, eikenprocessierups|True|True, hond|True|True, overig-overlast-dier|True|True, plaagdier|True|True, drugsoverlast|True|True, fietsoverlast|True|True, geluidsoverlast|True|True, graffiti|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-bedrijven-en-horeca|True|True, overlast-dak-en-thuislozen|True|True, overlast-personen|True|True, parkeeroverlast|True|True, scooteroverlast|True|True, vuurwerkoverlast|True|True, boot|True|True, fiets|True|True, geluid|True|True, graffiti|True|True, horeca-en-evenement|True|True, overig-overlast-openbare-ruimte|True|True, parkeren|True|True, persoon|True|True, scooter|True|True, dood-dier|True|True, eikenprocessierups|True|True, hondenoverlast2|True|True, ongedierte|True|True, overig-overlast-van-dieren|True|True, vogeloverlast|True|True, mankement-put|True|True, overig-riolering|True|True, riool|True|True, rioollucht|True|True, verstopping-riool|True|True, wateroverlast|True|True, bank|True|True, banken|True|True, bewegwijzering|True|True, bushalte|True|True, bushokje|True|True, gladheidsbestrijding|True|True, kabels-en-leidingen|True|True, kast|True|True, kasten|True|True, laadpaal|True|True, laadpalen|True|True, onderhoud-straat-fietspad-en-stoep|True|True, onderhoud-straten-fietspaden-en-stoepen|True|True, onveilige-verkeerssituatie|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, paal|True|True, palen|True|True, speelvoorziening|True|True, straatverlichting|True|True, verkeersbord|True|True, verkeersborden|True|True, verkeerslicht|True|True, verkeerslichten|True|True, waterpunten|True|True, wegmarkering|True|True"
+  },
+  {
+    "code": "VER",
+    "name": "Team Verkeer (VER)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "bewegwijzering|True|True, verkeersborden|True|True, fiets|True|True, textielcontainer|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, banken|True|True"
+  },
+  {
+    "code": "WEG",
+    "name": "Team Wegen (WEG)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "overig-wegen-verkeer-en-straatmeubilair|True|True"
+  },
+  {
+    "code": "WV",
+    "name": "Werkverdeler (WV)",
+    "is_intern": "1",
+    "can_direct": "0",
+    "categories": "dumping|True|True, afvalbakken|True|True, overig-afval|True|True, zwerfvuil|True|True, overig-wegen-verkeer-en-straatmeubilair|True|True, verkeersborden|True|True, verkeerslichten|True|True, overig-overlast-in-de-openbare-ruimte|True|True, overlast-personen|True|True, vuurwerkoverlast|True|True"
+  }
+]

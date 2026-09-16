@@ -1,0 +1,184 @@
+[
+  {
+    "key": "Textielcontainer_type_melding",
+    "field_type": "radio_input",
+    "meta": "{\"label\": \"Waar gaat uw melding over?\", \"values\": {\"1\": \"De textielcontainer is vol\", \"2\": \"De textielcontainer is beschadigd\", \"3\": \"Er ligt afval naast de textielcontainer\", \"4\": \"Anders\"}}",
+    "required": "1",
+    "categories": "textielcontainer|5, overig-wegen-verkeer-en-straatmeubilair|2"
+  },
+  {
+    "key": "Textielcontainer_locatie",
+    "field_type": "location_select",
+    "meta": "{\"label\": \"Selecteer de container waar het om gaat\", \"endpoint\": \"https://www.liteweb.nl/geojson/9deb1683a072e62a?bbox={west},{south},{east},{north}\", \"language\": {\"title\": \"Kies de container\", \"submit\": \"Meld deze container\", \"submitPlural\": \"Meld deze containers\", \"unregistered\": \"De container staat niet op de kaart\", \"unregisteredId\": \"Wat is het nummer van de container?\", \"objectTypePlural\": \"straatverlichting\", \"objectTypeSingular\": \"straatverlichting\"}, \"shortLabel\": \"Straatverlichting\", \"featureTypes\": [{\"icon\": {\"iconUrl\": \"https://meldingen.demo.meierijstad.delta10.cloud/assets/images/openbare_verlichting/overig.svg\"}, \"label\": \"Straatverlichting\", \"idField\": \"LitewebObjectId\", \"description\": \"Straatverlichting - {{ MastNummer }}\"}], \"maxNumberOfAssets\": 5}",
+    "required": "1",
+    "categories": "textielcontainer|0"
+  },
+  {
+    "key": "Testvragen_tijd_3",
+    "field_type": "clock_select",
+    "meta": "{\"label\": \"Hoe laat heeft u dit gezien?\"}",
+    "required": "0",
+    "categories": ""
+  },
+  {
+    "key": "Testvragen_langeTekst_11",
+    "field_type": "text_area_input",
+    "meta": "{\"label\": \"Kunt u de situatie verder toelichten?\", \"placeholder\": \"Beschrijf hier wat er aan de hand is.\"}",
+    "required": "0",
+    "categories": ""
+  },
+  {
+    "key": "Testvragen_korteTekst_10",
+    "field_type": "text_input",
+    "meta": "{\"label\": \"Geef een korte omschrijving\", \"placeholder\": \"Bijvoorbeeld: lamp bij huisnummer 10\"}",
+    "required": "1",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Testvragen_koptekst_5",
+    "field_type": "question_header",
+    "meta": "{\"label\": \"Testvragen aanvullende vragen\"}",
+    "required": "0",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Testvragen_informatie_6",
+    "field_type": "plain_text",
+    "meta": "{\"type\": \"caution\", \"value\": \"Dit is een testmelding om de weergave van een alert te controleren.\"}",
+    "required": "1",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Testvragen_datumTijd_4",
+    "field_type": "date_time_input",
+    "meta": "{\"label\": \"Wanneer heeft u dit gezien?\"}",
+    "required": "1",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Testvragen_checkbox_2",
+    "field_type": "checkbox_input",
+    "meta": "{\"label\": \"Welke situaties zijn van toepassing?\", \"values\": {\"1\": \"Er is iets kapot\", \"2\": \"Er is overlast\", \"3\": \"De situatie is onveilig\"}}",
+    "required": "1",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Testvragen_caterpillar_1",
+    "field_type": "caterpillar_select",
+    "meta": "{\"label\": \"Kies een optie uit de Caterpillar-selectie\"}",
+    "required": "1",
+    "categories": ""
+  },
+  {
+    "key": "Test_textinput_2",
+    "field_type": "text_input",
+    "meta": "{\"label\": \"Wat is uw naam?\", \"placeholder\": \"Bijvoorbeeld Jan Jansen\"}",
+    "required": "1",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Test_plaintext_1",
+    "field_type": "plain_text",
+    "meta": "{\"type\": \"citation\", \"value\": \"Dit is een testtekst om te controleren hoe informatieve tekst wordt weergegeven.\"}",
+    "required": "1",
+    "categories": "straatverlichting|1"
+  },
+  {
+    "key": "Straatverlichting_type_melding_beschadigd",
+    "field_type": "radio_input",
+    "meta": "{\"label\": \"Kunt u aangeven welke beschadigingen er zijn?\", \"values\": {\"1\": \"De lamp hangt los of is kapot\", \"2\": \"Hangen losse stroomkabels\", \"3\": \"Zit geen deurtje in de lantaarnpaal of het deurtje staat open\", \"4\": \"De lantaarnpaal staat gevaarlijk scheef\", \"5\": \"Overig\"}, \"ifOneOf\": {\"Straatverlichting_type_melding\": \"4\"}}",
+    "required": "1",
+    "categories": "straatverlichting|35"
+  },
+  {
+    "key": "Straatverlichting_type_melding_2",
+    "field_type": "radio_input",
+    "meta": "{\"label\": \"Is de stroom in uw huis ook uit?\", \"values\": {\"1\": \"Ja, de stroom is uit in mijn huis\", \"2\": \"Nee, mijn huis heeft stroom\"}, \"ifOneOf\": {\"Straatverlichting_type_melding\": [\"2\"]}}",
+    "required": "1",
+    "categories": "straatverlichting|10"
+  },
+  {
+    "key": "Straatverlichting_type_melding",
+    "field_type": "radio_input",
+    "meta": "{\"label\": \"Waar gaat uw melding over?\", \"values\": {\"1\": \"Lamp brandt niet\", \"2\": \"De hele straat, een deel ervan of een groot gebied is donker\", \"3\": \"Lamp brandt overdag, langer dan 1 dag\", \"4\": \"Lamp of lantaarnpaal is beschadigd of niet compleet\", \"5\": \"Anders\"}}",
+    "required": "1",
+    "categories": "straatverlichting|3"
+  },
+  {
+    "key": "Straatverlichting_alert_Verstoring",
+    "field_type": "plain_text",
+    "meta": "{\"type\": \"alert\", \"value\": \"Mogelijk is er een verstoring in het energienet. U kunt dit controleren via [Storingen en onderhoud](https://www.enexis.nl/storingen-en-onderhoud). In het geval van een storing of onderhoud hoeft u deze melding niet verder af te maken.\", \"ifOneOf\": {\"Straatverlichting_type_melding_2\": [\"1\"]}, \"validators\": [\"isBlocking\"]}",
+    "required": "0",
+    "categories": "straatverlichting|30"
+  },
+  {
+    "key": "Straatverlichting_alert_GevaarlijkeSituatie",
+    "field_type": "plain_text",
+    "meta": "{\"type\": \"alert\", \"value\": \"In het geval van een onveilige situatie kunt u tijdens kantoortijden het beste telefonisch contact met ons opnemen op telefoonnummer [14 0413](tel:+140413). Buiten kantoortijden verzoeken wij bij een gevaarlijke situatie direct contact op te nemen met de politie.\", \"ifOneOf\": {\"Straatverlichting_type_melding_beschadigd\": [\"1\", \"2\", \"3\", \"4\"]}, \"validators\": [\"isBlocking\"]}",
+    "required": "0",
+    "categories": "straatverlichting|40"
+  },
+  {
+    "key": "Select_voorbeeld",
+    "field_type": "select_input",
+    "meta": "{\"label\": \"Voorbeeld SelectInput\", \"values\": {\"1\": \"Optie 1\", \"2\": \"Optie 2\", \"3\": \"Optie 3\"}}",
+    "required": "0",
+    "categories": ""
+  },
+  {
+    "key": "Onderwerp",
+    "field_type": "radio_input",
+    "meta": "{\"label\": \"Waar gaat uw melding over:\", \"values\": {\"1\": \"De textielcontainer is vol\", \"2\": \"De textielcontainer is beschadigd\", \"3\": \"Er ligt afval naast de textielcontainer\", \"4\": \"Anders\"}}",
+    "required": "1",
+    "categories": "test2|5"
+  },
+  {
+    "key": "Locatie_straatverlichting",
+    "field_type": "asset_select",
+    "meta": "{\"label\": \"Selecteer de straatverlichting waar het om gaat\", \"endpoint\": \"https://www.liteweb.nl/geojson/9deb1683a072e62a?bbox={west},{south},{east},{north}\", \"language\": {\"title\": \"Kies de straatverlichting\", \"submit\": \"Meld deze straatverlichting\", \"submitPlural\": \"Meld deze straatverlichting\", \"unregistered\": \"De straatverlichting staat niet op de kaart\", \"unregisteredId\": \"Wat is het nummer van de straatverlichting?\", \"objectTypePlural\": \"straatverlichting\", \"objectTypeSingular\": \"straatverlichting\"}, \"shortLabel\": \"Straatverlichting\", \"featureTypes\": [{\"icon\": {\"iconUrl\": \"https://meldingen.demo.meierijstad.delta10.cloud/assets/images/openbare_verlichting/overig.svg\"}, \"label\": \"Straatverlichting\", \"idField\": \"LitewebObjectId\", \"description\": \"Straatverlichting - {{ MastNummer }}\"}], \"maxNumberOfAssets\": 5}",
+    "required": "1",
+    "categories": "straatverlichting|0, container|0"
+  },
+  {
+    "key": "Locatie_Ondergrondse_Container",
+    "field_type": "asset_select",
+    "meta": "{\"label\": \"Selecteer de container waar het om gaat\", \"endpoint\": \"https://datalab.purmerend.nl/geoserver/ows?service=WFS&request=GetFeature&outputFormat=application/json&typeNames=topp:beheer_afvalinzameling&version=2.0.0&srsName={srsName}&bbox={west},{south},{east},{north},{srsName}\", \"language\": {\"title\": \"Kies de container\", \"subTitle\": \"U kunt maar \\u00e9\\u00e9n container kiezen\", \"submitPlural\": \"Meld deze container\", \"unregistered\": \"De container staat niet op de kaart\", \"submitSingular\": \"Meld deze container\", \"unregisteredId\": \"Nummer van de container\", \"objectTypePlural\": \"containers\", \"objectTypeSingular\": \"container\"}, \"shortLabel\": \"Container op kaart\", \"featureTypes\": [{\"icon\": {\"iconUrl\": \"/assets/images/afval/glas.svg\"}, \"label\": \"Glascontainer\", \"idField\": \"container_nummer\", \"typeField\": \"soort\", \"typeValue\": \"Glas\"}, {\"icon\": {\"iconUrl\": \"/assets/images/afval/paper.svg\"}, \"label\": \"Papiercontainer\", \"idField\": \"container_nummer\", \"typeField\": \"soort\", \"typeValue\": \"Papier\"}, {\"icon\": {\"iconUrl\": \"/assets/images/afval/plastic.svg\"}, \"label\": \"PBD container\", \"idField\": \"container_nummer\", \"typeField\": \"soort\", \"typeValue\": \"PBD\"}, {\"icon\": {\"iconUrl\": \"/assets/images/afval/textile.svg\"}, \"label\": \"Textielcontainer\", \"idField\": \"container_nummer\", \"typeField\": \"soort\", \"typeValue\": \"Textiel\"}, {\"icon\": {\"iconUrl\": \"/assets/images/afval/rest.svg\"}, \"label\": \"Container\", \"idField\": \"container_nummer\"}], \"maxNumberOfAssets\": 3}",
+    "required": "1",
+    "categories": "boven-en-ondergrondse-containers2|0"
+  },
+  {
+    "key": "locatie",
+    "field_type": "location_select",
+    "meta": "{\"label\": \"Waar is het?\", \"language\": {\"title\": \"Locatie\", \"submit\": \"Gebruik deze locatie\", \"subTitle\": \"Waar is het?\", \"description\": \"Typ het dichtstbijzijnde adres of klik de locatie aan op de kaart\"}, \"shortLabel\": \"Waar is het?\", \"featureTypes\": []}",
+    "required": "1",
+    "categories": "banken|0, hond|0, overig-wegen-verkeer-en-straatmeubilair|0"
+  },
+  {
+    "key": "Hond_type_melding_1",
+    "field_type": "radio_input",
+    "meta": "{\"label\": \"Gaat het om hondenpoep?\", \"values\": {\"1\": \"Ja\", \"2\": \"Nee\"}}",
+    "required": "0",
+    "categories": "hond|1"
+  },
+  {
+    "key": "Eikenboom_Asset_Select",
+    "field_type": "asset_select",
+    "meta": "{\"label\": \"Waar is het?\", \"endpoint\": \"https://gis.bvowb.nl/geoserver/GW_GS_SIGNAL_730a186c-9e94-4ba1-8fec-aa5b406c9740/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=GW_GS_SIGNAL_730a186c-9e94-4ba1-8fec-aa5b406c9740:GW_GEOVISIA_BOOM_28992&outputFormat=application/json&srsName={srsName}&bbox={west},{south},{east},{north},{srsName}\", \"language\": {\"title\": \"Kies de boom waarom het gaat\", \"submit\": \"Gebruik deze locatie\", \"unregistered\": \"De boom staat niet op de kaart\", \"unregisteredId\": \"Waar staat de boom?\"}, \"shortLabel\": \"Boomnummer\", \"featureTypes\": [{\"icon\": {\"iconUrl\": \"/assets/images/groen_water/tree.svg\"}, \"label\": \"Boom\", \"idField\": \"ID\", \"description\": \"Boom - {{ ID }}\"}, {\"icon\": {\"iconUrl\": \"/assets/images/featureUnknownMarker.svg\"}, \"label\": \"Onbekend\", \"idField\": \"ID\", \"typeField\": \"ALG_Boomso\", \"typeValue\": \"not-on-map\", \"description\": \"De boom staat niet op de kaart\"}]}",
+    "required": "0",
+    "categories": "eikenprocessierups|0"
+  },
+  {
+    "key": "Afval_textielcontainer_Q",
+    "field_type": "plain_text",
+    "meta": "{\"label\": \"Waar gaat uw melding over?\", \"values\": {\"1\": \"De textielcontainer is vol\", \"2\": \"De textielcontainer is beschadigd\", \"3\": \"Er ligt afval naast de textielcontainer\", \"4\": \"Anders\"}, \"ifOneOf\": {\"Afval_type_melding\": \"4\"}}",
+    "required": "0",
+    "categories": ""
+  },
+  {
+    "key": "Afvalbak_Asset",
+    "field_type": "asset_select",
+    "meta": "{\"label\": \"Selecteer de afvalbak waar het om gaat\", \"endpoint\": \"https://kaart.alphenaandenrijn.nl/arcgis/services/afvalbakken/Afvalbakken/MapServer/WFSServer?SERVICE=WFS&request=GetFeature&version=2.0.0&outputFormat=geojson&typeNames=afvalbakken:Afval_Bakken&srsName={srsName}&bbox={south},{west},{north},{east},{srsName}\", \"language\": {\"title\": \"Kies de afvalbak\"}, \"shortLabel\": \"Afvalbak\", \"featureTypes\": [{\"icon\": {\"iconUrl\": \"/assets/images/icon-reported-marker.svg\"}, \"label\": \"Is gemeld\", \"idField\": \"OBJECTID\", \"typeField\": \"IS_GEMELD\", \"typeValue\": \"1\", \"description\": \"Is gemeld {{ TYPE_AFVALBAK }}\"}, {\"icon\": {\"iconUrl\": \"/assets/images/afval/rest.svg\"}, \"label\": \"Afvalbak\", \"idField\": \"OBJECTID\", \"description\": \"Afvalbak {{ NUMMER }}\"}], \"maxNumberOfAssets\": 3}",
+    "required": "0",
+    "categories": "afvalbak|0"
+  }
+]
