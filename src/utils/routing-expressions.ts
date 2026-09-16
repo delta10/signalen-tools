@@ -13,9 +13,7 @@ export function getDepartmentName(departmentCode: string, departments: Departmen
 
 {/* Helper function to get all categories used by a Routing Expression */}
 export function getRoutingExpressionCategories(routingExpression: RoutingExpression, expressions: Expression[]): string[] {
-    const expression = expressions.find(
-        (expression) => expression.name === routingExpression._expression
-    )
+    const expression = getExpressionFromRoutingExpression(routingExpression, expressions);
 
     if (!expression) {
         return []
@@ -160,9 +158,9 @@ function hasQuestion(expressionCode: string): boolean {
 }
 
 {/* Helper function to find connection in Expression & Routing Expression */}
-function getExpressionFromRoutingExpression(routingExpression: RoutingExpression, expressions: Expression[]): Expression | undefined {
+function getExpressionFromRoutingExpression(routingExpression: RoutingExpression, expressions: Expression[]): Expression | null {
     return expressions.find(
         (expression) =>
             expression.name === routingExpression._expression
-    )
+    ) ?? null
 }
