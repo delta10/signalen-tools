@@ -1,5 +1,6 @@
 import type {Expression, Questions, RoutingExpression,} from "@/types/routing-expressions"
 
+{/* QUESTION/ASNWER FIXTURES */}
 export const routingExpressionFixture = {
     _expression: "SingleQuestion",
 } as RoutingExpression
@@ -50,3 +51,26 @@ export const questionsFixture = [
         }),
     },
 ] as Questions[]
+
+{/* AREA FIXTURES */}
+export const areaRoutingExpressionFixture = {
+    _expression: "SingleArea",
+} as RoutingExpression
+
+export const areaExpressionsFixture = [
+    {
+        name: "SingleArea",
+        code: 'location in areas."district"."WK199101"',
+        _type: "routing",
+    },
+    {
+        name: "DifferentAreaType",
+        code: 'location in areas."neighbourhood"."BU19910101"',
+        _type: "routing",
+    },
+    {
+        name: "CategoryOnly",
+        code: 'sub == "Straatverlichting"',
+        _type: "routing",
+    },
+] as Expression[]
