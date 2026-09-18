@@ -139,11 +139,11 @@ body {
   }
 
   h1 {
-    @apply text-xl lg:text-2xl
+    @apply text-xl lg:text-2xl py-4
   }
 
   h2 {
-    @apply text-lg lg:text-xl
+    @apply text-lg lg:text-xl py-2
   }
 
   h3 {
