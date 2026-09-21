@@ -16,7 +16,10 @@ export type Category = {
 export type RoutingCondition = {
     id: string
     type: FormConditionType
-    categories: string[]
+    categories: string
+    areas: string
+    questions: string
+    answers: string[]
     operator?: "AND" | "OR"
 }
 

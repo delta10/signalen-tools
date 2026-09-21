@@ -3,6 +3,7 @@ import {Separator} from "@/components/ui/separator.tsx";
 import {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
 import {GeneralFields} from "@/components/create-routing-expression/general-fields.tsx";
 import {ConditionsBuilder} from "@/components/create-routing-expression/conditions-builder.tsx";
+import {DestinationsField} from "@/components/create-routing-expression/destinations-field.tsx";
 
 export function CreateForm() {
     const form = useRoutingExpressionForm()
@@ -18,6 +19,10 @@ export function CreateForm() {
             <Separator className={"my-4"} />
 
             <ConditionsBuilder form={form} />
+
+            <Separator className={"my-4"} />
+
+            <DestinationsField form={form} />
 
             <p className={"text-muted-foreground my-4"}>* Verplicht Veld</p>
             <Button type="submit">
