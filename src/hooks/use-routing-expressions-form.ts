@@ -9,7 +9,10 @@ const defaultValues: RoutingExpressionFormData = {
         {
             id: crypto.randomUUID(),
             type: "",
-            categories: []
+            categories: "",
+            areas: "",
+            questions: "",
+            answers: []
         },
     ],
     department: "",

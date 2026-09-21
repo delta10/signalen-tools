@@ -34,7 +34,9 @@ export function GeneralFields({form}: GeneralFieldsProps) {
             </form.Field>
             <form.Field name={"order"} validators={{
                 onChange: ({ value }) =>
-                    !value ? "Order is verplicht" : undefined
+                    value === undefined || value === null
+                        ? "Order is verplicht"
+                        : undefined
             }}>
                 {(field) => (
                     <div className="w-full max-w-sm">
