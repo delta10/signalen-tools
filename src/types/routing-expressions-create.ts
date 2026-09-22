@@ -19,7 +19,6 @@ export type RoutingCondition = {
     categories: string
     areas: string
     questions: string
-    answers: string[]
     operator?: "AND" | "OR"
 }
 
