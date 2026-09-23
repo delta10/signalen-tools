@@ -1,3 +1,5 @@
+import type {RoutingExpression} from "@/types/routing-expressions.ts";
+
 export type RoutingSimulationFormData = {
     category: string
     area: string
@@ -13,5 +15,18 @@ export type RoutingSimulationData = {
 }
 
 export type SimulationFormProps = {
-    onSimulationComplete: (results: any[]) => void
+    onSimulationComplete: (
+        data: RoutingSimulationFormData,
+        results: SimulationResult[]
+    ) => void
+}
+
+export type SimulationResult = {
+    routingExpression: RoutingExpression
+    matches: boolean
+    checks: {
+        category: boolean
+        area: boolean
+        questionAnswer: boolean
+    }
 }
