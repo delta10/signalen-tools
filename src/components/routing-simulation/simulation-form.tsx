@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {getCategories} from "@/services/categories.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {Link} from "@tanstack/react-router";
+import {Link, useNavigate} from "@tanstack/react-router";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
 import {getQuestionCategorySlugs, simulateRouting} from "@/utils/routing-simulations.ts";
@@ -15,6 +15,7 @@ import {getExpressions} from "@/services/expressions.tsx";
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
+    const navigate = useNavigate()
 
     const { data: categories = [], isLoading: isCategoriesLoading, error: categoriesError,} = useQuery(
         {
@@ -263,14 +264,24 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                     localExpressions
                                 )
 
-                                console.log("Simulation results:", results)
-
-                                onSimulationComplete(results)
+                            console.log(
+                                results
+                                    .filter((result) => result.checks.category)
+                                    .map((result) => ({
+                                        expression: result.routingExpression._expression,
+                                        matches: result.matches,
+                                        checks: result.checks,
+                                    }))
+                            )
+                                onSimulationComplete(value, results)
                             }}
                         >
                             Testen
                         </Button>
-                        <Button variant={"secondary"} size={"lg"} className={"flex-1"}>Annuleren</Button>
+                        <Button variant={"secondary"} size={"lg"} className={"flex-1"} onClick={() => {
+                            navigate({to: "/routing-expressions",})
+                        }}
+                        >Annuleren</Button>
                     </div>
                 </form>
             </div>
