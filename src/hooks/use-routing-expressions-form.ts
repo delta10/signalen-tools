@@ -16,7 +16,6 @@ const defaultValues: RoutingExpressionFormData = {
             categories: "",
             areas: "",
             questions: "",
-            answers: []
         },
     ],
     department: "",

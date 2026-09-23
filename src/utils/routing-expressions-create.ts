@@ -26,7 +26,7 @@ export function convertConditionToExpression(condition: RoutingCondition): strin
             return `location in areas."district"."${condition.areas}"`
 
         case "question":
-            return `${condition.questions} == "${condition.answers}"`
+            return `${condition.questions}`
 
         default:
             return ""
