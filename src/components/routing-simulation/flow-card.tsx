@@ -8,7 +8,7 @@ type FlowCardProps = {
 export function FlowCard({title, children}: FlowCardProps) {
     return(
         <div>
-            <Card className={"bg-secondary w-84"}>
+            <Card className={"w-84"}>
                 <CardHeader>
                     <CardTitle>{title}</CardTitle>
                 </CardHeader>

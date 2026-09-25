@@ -17,12 +17,14 @@ export type RoutingSimulationData = {
 export type SimulationFormProps = {
     onSimulationComplete: (
         data: RoutingSimulationFormData,
-        results: SimulationResult[]
+        results: SimulationResult[],
+        selected: SimulationResult | null
     ) => void
 }
 
 export type SimulationResult = {
     routingExpression: RoutingExpression
+    order: number
     matches: boolean
     checks: {
         category: boolean

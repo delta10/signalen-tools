@@ -28,10 +28,7 @@ export function ReportNode({data}: NodeProps) {
                 </div>
             </FlowCard>
 
-            <Handle
-                type="source"
-                position={Position.Bottom}
-            />
+            <Handle type="source" position={Position.Right}/>
         </>
     )
 }
