@@ -1,24 +1,31 @@
-import {Background, ReactFlow} from "@xyflow/react"
+import {Background, MarkerType, ReactFlow} from "@xyflow/react"
 import {ExpressionNode} from "@/components/routing-simulation/expression-node.tsx";
 import type {RoutingSimulationFormData, SimulationResult} from "@/types/routing-simulations.ts";
 import {ReportNode} from "@/components/routing-simulation/report-node.tsx";
+import {DestinationNode} from "@/components/routing-simulation/destination-node.tsx";
+import {useState} from "react";
+import {Button} from "@/components/ui/button.tsx";
 
 const nodeTypes = {
     report: ReportNode,
-    expression: ExpressionNode
+    expression: ExpressionNode,
+    destination: DestinationNode
 }
 
 type RoutingSimulationFlowProps = {
     results: SimulationResult[]
     report: RoutingSimulationFormData
+    selectedRoutingExpression: SimulationResult | null
 }
 
-export function RoutingSimulationFlow({results, report}: RoutingSimulationFlowProps) {
-    const matchedResults = results.filter((result) => result.matches)
-    const unmatchedResults = results.filter((result) => !result.matches)
+export function RoutingSimulationFlow({results, report, selectedRoutingExpression}: RoutingSimulationFlowProps) {
+    const [showUnmatched, setShowUnmatched] = useState(false)
 
-    console.log(matchedResults)
+    const visibleResults = showUnmatched
+        ? results
+        : results.filter((result) => result.matches)
 
+    {/* Create all nodes */}
     const reportNode = {
         id: "original-report",
         type: "report",
@@ -35,46 +42,98 @@ export function RoutingSimulationFlow({results, report}: RoutingSimulationFlowPr
         },
     }
 
-    const matchedExpressionNodes = matchedResults.map((result, index) => ({
-        id: `matched-expression-${index}`,
+    const expressionNodes = visibleResults.map((result, index) => ({
+        id: `expression-${result.routingExpression._expression}-${result.order}`,
         type: "expression",
         position: {
             x: 340,
-            y: 250 + index * 250,
+            y: index * 250,
         },
         data: result,
     }))
 
-    const unmatchedNode = {
-        id: "unmatched-expressions",
-        type: "unmatched",
-        position: {
-            x: 700,
-            y: 250,
-        },
-        data: {
-            results: unmatchedResults,
-        },
-    }
+    const destinationNode = selectedRoutingExpression ? {
+            id: "destination-node",
+            type: "destination",
+            position: {
+                x: 780,
+                y: 250,
+            },
+            data: selectedRoutingExpression,
+        } : null
 
-    const nodes = [reportNode, ...matchedExpressionNodes, unmatchedNode]
+    {/* Create connections between nodes */}
+    const matchingExpressionNodes = expressionNodes.filter(
+        (node) => node.data.matches
+    )
 
-    const edges = results.map((_, index) => ({
-        id: `report-expression-${index}`,
+    const reportEdges = matchingExpressionNodes.map((node) => ({
+        id: `report-${node.id}`,
         source: "original-report",
-        target: `expression-${index}`,
+        target: node.id,
+        type: "smoothstep",
+        markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: "#000"
+        },
+        style: {
+            stroke: "#000",
+            strokeWidth: 2
+        }
     }))
 
+    const selectedExpressionNode = expressionNodes.find(
+        (node) =>
+            node.data.routingExpression._expression ===
+            selectedRoutingExpression?.routingExpression._expression &&
+            node.data.order === selectedRoutingExpression?.order
+    )
+
+    const destinationEdge =
+        selectedExpressionNode && destinationNode ? {
+                id: "selected-destination",
+                source: selectedExpressionNode.id,
+                target: destinationNode.id,
+                type: "smoothstep",
+                markerEnd: {
+                    type: MarkerType.ArrowClosed,
+                    color: "#000"
+                },
+                style: {
+                    stroke: "#000",
+                    strokeWidth: 2
+                },
+            } : null
+
+    {/* Define nodes + edges */}
+    const nodes = [
+        reportNode,
+        ...expressionNodes,
+        ...(destinationNode ? [destinationNode] : [])
+    ]
+
+    const edges = [
+        ...reportEdges,
+        ...(destinationEdge ? [destinationEdge] : []),
+    ]
+
     return (
-        <div className="h-150 w-full">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                nodeTypes={nodeTypes}
-                fitView
-            >
-                <Background />
-            </ReactFlow>
-        </div>
+        <>
+            <Button variant="secondary" onClick={() => setShowUnmatched((current) => !current)}>
+                {showUnmatched
+                    ? "Verberg niet-matchende regels"
+                    : "Toon niet-matchende regels"}
+            </Button>
+            <div className="h-150 w-full">
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    nodeTypes={nodeTypes}
+                    fitView
+                >
+                    <Background />
+                </ReactFlow>
+            </div>
+        </>
     )
 }

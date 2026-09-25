@@ -8,7 +8,7 @@ import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
-import {getQuestionCategorySlugs, simulateRouting} from "@/utils/routing-simulations.ts";
+import {getQuestionCategorySlugs, getSelectedRoutingExpression, simulateRouting} from "@/utils/routing-simulations.ts";
 import type {SimulationFormProps} from "@/types/routing-simulations.ts";
 import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {getExpressions} from "@/services/expressions.tsx";
@@ -264,16 +264,9 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                     localExpressions
                                 )
 
-                            console.log(
-                                results
-                                    .filter((result) => result.checks.category)
-                                    .map((result) => ({
-                                        expression: result.routingExpression._expression,
-                                        matches: result.matches,
-                                        checks: result.checks,
-                                    }))
-                            )
-                                onSimulationComplete(value, results)
+                            const selectedRoutingExpression = getSelectedRoutingExpression(results)
+
+                                onSimulationComplete(value, results, selectedRoutingExpression)
                             }}
                         >
                             Testen

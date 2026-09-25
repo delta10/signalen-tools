@@ -5,7 +5,7 @@ import {
     getRoutingExpressionQuestionConditions
 } from "@/utils/routing-expressions.ts";
 import type {Category} from "@/types/routing-expressions-create.ts";
-import type {RoutingSimulationData} from "@/types/routing-simulations.ts";
+import type {RoutingSimulationData, SimulationResult} from "@/types/routing-simulations.ts";
 
 {/* Helper function to split categories from specific question */}
 export function getQuestionCategorySlugs(question: Questions): string[] {
@@ -143,6 +143,7 @@ export function simulateRouting(
 
         return {
             routingExpression,
+            order: Number(routingExpression.order),
             matches:
                 categoryMatches &&
                 areaMatches &&
@@ -154,4 +155,17 @@ export function simulateRouting(
             },
         }
     })
+}
+
+{/* Helper function that determines which routing is chosen based off order number */}
+export function getSelectedRoutingExpression(results: SimulationResult[]): SimulationResult | null {
+    const matches = results.filter((result) => result.matches)
+
+    if (matches.length === 0) {
+        return null
+    }
+
+    return matches.reduce((selected, current) =>
+        current.order < selected.order ? current : selected
+    )
 }
