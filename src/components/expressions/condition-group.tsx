@@ -1,11 +1,9 @@
 import {Button} from "@/components/ui/button.tsx";
-import {ConditionRow} from "@/components/create-routing-expression/condition-row.tsx";
 import type {Area, Questions} from "@/types/routing-expressions.ts";
 import type {Category, RoutingConditionGroup} from "@/types/routing-expressions-create.ts";
 import type {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
 import {CategoryMultiSelect} from "@/components/create-routing-expression/category-multiselect.tsx";
 import {AreaMultiSelect} from "@/components/create-routing-expression/area-multiselect.tsx";
-import {QuestionConditionEditor} from "@/components/create-routing-expression/question-condition-editor.tsx";
 
 type ConditionGroupProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
