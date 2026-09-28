@@ -9,16 +9,9 @@ const defaultValues: RoutingExpressionFormData = {
     name: "",
     order: 0,
     isActive: true,
-    conditions: [
-        {
-            id: crypto.randomUUID(),
-            type: "",
-            categories: "",
-            areas: "",
-            questions: "",
-        },
-    ],
     department: "",
+    conditionGroups: [],
+    conditionOperator: "AND"
 }
 
 export function useRoutingExpressionForm() {

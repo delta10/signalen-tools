@@ -15,20 +15,24 @@ export type Category = {
 
 export type RoutingCondition = {
     id: string
-    type: FormConditionType
-    categories: string
-    areas: string
-    questions: string
-    operator?: "AND" | "OR"
+    value: string
+}
+
+export type RoutingConditionGroup = {
+    id: string
+    type: ConditionType
+    operator: ConditionOperator
+    conditions: RoutingCondition[]
 }
 
 export type RoutingExpressionFormData = {
     name: string
     order: number
     isActive: boolean
-    conditions: RoutingCondition[]
+    conditionOperator: ConditionOperator
+    conditionGroups: RoutingConditionGroup[]
     department: string
 }
 
 export type ConditionType = "category" | "area" | "question"
-export type FormConditionType = ConditionType | ""
+export type ConditionOperator = "AND" | "OR"
