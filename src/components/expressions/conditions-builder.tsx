@@ -86,6 +86,7 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                     value: "",
                                 },
                             ],
+                            values: []
                         })
                     }
 

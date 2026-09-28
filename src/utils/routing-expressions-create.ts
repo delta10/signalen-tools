@@ -1,5 +1,9 @@
 import type {Expression, Questions, RoutingExpression,} from "@/types/routing-expressions.ts"
-import type {RoutingConditionGroup, RoutingExpressionFormData,} from "@/types/routing-expressions-create.ts"
+import type {
+    ConditionType,
+    RoutingConditionGroup,
+    RoutingExpressionFormData,
+} from "@/types/routing-expressions-create.ts"
 
 
 /* Helper function to extract possible answers from question.meta */
@@ -19,8 +23,8 @@ export function getQuestionAnswers(question: Questions): string[] {
 
 
 /* Convert one condition value to expression code based on its group type */
-export function convertConditionValueToExpression(group: RoutingConditionGroup, value: string,): string {
-    switch (group.type) {
+export function convertConditionValueToExpression(type: ConditionType, value: string,): string {
+    switch (type) {
         case "category":
             return `sub == "${value}"`
 
@@ -43,18 +47,17 @@ export function convertConditionGroupToExpression(group: RoutingConditionGroup,)
             ? " and "
             : " or "
 
-    const expression = group.conditions
-        .map((condition) =>
-            convertConditionValueToExpression(group, condition.value)
-        )
+    const expressions = group.values
         .filter(Boolean)
-        .join(separator)
+        .map((value) =>
+            convertConditionValueToExpression(group.type, value)
+        )
 
-    if (!expression) {
+    if (expressions.length === 0) {
         return ""
     }
 
-    return `(${expression})`
+    return `(${expressions.join(separator)})`
 }
 
 
