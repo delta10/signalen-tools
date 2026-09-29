@@ -21,6 +21,17 @@ export function getQuestionAnswers(question: Questions): string[] {
     }
 }
 
+/* Helper function to create array of category slugs */
+export function getQuestionCategorySlugs(question: Questions): string[] {
+    if (!question.categories) {
+        return []
+    }
+
+    return question.categories
+        .split(",")
+        .map((category) => category.trim().split("|")[0])
+}
+
 
 /* Convert one condition value to expression code based on its group type */
 export function convertConditionValueToExpression(type: ConditionType, value: string,): string {
@@ -42,6 +53,14 @@ export function convertConditionValueToExpression(type: ConditionType, value: st
 
 /* Convert one group to expression code */
 export function convertConditionGroupToExpression(group: RoutingConditionGroup,): string {
+    if (group.type === "question") {
+        if (!group.question || !group.answer) {
+            return ""
+        }
+
+        return `(${group.question} == "${group.answer}")`
+    }
+
     const separator =
         group.operator === "AND"
             ? " and "

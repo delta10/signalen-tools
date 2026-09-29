@@ -36,9 +36,7 @@ export function ConditionRow({form, group, groupIndex, conditionIndex, categorie
                                         <DropdownMenuItem
                                             key={`${category.parent}-${category.slug}`}
                                             onSelect={() =>
-                                                valueField.handleChange(
-                                                    category.name
-                                                )
+                                                valueField.handleChange(category.name)
                                             }
                                         >
                                             {category.name}
@@ -61,9 +59,7 @@ export function ConditionRow({form, group, groupIndex, conditionIndex, categorie
                                         <DropdownMenuItem
                                             key={area.code}
                                             onSelect={() =>
-                                                valueField.handleChange(
-                                                    area.code
-                                                )
+                                                valueField.handleChange(area.code)
                                             }
                                         >
                                             {area.name}
@@ -86,9 +82,7 @@ export function ConditionRow({form, group, groupIndex, conditionIndex, categorie
                                         <DropdownMenuItem
                                             key={question.key}
                                             onSelect={() =>
-                                                valueField.handleChange(
-                                                    question.key
-                                                )
+                                                valueField.handleChange(question.key)
                                             }
                                         >
                                             {question.key}

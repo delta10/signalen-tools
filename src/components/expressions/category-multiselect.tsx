@@ -32,8 +32,7 @@ export function CategoryMultiSelect({form, groupIndex, categories}: CategoryMult
                         field.removeValue(selectedIndex)
                     }
 
-                    const allSelected =
-                        selectedValues.length === categories.length
+                    const allSelected = selectedValues.length === categories.length
 
                     const toggleAllCategories = () => {
                         if (allSelected) {
@@ -45,8 +44,8 @@ export function CategoryMultiSelect({form, groupIndex, categories}: CategoryMult
                         }
 
                         categories.forEach((category) => {
-                            if (!selectedValues.includes(category.name)) {
-                                field.pushValue(category.name)
+                            if (!selectedValues.includes(category.slug)) {
+                                field.pushValue(category.slug)
                             }
                         })
                     }
@@ -77,13 +76,13 @@ export function CategoryMultiSelect({form, groupIndex, categories}: CategoryMult
                                             <CommandSeparator />
 
                                             {categories.map((category) => {
-                                                const checked = selectedValues.includes(category.name)
+                                                const checked = selectedValues.includes(category.slug)
 
                                                 return (
                                                     <CommandItem
                                                         key={`${category.parent}-${category.slug}`}
                                                         value={category.name}
-                                                        onSelect={() => toggleCategory(category.name)}
+                                                        onSelect={() => toggleCategory(category.slug)}
                                                     >
                                                         <Checkbox checked={checked} className="mr-2" />
                                                         {category.name}

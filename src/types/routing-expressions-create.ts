@@ -24,6 +24,8 @@ export type RoutingConditionGroup = {
     operator: ConditionOperator
     conditions: RoutingCondition[]
     values: string[]
+    question: string
+    answer: string
 }
 
 export type RoutingExpressionFormData = {

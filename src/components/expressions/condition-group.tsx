@@ -4,6 +4,7 @@ import type {Category, RoutingConditionGroup} from "@/types/routing-expressions-
 import type {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
 import {CategoryMultiSelect} from "@/components/create-routing-expression/category-multiselect.tsx";
 import {AreaMultiSelect} from "@/components/create-routing-expression/area-multiselect.tsx";
+import {QuestionConditionEditor} from "@/components/create-routing-expression/question-condition-editor.tsx";
 
 type ConditionGroupProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -21,7 +22,7 @@ const groupLabels = {
     question: "Aanvullende vraag",
 }
 
-export function ConditionGroup({form, group, groupIndex, categories, areas, onRemove,}: ConditionGroupProps) {
+export function ConditionGroup({form, group, groupIndex, categories, areas, questions, onRemove}: ConditionGroupProps) {
     return (
         <div className="flex flex-col gap-4 rounded-lg border p-4">
             <div className="flex items-center justify-between">
@@ -39,7 +40,9 @@ export function ConditionGroup({form, group, groupIndex, categories, areas, onRe
                 <AreaMultiSelect form={form} groupIndex={groupIndex} areas={areas} />
             )}
 
-            {/* Question conditions */}
+            {group.type === "question" && (
+                <QuestionConditionEditor form={form} groupIndex={groupIndex} questions={questions} />
+            )}
 
         </div>
     )
