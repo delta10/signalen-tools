@@ -5,6 +5,24 @@ import type {
     RoutingExpressionFormData,
 } from "@/types/routing-expressions-create.ts"
 
+/* Helper function to identify radio & checkbox input questions */
+export function isSupportedQuestion(question: Questions): boolean {
+    return (
+        question.field_type === "radio_input" ||
+        question.field_type === "checkbox_input"
+    )
+}
+
+/* Helper function to extract question label from metadata */
+export function getQuestionLabel(question: Questions): string {
+    try {
+        const meta = JSON.parse(question.meta)
+
+        return meta.label ?? question.key
+    } catch {
+        return question.key
+    }
+}
 
 /* Helper function to extract possible answers from question.meta */
 export function getQuestionAnswers(question: Questions): string[] {
