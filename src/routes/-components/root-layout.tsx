@@ -1,6 +1,7 @@
 import { Outlet } from '@tanstack/react-router'
 import { AppSidebar } from "@/components/layout/app-sidebar.tsx";
 import { AppHeader } from "@/components/layout/app-header.tsx";
+import {Toaster} from "sonner";
 
 export function RootLayout() {
   return (
@@ -15,6 +16,7 @@ export function RootLayout() {
 
           <main className="m-4 min-w-0 overflow-auto rounded-lg bg-background p-6">
               <Outlet />
+              <Toaster />
           </main>
       </div>
   )

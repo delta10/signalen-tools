@@ -3,5 +3,13 @@ import type {Expression} from "@/types/routing-expressions.ts";
 
 {/* Endpoint(s) can eventually be fetched here */}
 export async function getExpressions(): Promise<Expression[]> {
-    return expressions
+    {/* Only applicable to test environment */}
+    const storedExpressions = JSON.parse(
+        localStorage.getItem("newExpressions") ?? "[]"
+    )
+
+    return [
+        ...expressions,
+        ...storedExpressions,
+    ]
 }
