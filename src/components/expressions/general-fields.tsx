@@ -1,4 +1,4 @@
-import type {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
+import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {Input} from "@/components/ui/input.tsx";
 import {Switch} from "@/components/ui/switch.tsx";
 

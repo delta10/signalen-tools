@@ -1,4 +1,4 @@
-import type {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
+import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {useQuery} from "@tanstack/react-query";
 import {getDepartments} from "@/services/departments.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";

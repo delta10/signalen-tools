@@ -1,9 +1,9 @@
 import {Button} from "@/components/ui/button.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
-import {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
-import {GeneralFields} from "@/components/create-routing-expression/general-fields.tsx";
-import {ConditionsBuilder} from "@/components/create-routing-expression/conditions-builder.tsx";
-import {DestinationsField} from "@/components/create-routing-expression/destinations-field.tsx";
+import {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
+import {GeneralFields} from "@/components/expressions/general-fields.tsx";
+import {ConditionsBuilder} from "@/components/expressions/conditions-builder.tsx";
+import {DestinationsField} from "@/components/expressions/destinations-field.tsx";
 
 export function CreateForm() {
     const form = useRoutingExpressionForm()

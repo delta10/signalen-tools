@@ -1,4 +1,4 @@
-import {CreateForm} from "@/components/create-routing-expression/create-form.tsx";
+import {CreateForm} from "@/components/expressions/create-form.tsx";
 
 export function RoutingExpressionsCreatePage() {
     return(

@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form"
-import type { RoutingExpressionFormData } from "@/types/routing-expressions-create"
+import type { RoutingExpressionFormData } from "@/types/routing-expressions-create.ts"
 import {convertRoutingExpressionFormData} from "@/utils/routing-expressions-create.ts";
 import {useNavigate} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
