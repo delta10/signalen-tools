@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest"
-import {getRoutingExpressionAreas, getRoutingExpressionQuestionsAnswers} from "./routing-expressions"
+import {getRoutingExpressionAreas, getRoutingExpressionQuestionsAnswers} from "@/utils/routing-expressions.ts"
 import {
     areaExpressionsFixture, areaRoutingExpressionFixture,
     expressionsFixture,
     questionsFixture,
     routingExpressionFixture,
-} from "@/test/fixtures/routing-expressions"
+} from "@/test/fixtures/routing-expressions.ts"
 
 {/* Tests for extracting question and answer conditions from Routing Expressions */}
 describe("getRoutingExpressionQuestionsAnswers", () => {
