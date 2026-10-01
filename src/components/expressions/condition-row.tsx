@@ -1,4 +1,4 @@
-import type { useRoutingExpressionForm } from "@/hooks/use-routing-expressions-form.ts"
+import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
 import type {Category, RoutingConditionGroup,} from "@/types/routing-expressions-create.ts"
 import type {Area, Questions,} from "@/types/routing-expressions.ts"
 import { Button } from "@/components/ui/button.tsx"

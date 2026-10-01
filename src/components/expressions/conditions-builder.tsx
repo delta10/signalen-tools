@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton.tsx"
 import { Link } from "@tanstack/react-router"
 import { getQuestions } from "@/services/questions-answers.tsx"
 import { getAreas } from "@/services/areas.tsx"
-import {ConditionGroup} from "@/components/create-routing-expression/condition-group.tsx";
+import {ConditionGroup} from "@/components/expressions/condition-group.tsx";
 import type {ConditionType} from "@/types/routing-expressions-create.ts";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 

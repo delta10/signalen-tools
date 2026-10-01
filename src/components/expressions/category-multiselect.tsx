@@ -1,5 +1,5 @@
 import type {Category} from "@/types/routing-expressions-create.ts";
-import type {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
+import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {useState} from "react";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {Button} from "@/components/ui/button.tsx";

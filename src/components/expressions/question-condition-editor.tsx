@@ -1,4 +1,4 @@
-import type { useRoutingExpressionForm } from "@/hooks/use-routing-expressions-form.ts"
+import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
 import type { Questions } from "@/types/routing-expressions.ts"
 import {getQuestionAnswers, getQuestionLabel, isSupportedQuestion} from "@/utils/routing-expressions-create.ts"
 import { getQuestionCategorySlugs } from "@/utils/routing-expressions-create.ts"

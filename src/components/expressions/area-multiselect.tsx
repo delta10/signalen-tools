@@ -1,4 +1,4 @@
-import type {useRoutingExpressionForm} from "@/hooks/use-routing-expressions-form.ts";
+import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import type {Area} from "@/types/routing-expressions.ts";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {Button} from "@/components/ui/button.tsx";
