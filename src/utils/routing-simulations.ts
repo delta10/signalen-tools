@@ -42,7 +42,10 @@ export function doesCategoryMatch(
         return false
     }
 
-    return expressionCategories.includes(selectedCategory.name)
+    return expressionCategories.some(
+        (category) =>
+            category.toLowerCase() === selectedCategory.name.toLowerCase()
+    )
 }
 
 {/* Helper function to match area with simulated signal */}
@@ -69,9 +72,14 @@ export function doesAreaMatch(
         return false
     }
 
-    return expressionAreas.some(
-        (area) => area.code === selectedArea.code
-    )
+    return expressionAreas.some((expressionArea) => {
+        const value = expressionArea.code.toLowerCase()
+
+        return (
+            value === selectedArea.code.toLowerCase() ||
+            value === selectedArea.name.toLowerCase()
+        )
+    })
 }
 
 {/* Helper function to match question/answer with simulated signal */}

@@ -12,10 +12,16 @@ import {getQuestionCategorySlugs, getSelectedRoutingExpression, simulateRouting}
 import type {SimulationFormProps} from "@/types/routing-simulations.ts";
 import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {getExpressions} from "@/services/expressions.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command.tsx";
+import {useState} from "react";
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
     const navigate = useNavigate()
+
+    const [areaOpen, setAreaOpen] = useState(false)
+    const [categoryOpen, setCategoryOpen] = useState(false)
 
     const { data: categories = [], isLoading: isCategoriesLoading, error: categoriesError,} = useQuery(
         {
@@ -95,62 +101,94 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                             )
 
                             return (
-                                <>
-                                    <div className={"flex flex-row gap-4 items-center"}>
-                                        <label htmlFor={field.name}>Categorie: </label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button type="button" variant="outline">
-                                                    {selectedCategory?.name ?? "Selecteer een categorie"}
-                                                </Button>
-                                            </DropdownMenuTrigger>
-
-                                            <DropdownMenuContent>
-                                                {categories.map((category) => (
-                                                    <DropdownMenuItem
-                                                        key={`${category.parent}-${category.slug}`}
-                                                        onSelect={() => {
-                                                            field.handleChange(category.slug)
-
-                                                            form.setFieldValue("question", "")
-                                                            form.setFieldValue("answer", "")
-                                                        }}
-                                                    >
-                                                        {category.name}
-                                                    </DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                </>
+                                <div className="flex items-center gap-4">
+                                    <label htmlFor={field.name}>
+                                        Categorie:
+                                    </label>
+                                    <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button type="button" variant="outline" role="combobox">
+                                                {selectedCategory?.name ??
+                                                    "Selecteer een categorie"}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="p-0">
+                                            <Command>
+                                                <CommandInput placeholder="Zoek categorie..." />
+                                                <CommandList>
+                                                    <CommandEmpty>
+                                                        Geen categorie gevonden.
+                                                    </CommandEmpty>
+                                                    <CommandGroup>
+                                                        {categories.map((category) => (
+                                                            <CommandItem
+                                                                key={`${category.parent}-${category.slug}`}
+                                                                value={category.name}
+                                                                onSelect={() => {
+                                                                    field.handleChange(category.slug)
+                                                                    form.setFieldValue("question", "")
+                                                                    form.setFieldValue("answer", "")
+                                                                    setCategoryOpen(false)
+                                                                }}
+                                                            >
+                                                                {category.name}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
                             )
                         }}
                     </form.Field>
-                    <form.Field name={"area"}>
-                        {(field) => (
-                            <div className={"flex flex-row gap-4 items-center"}>
-                                <label htmlFor={field.name}>Gebied: </label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button type="button" variant="outline">
-                                            {field.state.value || "Selecteer een gebied"}
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        {areas.map((area) => (
-                                            <DropdownMenuItem
-                                                key={area.name}
-                                                onSelect={() => {
-                                                    field.handleChange(area.name)
-                                                }}
-                                            >
-                                                {area.name}
-                                            </DropdownMenuItem>
-                                        ))}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        )}
+                    <form.Field name="area">
+                        {(field) => {
+                            const selectedArea = areas.find(
+                                (area) => area.name === field.state.value
+                            )
+
+                            return (
+                                <div className="flex items-center gap-4">
+                                    <label htmlFor={field.name}>
+                                        Gebied:
+                                    </label>
+
+                                    <Popover open={areaOpen} onOpenChange={setAreaOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button type="button" variant="outline" role="combobox">
+                                                {selectedArea?.name ?? "Selecteer een gebied"}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="p-0">
+                                            <Command>
+                                                <CommandInput placeholder="Zoek gebied..." />
+                                                <CommandList>
+                                                    <CommandEmpty>
+                                                        Geen gebied gevonden.
+                                                    </CommandEmpty>
+                                                    <CommandGroup>
+                                                        {areas.map((area) => (
+                                                            <CommandItem
+                                                                key={area.name}
+                                                                value={area.name}
+                                                                onSelect={() => {
+                                                                    field.handleChange(area.name)
+                                                                    setAreaOpen(false)
+                                                                }}
+                                                            >
+                                                                {area.name}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                            )
+                        }}
                     </form.Field>
                     <form.Subscribe selector={(state) => state.values.category}>
                         {(selectedCategory) => (
