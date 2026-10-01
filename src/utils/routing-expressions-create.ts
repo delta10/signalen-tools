@@ -1,7 +1,30 @@
-import type {Expression, Questions, RoutingExpression} from "@/types/routing-expressions.ts";
-import type {RoutingCondition, RoutingExpressionFormData} from "@/types/routing-expressions-create.ts";
+import type {Expression, Questions, RoutingExpression,} from "@/types/routing-expressions.ts"
+import type {
+    ConditionType,
+    RoutingConditionGroup,
+    RoutingExpressionFormData,
+} from "@/types/routing-expressions-create.ts"
 
-{/* Helper function to extract possible answers from question.meta */}
+/* Helper function to identify radio & checkbox input questions */
+export function isSupportedQuestion(question: Questions): boolean {
+    return (
+        question.field_type === "radio_input" ||
+        question.field_type === "checkbox_input"
+    )
+}
+
+/* Helper function to extract question label from metadata */
+export function getQuestionLabel(question: Questions): string {
+    try {
+        const meta = JSON.parse(question.meta)
+
+        return meta.label ?? question.key
+    } catch {
+        return question.key
+    }
+}
+
+/* Helper function to extract possible answers from question.meta */
 export function getQuestionAnswers(question: Questions): string[] {
     try {
         const meta = JSON.parse(question.meta)
@@ -16,44 +39,91 @@ export function getQuestionAnswers(question: Questions): string[] {
     }
 }
 
-{/* Helper function to convert a condition to expression code (DISTRICT IS STILL HARDCODED) */}
-export function convertConditionToExpression(condition: RoutingCondition): string {
-    switch (condition.type) {
+/* Helper function to create array of category slugs */
+export function getQuestionCategorySlugs(question: Questions): string[] {
+    if (!question.categories) {
+        return []
+    }
+
+    return question.categories
+        .split(",")
+        .map((category) => category.trim().split("|")[0])
+}
+
+
+/* Convert one condition value to expression code based on its group type */
+export function convertConditionValueToExpression(type: ConditionType, value: string,): string {
+    switch (type) {
         case "category":
-            return `sub == "${condition.categories}"`
+            return `sub == "${value}"`
 
         case "area":
-            return `location in areas."district"."${condition.areas}"`
+            return `location in areas."district"."${value}"`
 
         case "question":
-            return `${condition.questions}`
+            return value
 
         default:
             return ""
     }
 }
 
-{/* Helper function to convert form conditions to expression code */}
-export function convertConditionsToExpression(
-    conditions: RoutingCondition[]
-): string {
-    return conditions
-        .map(convertConditionToExpression)
+
+/* Convert one group to expression code */
+export function convertConditionGroupToExpression(group: RoutingConditionGroup,): string {
+    if (group.type === "question") {
+        if (!group.question || !group.answer) {
+            return ""
+        }
+
+        return `(${group.question} == "${group.answer}")`
+    }
+
+    const separator =
+        group.operator === "AND"
+            ? " and "
+            : " or "
+
+    const expressions = group.values
         .filter(Boolean)
-        .join(" and ")
+        .map((value) =>
+            convertConditionValueToExpression(group.type, value)
+        )
+
+    if (expressions.length === 0) {
+        return ""
+    }
+
+    return `(${expressions.join(separator)})`
 }
 
-{/* Helper function to create an Expression from form data */}
-export function createExpressionFromFormData(formData: RoutingExpressionFormData): Expression {
+
+/* Convert all groups to expression code */
+export function convertConditionsToExpression(formData: RoutingExpressionFormData,): string {
+    const separator =
+        formData.conditionOperator === "AND"
+            ? " and "
+            : " or "
+
+    return formData.conditionGroups
+        .map(convertConditionGroupToExpression)
+        .filter(Boolean)
+        .join(separator)
+}
+
+
+/* Helper function to create an Expression from form data */
+export function createExpressionFromFormData(formData: RoutingExpressionFormData,): Expression {
     return {
         name: formData.name,
-        code: convertConditionsToExpression(formData.conditions),
+        code: convertConditionsToExpression(formData),
         _type: "routing",
     }
 }
 
-{/* Helper function to create a RoutingExpression from form data */}
-export function createRoutingExpressionFromFormData(formData: RoutingExpressionFormData): RoutingExpression {
+
+/* Helper function to create a RoutingExpression from form data */
+export function createRoutingExpressionFromFormData(formData: RoutingExpressionFormData,): RoutingExpression {
     return {
         _expression: formData.name,
         _department: formData.department,
@@ -63,12 +133,13 @@ export function createRoutingExpressionFromFormData(formData: RoutingExpressionF
     }
 }
 
-{/* Helper function to convert routing expression form data */}
-export function convertRoutingExpressionFormData(
-    formData: RoutingExpressionFormData
-) {
+
+/* Helper function to convert routing expression form data */
+export function convertRoutingExpressionFormData(formData: RoutingExpressionFormData,) {
     return {
-        expression: createExpressionFromFormData(formData),
+        expression:
+            createExpressionFromFormData(formData),
+
         routingExpression:
             createRoutingExpressionFromFormData(formData),
     }
