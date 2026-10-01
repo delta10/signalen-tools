@@ -19,7 +19,7 @@ const conditionTypeLabels: Record<ConditionType, string> = {
     question: "Aanvullende vraag",
 }
 
-const conditionTypes = Object.entries(conditionTypeLabels) as [ConditionType, string,][]
+const conditionTypes = Object.entries(conditionTypeLabels) as [ConditionType, string][]
 
 export function ConditionsBuilder({ form }: ConditionsProps) {
     const {data: categories = [], isLoading: isCategoriesLoading, error: categoriesError,} = useQuery({
@@ -83,14 +83,11 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
                                                 {conditionTypes.map(([value, label]) => (
-                                                        <DropdownMenuItem
-                                                            key={value}
-                                                            onSelect={() =>
-                                                                typeField.handleChange(value)}
-                                                        >
-                                                            {label}
-                                                        </DropdownMenuItem>
-                                                    ))}
+                                                    <DropdownMenuItem key={value}
+                                                        onSelect={() => typeField.handleChange(value)}>
+                                                        {label}
+                                                    </DropdownMenuItem>
+                                                ))}
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                         {typeField.state.value === "category" && (
@@ -104,16 +101,15 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent>
                                                             {categories.map((category) => (
-                                                                    <DropdownMenuItem
-                                                                        key={`${category.parent}-${category.slug}`}
-                                                                        onSelect={() => {
-                                                                            categoryField.handleChange(category.name)
-                                                                        }}
-                                                                    >
-                                                                        {category.name}
-                                                                    </DropdownMenuItem>
-                                                                )
-                                                            )}
+                                                                <DropdownMenuItem
+                                                                    key={`${category.parent}-${category.slug}`}
+                                                                    onSelect={() => {
+                                                                        categoryField.handleChange(category.name)
+                                                                    }}
+                                                                >
+                                                                    {category.name}
+                                                                </DropdownMenuItem>
+                                                            ))}
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
                                                 )}
@@ -130,16 +126,15 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent>
                                                             {areas.map((area) => (
-                                                                    <DropdownMenuItem
-                                                                        key={area.code}
-                                                                        onSelect={() => {
-                                                                            areaField.handleChange(area.code)
-                                                                        }}
-                                                                    >
-                                                                        {area.name}
-                                                                    </DropdownMenuItem>
-                                                                )
-                                                            )}
+                                                                <DropdownMenuItem
+                                                                    key={area.code}
+                                                                    onSelect={() => {
+                                                                        areaField.handleChange(area.code)
+                                                                    }}
+                                                                >
+                                                                    {area.name}
+                                                                </DropdownMenuItem>
+                                                            ))}
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
                                                 )}
@@ -156,16 +151,17 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                                         </DropdownMenuTrigger>
                                                         <DropdownMenuContent>
                                                             {questions.map((question) => (
-                                                                    <DropdownMenuItem
-                                                                        key={question.key}
-                                                                        onSelect={() => {
-                                                                            questionField.handleChange(question.key)
-                                                                        }}
-                                                                    >
-                                                                        {question.key}
-                                                                    </DropdownMenuItem>
-                                                                )
-                                                            )}
+                                                                <DropdownMenuItem
+                                                                    key={question.key}
+                                                                    onSelect={() => {
+                                                                        questionField.handleChange(
+                                                                            question.key
+                                                                        )
+                                                                    }}
+                                                                >
+                                                                    {question.key}
+                                                                </DropdownMenuItem>
+                                                            ))}
                                                         </DropdownMenuContent>
                                                     </DropdownMenu>
                                                 )}
@@ -175,8 +171,7 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                 )}
                             </form.Field>
                         ))}
-                        <Button type="button" variant="secondary"
-                            onClick={() =>
+                        <Button type="button" variant="secondary" onClick={() =>
                                 field.pushValue({
                                     id: crypto.randomUUID(),
                                     type: "",

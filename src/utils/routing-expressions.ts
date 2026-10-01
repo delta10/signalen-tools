@@ -143,6 +143,48 @@ export function getRoutingExpressionQuestionsAnswers(routingExpression: RoutingE
     )
 }
 
+{/* Helper function to  */}
+export function getRoutingExpressionQuestionConditions(
+    routingExpression: RoutingExpression,
+    expressions: Expression[],
+    questions: Questions[]
+) {
+    const expression = getExpressionFromRoutingExpression(
+        routingExpression,
+        expressions
+    )
+
+    if (!expression) {
+        return []
+    }
+
+    const matches = expression.code.matchAll(
+        /([A-Za-z0-9_]+)\s*==\s*"([^"]+)"/g
+    )
+
+    const conditions: { key: string; value: string }[] = []
+
+    for (const match of matches) {
+        const questionKey = match[1]
+        const rawAnswer = match[2]
+
+        const question = questions.find(
+            (question) => question.key === questionKey
+        )
+
+        if (!question) {
+            continue
+        }
+
+        conditions.push({
+            key: questionKey,
+            value: rawAnswer,
+        })
+    }
+
+    return conditions
+}
+
 {/* Helper function to identify possible questions in string */}
 function hasQuestion(expressionCode: string): boolean {
     const comparisonRegex =
