@@ -1,25 +1,18 @@
 import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
 import { Button } from "@/components/ui/button.tsx"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
-import type { ConditionType } from "@/types/routing-expressions-create.ts"
 import { useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/services/categories.tsx"
 import { Skeleton } from "@/components/ui/skeleton.tsx"
 import { Link } from "@tanstack/react-router"
 import { getQuestions } from "@/services/questions-answers.tsx"
 import { getAreas } from "@/services/areas.tsx"
+import {ConditionGroup} from "@/components/expressions/condition-group.tsx";
+import type {ConditionType} from "@/types/routing-expressions-create.ts";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 
 type ConditionsProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
 }
-
-const conditionTypeLabels: Record<ConditionType, string> = {
-    category: "Categorie",
-    area: "Gebied",
-    question: "Aanvullende vraag",
-}
-
-const conditionTypes = Object.entries(conditionTypeLabels) as [ConditionType, string][]
 
 export function ConditionsBuilder({ form }: ConditionsProps) {
     const {data: categories = [], isLoading: isCategoriesLoading, error: categoriesError,} = useQuery({
@@ -66,125 +59,111 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
     return (
         <>
             <h2>Wanneer...</h2>
-            <form.Field name="conditions" mode="array">
-                {(field) => (
-                    <div className="flex flex-col gap-4">
-                        {field.state.value.map((condition, index) => (
-                            <form.Field key={condition.id} name={`conditions[${index}].type`}>
-                                {(typeField) => (
-                                    <>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button type="button" variant="outline">
-                                                    {typeField.state.value
-                                                        ? conditionTypeLabels[typeField.state.value]
-                                                        : "Selecteer een type"}
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                {conditionTypes.map(([value, label]) => (
-                                                    <DropdownMenuItem key={value}
-                                                        onSelect={() => typeField.handleChange(value)}>
-                                                        {label}
-                                                    </DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                        {typeField.state.value === "category" && (
-                                            <form.Field name={`conditions[${index}].categories`}>
-                                                {(categoryField) => (
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button type="button" variant="outline">
-                                                                {categoryField.state.value || "Selecteer categorie"}
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent>
-                                                            {categories.map((category) => (
-                                                                <DropdownMenuItem
-                                                                    key={`${category.parent}-${category.slug}`}
-                                                                    onSelect={() => {
-                                                                        categoryField.handleChange(category.name)
-                                                                    }}
-                                                                >
-                                                                    {category.name}
-                                                                </DropdownMenuItem>
-                                                            ))}
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
-                                                )}
-                                            </form.Field>
-                                        )}
-                                        {typeField.state.value === "area" && (
-                                            <form.Field name={`conditions[${index}].areas`}>
-                                                {(areaField) => (
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button type="button" variant="outline">
-                                                                {areaField.state.value || "Selecteer gebied"}
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent>
-                                                            {areas.map((area) => (
-                                                                <DropdownMenuItem
-                                                                    key={area.code}
-                                                                    onSelect={() => {
-                                                                        areaField.handleChange(area.code)
-                                                                    }}
-                                                                >
-                                                                    {area.name}
-                                                                </DropdownMenuItem>
-                                                            ))}
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
-                                                )}
-                                            </form.Field>
-                                        )}
-                                        {typeField.state.value === "question" && (
-                                            <form.Field name={`conditions[${index}].questions`}>
-                                                {(questionField) => (
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button type="button" variant="outline">
-                                                                {questionField.state.value || "Selecteer vraag"}
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent>
-                                                            {questions.map((question) => (
-                                                                <DropdownMenuItem
-                                                                    key={question.key}
-                                                                    onSelect={() => {
-                                                                        questionField.handleChange(
-                                                                            question.key
-                                                                        )
-                                                                    }}
-                                                                >
-                                                                    {question.key}
-                                                                </DropdownMenuItem>
-                                                            ))}
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
-                                                )}
-                                            </form.Field>
-                                        )}
-                                    </>
-                                )}
-                            </form.Field>
-                        ))}
-                        <Button type="button" variant="secondary" onClick={() =>
-                                field.pushValue({
+            <form.Field name="conditionGroups" mode="array">
+                {(field) => {
+                    const groups = field.state.value
+
+                    const hasCategoryGroup = groups.some(
+                        (group) => group.type === "category"
+                    )
+
+                    const hasAreaGroup = groups.some(
+                        (group) => group.type === "area"
+                    )
+
+                    const hasQuestionGroup = groups.some(
+                        (group) => group.type === "question"
+                    )
+
+                    const addGroup = (type: ConditionType) => {
+                        field.pushValue({
+                            id: crypto.randomUUID(),
+                            type,
+                            operator: "OR",
+                            conditions: [
+                                {
                                     id: crypto.randomUUID(),
-                                    type: "",
-                                    categories: "",
-                                    areas: "",
-                                    questions: "",
-                                })
-                            }
-                        >
-                            + Voorwaarde toevoegen
-                        </Button>
-                    </div>
-                )}
+                                    value: "",
+                                },
+                            ],
+                            values: [],
+                            question: "",
+                            answer: ""
+                        })
+                    }
+
+                    return (
+                        <>
+                            {groups.map((group, groupIndex) => (
+                                <div key={group.id} className="flex flex-col gap-4">
+                                    {groupIndex > 0 && (
+                                        <form.Field name="conditionOperator">
+                                            {(operatorField) => (
+                                                <div className="flex justify-center">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button type="button" variant="ghost" size="sm">
+                                                                {operatorField.state.value === "AND"
+                                                                    ? "EN"
+                                                                    : "OF"}
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+
+                                                        <DropdownMenuContent>
+                                                            <DropdownMenuItem
+                                                                onSelect={() => operatorField.handleChange("AND")}
+                                                            >
+                                                                EN
+                                                            </DropdownMenuItem>
+
+                                                            <DropdownMenuItem
+                                                                onSelect={() => operatorField.handleChange("OR")}
+                                                            >
+                                                                OF
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </div>
+                                            )}
+                                        </form.Field>
+                                    )}
+
+                                    <ConditionGroup
+                                        form={form}
+                                        group={group}
+                                        groupIndex={groupIndex}
+                                        categories={categories}
+                                        areas={areas}
+                                        questions={questions}
+                                        onRemove={() =>
+                                            field.removeValue(groupIndex)
+                                        }
+                                    />
+                                </div>
+                            ))}
+
+                            <div className="flex gap-2">
+                                {!hasCategoryGroup && (
+                                    <Button type="button" variant="secondary" onClick={() => addGroup("category")}>
+                                        + Categorie
+                                    </Button>
+                                )}
+
+                                {!hasAreaGroup && (
+                                    <Button type="button" variant="secondary" onClick={() => addGroup("area")}>
+                                        + Gebied
+                                    </Button>
+                                )}
+
+                                {!hasQuestionGroup && (
+                                    <Button type="button" variant="secondary" onClick={() => addGroup("question")}>
+                                        + Aanvullende vraag
+                                    </Button>
+                                )}
+                            </div>
+                        </>
+                    )
+                }}
             </form.Field>
         </>
     )
