@@ -8,8 +8,8 @@ export function DestinationNode({ data }: NodeProps) {
     return (
         <>
             <Handle type="target" position={Position.Left}/>
-            <FlowCard title={"Gekozen Routeerregel"}>
-                <p>{result.routingExpression._expression}</p>
+            <FlowCard title={result.routingExpression._department}>
+                <p>Naam: {result.routingExpression._expression}</p>
                 <p>Order: {result.order}</p>
             </FlowCard>
         </>

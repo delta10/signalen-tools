@@ -15,6 +15,7 @@ import {getExpressions} from "@/services/expressions.tsx";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command.tsx";
 import {useState} from "react";
+import {getQuestionLabel} from "@/utils/routing-expressions-create.ts";
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
@@ -194,25 +195,35 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                         {(selectedCategory) => (
                             <form.Field name="question">
                                 {(field) => {
-                                    const relevantQuestions = questions.filter((question) =>
-                                        getQuestionCategorySlugs(question).includes(selectedCategory)
+                                    const relevantQuestions = questions.filter(
+                                        (question) =>
+                                            getQuestionCategorySlugs(question).includes(selectedCategory) &&
+                                            ["radio_input", "checkbox_input"].includes(question.field_type)
                                     )
 
                                     if (relevantQuestions.length === 0) {
                                         return null
                                     }
 
+                                    const selectedQuestion = relevantQuestions.find(
+                                        (question) => question.key === field.state.value
+                                    )
+
                                     return (
                                         <>
                                             <label htmlFor={field.name}>
                                                 Aanvullende vraag:
                                             </label>
+
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button type="button" variant="outline">
-                                                        {field.state.value || "Selecteer een vraag"}
+                                                        {selectedQuestion
+                                                            ? getQuestionLabel(selectedQuestion)
+                                                            : "Selecteer een vraag"}
                                                     </Button>
                                                 </DropdownMenuTrigger>
+
                                                 <DropdownMenuContent>
                                                     {relevantQuestions.map((question) => (
                                                         <DropdownMenuItem
@@ -222,7 +233,7 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                                                 form.setFieldValue("answer", "")
                                                             }}
                                                         >
-                                                            {question.key}
+                                                            {getQuestionLabel(question)}
                                                         </DropdownMenuItem>
                                                     ))}
                                                 </DropdownMenuContent>

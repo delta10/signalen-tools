@@ -89,7 +89,11 @@ export function doesQuestionAnswerMatch(
     expressions: Expression[],
     questions: Questions[],
 ): boolean {
-    const questionConditions = getRoutingExpressionQuestionConditions(routingExpression, expressions, questions)
+    const questionConditions = getRoutingExpressionQuestionConditions(
+        routingExpression,
+        expressions,
+        questions
+    )
 
     if (questionConditions.length === 0) {
         return true
@@ -99,10 +103,21 @@ export function doesQuestionAnswerMatch(
         return false
     }
 
+    const selectedQuestion = questions.find(
+        (question) => question.key === simulationData.question
+    )
+
+    const meta = selectedQuestion
+        ? JSON.parse(selectedQuestion.meta)
+        : null
+
+    const simulationAnswer =
+        meta?.values?.[simulationData.answer] ?? simulationData.answer
+
     return questionConditions.some(
         (condition) =>
             condition.key === simulationData.question &&
-            condition.value === simulationData.answer
+            condition.value === simulationAnswer
     )
 }
 

@@ -1,11 +1,10 @@
 import {Handle, type NodeProps, Position} from "@xyflow/react"
 import { FlowCard } from "./flow-card"
+import type {RoutingExpression} from "@/types/routing-expressions.ts";
 
 type ExpressionNodeData = {
     order: number
-    routingExpression: {
-        _expression: string
-    }
+    routingExpression: RoutingExpression
     matches: boolean
     checks: {
         category: boolean
@@ -21,11 +20,8 @@ export function ExpressionNode({ data }: NodeProps) {
         <>
             <Handle type="target" position={Position.Left}/>
 
-            <FlowCard title={result.routingExpression._expression}>
+            <FlowCard title={`Naam: ${result.routingExpression._expression}`}>
                 <div className="space-y-2">
-                    <div>
-                        Order: {result.order}
-                    </div>
                     <div>
                         Match: {result.matches ? "JA" : "NEE"}
                     </div>
@@ -41,6 +37,12 @@ export function ExpressionNode({ data }: NodeProps) {
                     <div>
                         Vraag/antwoord:{" "}
                         {result.checks.questionAnswer ? "✓" : "✕"}
+                    </div>
+                    <div>
+                        Afdeling: {result.routingExpression._department}
+                    </div>
+                    <div>
+                        Order: {result.order}
                     </div>
                 </div>
             </FlowCard>
