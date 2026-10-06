@@ -37,5 +37,21 @@ export type RoutingExpressionFormData = {
     department: string
 }
 
-export type ConditionType = "category" | "area" | "question"
-export type ConditionOperator = "AND" | "OR"
+export const ConditionTypes = {
+    CATEGORY: "category",
+    AREA: "area",
+    QUESTION: "question",
+} as const
+
+export type ConditionType =
+    typeof ConditionTypes[keyof typeof ConditionTypes]
+
+export type FormConditionType = ConditionType | ""
+
+export const ConditionOperators = {
+    AND: "AND",
+    OR: "OR",
+} as const
+
+export type ConditionOperator =
+    typeof ConditionOperators[keyof typeof ConditionOperators]

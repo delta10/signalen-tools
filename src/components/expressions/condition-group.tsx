@@ -23,6 +23,37 @@ const groupLabels = {
 }
 
 export function ConditionGroup({form, group, groupIndex, categories, areas, questions, onRemove}: ConditionGroupProps) {
+    const renderConditionEditor = () => {
+        switch (group.type) {
+            case "category":
+                return (
+                    <CategoryMultiSelect
+                        form={form}
+                        groupIndex={groupIndex}
+                        categories={categories}
+                    />
+                )
+
+            case "area":
+                return (
+                    <AreaMultiSelect
+                        form={form}
+                        groupIndex={groupIndex}
+                        areas={areas}
+                    />
+                )
+
+            case "question":
+                return (
+                    <QuestionConditionEditor
+                        form={form}
+                        groupIndex={groupIndex}
+                        questions={questions}
+                    />
+                )
+        }
+    }
+
     return (
         <div className="flex flex-col gap-4 rounded-lg border p-4">
             <div className="flex items-center justify-between">
@@ -32,17 +63,7 @@ export function ConditionGroup({form, group, groupIndex, categories, areas, ques
                 </Button>
             </div>
 
-            {group.type === "category" && (
-                <CategoryMultiSelect form={form} groupIndex={groupIndex} categories={categories} />
-            )}
-
-            {group.type === "area" && (
-                <AreaMultiSelect form={form} groupIndex={groupIndex} areas={areas} />
-            )}
-
-            {group.type === "question" && (
-                <QuestionConditionEditor form={form} groupIndex={groupIndex} questions={questions} />
-            )}
+            {renderConditionEditor()}
 
         </div>
     )

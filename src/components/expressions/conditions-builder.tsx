@@ -7,7 +7,7 @@ import { Link } from "@tanstack/react-router"
 import { getQuestions } from "@/services/questions-answers.tsx"
 import { getAreas } from "@/services/areas.tsx"
 import {ConditionGroup} from "@/components/expressions/condition-group.tsx";
-import type {ConditionType} from "@/types/routing-expressions-create.ts";
+import {ConditionOperators, type ConditionType, ConditionTypes} from "@/types/routing-expressions-create.ts";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 
 type ConditionsProps = {
@@ -64,22 +64,22 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                     const groups = field.state.value
 
                     const hasCategoryGroup = groups.some(
-                        (group) => group.type === "category"
+                        (group) => group.type === ConditionTypes.CATEGORY
                     )
 
                     const hasAreaGroup = groups.some(
-                        (group) => group.type === "area"
+                        (group) => group.type === ConditionTypes.AREA
                     )
 
                     const hasQuestionGroup = groups.some(
-                        (group) => group.type === "question"
+                        (group) => group.type === ConditionTypes.QUESTION
                     )
 
                     const addGroup = (type: ConditionType) => {
                         field.pushValue({
                             id: crypto.randomUUID(),
                             type,
-                            operator: "OR",
+                            operator: ConditionOperators.OR,
                             conditions: [
                                 {
                                     id: crypto.randomUUID(),
@@ -88,7 +88,7 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                             ],
                             values: [],
                             question: "",
-                            answer: ""
+                            answer: "",
                         })
                     }
 
@@ -103,7 +103,7 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                                     <DropdownMenu>
                                                         <DropdownMenuTrigger asChild>
                                                             <Button type="button" variant="ghost" size="sm">
-                                                                {operatorField.state.value === "AND"
+                                                                {operatorField.state.value === ConditionOperators.AND
                                                                     ? "EN"
                                                                     : "OF"}
                                                             </Button>
@@ -111,13 +111,17 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
 
                                                         <DropdownMenuContent>
                                                             <DropdownMenuItem
-                                                                onSelect={() => operatorField.handleChange("AND")}
+                                                                onSelect={() =>
+                                                                    operatorField.handleChange(ConditionOperators.AND)
+                                                                }
                                                             >
                                                                 EN
                                                             </DropdownMenuItem>
 
                                                             <DropdownMenuItem
-                                                                onSelect={() => operatorField.handleChange("OR")}
+                                                                onSelect={() =>
+                                                                    operatorField.handleChange(ConditionOperators.OR)
+                                                                }
                                                             >
                                                                 OF
                                                             </DropdownMenuItem>
@@ -144,19 +148,19 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
 
                             <div className="flex gap-2">
                                 {!hasCategoryGroup && (
-                                    <Button type="button" variant="secondary" onClick={() => addGroup("category")}>
+                                    <Button type="button" variant="secondary" onClick={() => addGroup(ConditionTypes.CATEGORY)}>
                                         + Categorie
                                     </Button>
                                 )}
 
                                 {!hasAreaGroup && (
-                                    <Button type="button" variant="secondary" onClick={() => addGroup("area")}>
+                                    <Button type="button" variant="secondary" onClick={() => addGroup(ConditionTypes.AREA)}>
                                         + Gebied
                                     </Button>
                                 )}
 
                                 {!hasQuestionGroup && (
-                                    <Button type="button" variant="secondary" onClick={() => addGroup("question")}>
+                                    <Button type="button" variant="secondary" onClick={() => addGroup(ConditionTypes.QUESTION)}>
                                         + Aanvullende vraag
                                     </Button>
                                 )}

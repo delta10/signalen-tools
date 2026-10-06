@@ -19,9 +19,7 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
                     (group) => group.type === "category"
                 )
 
-                const selectedCategories = categoryGroup?.type === "category"
-                        ? categoryGroup.values
-                        : []
+                const selectedCategories = categoryGroup?.values ?? []
 
                 const relevantQuestions = questions
                     .filter(isSupportedQuestion)
@@ -34,7 +32,7 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
                     )
                 })
 
-                if (selectedCategories.length === 0) {
+                if (!selectedCategories.length) {
                     return (
                         <p className="text-sm text-muted-foreground">
                             Selecteer eerst een categorie.
