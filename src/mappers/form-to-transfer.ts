@@ -10,22 +10,6 @@ export function isSupportedQuestion(question: Question): boolean {
     )
 }
 
-/* Helper function to extract question label from metadata */
-export function getQuestionLabel(question: Question): string {
-    return question.label
-}
-
-/* Helper function to extract possible answers from question.meta */
-export function getQuestionAnswers(question: Question): string[] {
-    return question.answers.map((answer) => answer.label)
-}
-
-/* Helper function to create array of category slugs */
-export function getQuestionCategorySlugs(question: Question): string[] {
-    return question.categorySlugs
-}
-
-
 /* Convert one condition value to expression code based on its group type */
 export function convertConditionValueToExpression(type: ConditionType, value: string,): string {
     switch (type) {
@@ -95,7 +79,6 @@ export function createExpressionFromFormData(formData: RoutingExpressionFormData
         _type: "routing",
     }
 }
-
 
 /* Helper function to create a RoutingExpression from form data */
 export function createRoutingExpressionFromFormData(formData: RoutingExpressionFormData): RoutingExpressionTransfer {

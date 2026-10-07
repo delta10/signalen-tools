@@ -1,7 +1,6 @@
 import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
 import type { Question } from "@/types/domain/reference-data.ts"
-import {getQuestionAnswers, getQuestionLabel, isSupportedQuestion} from "@/utils/routing-expressions-create.ts"
-import { getQuestionCategorySlugs } from "@/utils/routing-expressions-create.ts"
+import {isSupportedQuestion} from "@/mappers/form-to-transfer.ts"
 import { Button } from "@/components/ui/button.tsx"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
 
@@ -24,8 +23,7 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
                 const relevantQuestions = questions
                     .filter(isSupportedQuestion)
                     .filter((question) => {
-                    const questionCategories =
-                        getQuestionCategorySlugs(question)
+                    const questionCategories = question.categorySlugs
 
                     return selectedCategories.some((category) =>
                         questionCategories.includes(category)
@@ -57,7 +55,7 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
                                 )
 
                             const answers = selectedQuestion
-                                ? getQuestionAnswers(selectedQuestion)
+                                ? selectedQuestion.answers.map((answer) => answer.label)
                                 : []
 
                             return (
@@ -66,7 +64,7 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
                                         <DropdownMenuTrigger asChild>
                                             <Button type="button" variant="outline" className="w-84">
                                                 {selectedQuestion
-                                                    ? getQuestionLabel(selectedQuestion)
+                                                    ? selectedQuestion.label
                                                     : "Selecteer vraag"}
                                             </Button>
                                         </DropdownMenuTrigger>
@@ -80,7 +78,7 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
                                                             questionField.handleChange(question.key)
                                                         }
                                                     >
-                                                        {getQuestionLabel(question)}
+                                                        {question.label}
                                                     </DropdownMenuItem>
                                                 )
 

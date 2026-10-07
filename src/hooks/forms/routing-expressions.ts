@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form"
 import type { RoutingExpressionFormData } from "@/types/forms/create-expression.ts"
-import {mapCreateExpressionFormToTransfers} from "@/utils/routing-expressions-create.ts";
+import {mapCreateExpressionFormToTransfers} from "@/mappers/form-to-transfer.ts";
 import {useNavigate} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";

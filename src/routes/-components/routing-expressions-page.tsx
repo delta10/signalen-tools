@@ -9,7 +9,7 @@ import {getExpressions} from "@/services/expressions.tsx";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {mapExpressionsToTableRows} from "@/utils/routing-expressions-mapper.ts";
+import {mapExpressionsToTableRows} from "@/mappers/routing-expressions-table.ts";
 import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";

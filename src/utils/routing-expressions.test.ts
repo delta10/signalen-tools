@@ -1,23 +1,16 @@
 import { describe, expect, it } from "vitest"
-import {getRoutingExpressionAreas, getRoutingExpressionQuestionsAnswers} from "./routing-expressions"
-import {
-    areaExpressionsFixture, areaRoutingExpressionFixture,
-    expressionsFixture,
-    questionsFixture,
-    routingExpressionFixture,
-} from "@/test/fixtures/routing-expressions"
+import {getExpressionAreas, getExpressionQuestionsAnswers,} from "./routing-expressions"
+import {expressionsFixture, questionsFixture} from "@/test/fixtures/routing-expressions.ts";
 
-{/* Tests for extracting question and answer conditions from Routing Expressions */}
-describe("getRoutingExpressionQuestionsAnswers", () => {
+/* Tests for extracting question and answer conditions from Expressions */
+describe("getExpressionQuestionsAnswers", () => {
     it("returns the readable answer for a question condition", () => {
-        const routingExpression = {
-            ...routingExpressionFixture,
-            _expression: "SingleQuestion",
-        }
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "SingleQuestion"
+        )!
 
-        const result = getRoutingExpressionQuestionsAnswers(
-            routingExpression,
-            expressionsFixture,
+        const result = getExpressionQuestionsAnswers(
+            expression,
             questionsFixture
         )
 
@@ -27,14 +20,12 @@ describe("getRoutingExpressionQuestionsAnswers", () => {
     })
 
     it("groups multiple answers for the same question", () => {
-        const routingExpression = {
-            ...routingExpressionFixture,
-            _expression: "MultipleAnswers",
-        }
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "MultipleAnswers"
+        )!
 
-        const result = getRoutingExpressionQuestionsAnswers(
-            routingExpression,
-            expressionsFixture,
+        const result = getExpressionQuestionsAnswers(
+            expression,
             questionsFixture
         )
 
@@ -44,14 +35,12 @@ describe("getRoutingExpressionQuestionsAnswers", () => {
     })
 
     it("ignores comparisons that do not belong to a question", () => {
-        const routingExpression = {
-            ...routingExpressionFixture,
-            _expression: "CategoryOnly",
-        }
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "CategoryOnly"
+        )!
 
-        const result = getRoutingExpressionQuestionsAnswers(
-            routingExpression,
-            expressionsFixture,
+        const result = getExpressionQuestionsAnswers(
+            expression,
             questionsFixture
         )
 
@@ -59,14 +48,12 @@ describe("getRoutingExpressionQuestionsAnswers", () => {
     })
 
     it("recognizes Onderwerp as a question", () => {
-        const routingExpression = {
-            ...routingExpressionFixture,
-            _expression: "SubjectQuestion",
-        }
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "SubjectQuestion"
+        )!
 
-        const result = getRoutingExpressionQuestionsAnswers(
-            routingExpression,
-            expressionsFixture,
+        const result = getExpressionQuestionsAnswers(
+            expression,
             questionsFixture
         )
 
@@ -76,13 +63,14 @@ describe("getRoutingExpressionQuestionsAnswers", () => {
     })
 })
 
-{/* Tests for extracting area information from Routing Expressions */}
-describe("getRoutingExpressionAreas", () => {
+/* Tests for extracting area information from Expressions */
+describe("getExpressionAreas", () => {
     it("extracts an area type and code", () => {
-        const result = getRoutingExpressionAreas(
-            areaRoutingExpressionFixture,
-            areaExpressionsFixture
-        )
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "DistrictArea"
+        )!
+
+        const result = getExpressionAreas(expression)
 
         expect(result).toEqual([
             {
@@ -93,15 +81,11 @@ describe("getRoutingExpressionAreas", () => {
     })
 
     it("supports area types other than district", () => {
-        const routingExpression = {
-            ...areaRoutingExpressionFixture,
-            _expression: "DifferentAreaType",
-        }
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "DifferentAreaType"
+        )!
 
-        const result = getRoutingExpressionAreas(
-            routingExpression,
-            areaExpressionsFixture
-        )
+        const result = getExpressionAreas(expression)
 
         expect(result).toEqual([
             {
@@ -112,15 +96,11 @@ describe("getRoutingExpressionAreas", () => {
     })
 
     it("returns an empty array when no area is used", () => {
-        const routingExpression = {
-            ...areaRoutingExpressionFixture,
-            _expression: "CategoryOnly",
-        }
+        const expression = expressionsFixture.find(
+            (expression) => expression.name === "CategoryOnly"
+        )!
 
-        const result = getRoutingExpressionAreas(
-            routingExpression,
-            areaExpressionsFixture
-        )
+        const result = getExpressionAreas(expression)
 
         expect(result).toEqual([])
     })
