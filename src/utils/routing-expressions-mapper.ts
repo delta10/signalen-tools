@@ -1,46 +1,21 @@
-import type {
-    Area,
-    Department,
-    Expression, Questions,
-    RoutingExpression,
-    RoutingExpressionTableRow
-} from "@/types/routing-expressions.ts";
-import {getDepartmentName, getRoutingExpressionAreaNames, getRoutingExpressionCategories, getRoutingExpressionQuestionsAnswers, getRoutingExpressionTypes} from "@/utils/routing-expressions.ts";
+import type { Expression } from "@/types/domain/routing"
+import type {Area, Question,} from "@/types/domain/reference-data"
+import type { RoutingExpressionTableRow } from "@/types/view-models/table"
+import {getExpressionAreaNames, getExpressionCategories, getExpressionQuestionsAnswers, getExpressionTypes,} from "@/utils/routing-expressions"
 
-export function mapRoutingExpressionsToTableRows(
-    routingExpressions: RoutingExpression[],
+export function mapExpressionsToTableRows(
     expressions: Expression[],
     areas: Area[],
-    questions: Questions[],
-    departments: Department[]
+    questions: Question[]
 ): RoutingExpressionTableRow[] {
-    return routingExpressions.map(
-        (routingExpression) => ({
-            order: routingExpression.order,
-            name: routingExpression._expression,
-            types: getRoutingExpressionTypes(
-                routingExpression,
-                expressions
-            ),
-            categories: getRoutingExpressionCategories(
-                routingExpression,
-                expressions
-            ),
-            areas: getRoutingExpressionAreaNames(
-                routingExpression,
-                expressions,
-                areas
-            ),
-            questionAnswers: getRoutingExpressionQuestionsAnswers(
-                routingExpression,
-                expressions,
-                questions
-            ),
-            department: getDepartmentName(
-                routingExpression._department,
-                departments
-            ),
-            isActive: routingExpression.is_active === "1",
-        })
-    )
+    return expressions.map((expression) => ({
+        order: String(expression.routing?.order ?? ""),
+        name: expression.name,
+        types: getExpressionTypes(expression),
+        categories: getExpressionCategories(expression),
+        areas: getExpressionAreaNames(expression, areas),
+        questionAnswers: getExpressionQuestionsAnswers(expression, questions),
+        department: expression.routing?.department.name ?? "-",
+        isActive: expression.isActive,
+    }))
 }

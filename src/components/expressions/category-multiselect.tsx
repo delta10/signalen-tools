@@ -1,11 +1,11 @@
-import type {Category} from "@/types/routing-expressions-create.ts";
+import type {CategoryTransfer} from "@/types/import-export/expressions.ts";
 import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {ConditionMultiSelect} from "./condition-multiselect";
 
 type CategoryMultiSelectProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
     groupIndex: number
-    categories: Category[]
+    categories: CategoryTransfer[]
 }
 
 export function CategoryMultiSelect({form, groupIndex, categories}: CategoryMultiSelectProps) {

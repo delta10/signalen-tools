@@ -1,18 +1,3 @@
-export type Category = {
-    parent: string,
-    slug: string,
-    name: string,
-    public_name: string,
-    is_public_accessible: string,
-    configuration: string | null,
-    handling: string,
-    handling_message: string,
-    is_active: string,
-    description: string,
-    note: string,
-    icon: string
-}
-
 export type RoutingCondition = {
     id: string
     value: string

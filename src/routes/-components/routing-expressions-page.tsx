@@ -9,12 +9,16 @@ import {getExpressions} from "@/services/expressions.tsx";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {mapRoutingExpressionsToTableRows} from "@/utils/routing-expressions-mapper.ts";
+import {mapExpressionsToTableRows} from "@/utils/routing-expressions-mapper.ts";
 import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";
+import {
+    mapAreaTransfersToDomain,
+    mapDepartmentTransfersToDomain, mapQuestionTransfersToDomain,
+    mapTransfersToDomain
+} from "@/mappers/import-export.ts";
 
-;
 
 export function RoutingExpressionsPage() {
     const [globalFilter, setGlobalFilter] = useState("")
@@ -53,14 +57,21 @@ export function RoutingExpressionsPage() {
         }
     )
 
-    const tableData = mapRoutingExpressionsToTableRows(
+    const domainDepartments = mapDepartmentTransfersToDomain(departments)
+    const domainAreas = mapAreaTransfersToDomain(areas)
+    const domainQuestions = mapQuestionTransfersToDomain(questions)
+
+    const domainExpressions = mapTransfersToDomain(
         routingExpressions,
         expressions,
-        areas,
-        questions,
-        departments
+        domainDepartments
     )
 
+    const tableData = mapExpressionsToTableRows(
+        domainExpressions,
+        domainAreas,
+        domainQuestions
+    )
     const isLoading = isRoutingExpressionsLoading || isDepartmentsLoading || isExpressionsLoading || isQuestionsLoading || isAreasLoading
     const error = routingExpressionsError || departmentsError || expressionsError || questionsError || areasError
 
