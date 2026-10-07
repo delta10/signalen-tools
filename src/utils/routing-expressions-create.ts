@@ -1,53 +1,28 @@
-import type {Expression, Questions, RoutingExpression,} from "@/types/routing-expressions.ts"
-import type {
-    ConditionType,
-    RoutingConditionGroup,
-    RoutingExpressionFormData,
-} from "@/types/routing-expressions-create.ts"
+import type {ConditionType, RoutingConditionGroup, RoutingExpressionFormData,} from "@/types/forms/create-expression.ts"
+import type {Question} from "@/types/domain/reference-data.ts";
+import type {ExpressionTransfer, RoutingExpressionTransfer} from "@/types/import-export/expressions.ts";
 
 /* Helper function to identify radio & checkbox input questions */
-export function isSupportedQuestion(question: Questions): boolean {
+export function isSupportedQuestion(question: Question): boolean {
     return (
-        question.field_type === "radio_input" ||
-        question.field_type === "checkbox_input"
+        question.fieldType === "radio_input" ||
+        question.fieldType === "checkbox_input"
     )
 }
 
 /* Helper function to extract question label from metadata */
-export function getQuestionLabel(question: Questions): string {
-    try {
-        const meta = JSON.parse(question.meta)
-
-        return meta.label ?? question.key
-    } catch {
-        return question.key
-    }
+export function getQuestionLabel(question: Question): string {
+    return question.label
 }
 
 /* Helper function to extract possible answers from question.meta */
-export function getQuestionAnswers(question: Questions): string[] {
-    try {
-        const meta = JSON.parse(question.meta)
-
-        if (!meta.values) {
-            return []
-        }
-
-        return Object.values(meta.values)
-    } catch {
-        return []
-    }
+export function getQuestionAnswers(question: Question): string[] {
+    return question.answers.map((answer) => answer.label)
 }
 
 /* Helper function to create array of category slugs */
-export function getQuestionCategorySlugs(question: Questions): string[] {
-    if (!question.categories) {
-        return []
-    }
-
-    return question.categories
-        .split(",")
-        .map((category) => category.trim().split("|")[0])
+export function getQuestionCategorySlugs(question: Question): string[] {
+    return question.categorySlugs
 }
 
 
@@ -113,7 +88,7 @@ export function convertConditionsToExpression(formData: RoutingExpressionFormDat
 
 
 /* Helper function to create an Expression from form data */
-export function createExpressionFromFormData(formData: RoutingExpressionFormData,): Expression {
+export function createExpressionFromFormData(formData: RoutingExpressionFormData): ExpressionTransfer {
     return {
         name: formData.name,
         code: convertConditionsToExpression(formData),
@@ -123,7 +98,7 @@ export function createExpressionFromFormData(formData: RoutingExpressionFormData
 
 
 /* Helper function to create a RoutingExpression from form data */
-export function createRoutingExpressionFromFormData(formData: RoutingExpressionFormData,): RoutingExpression {
+export function createRoutingExpressionFromFormData(formData: RoutingExpressionFormData): RoutingExpressionTransfer {
     return {
         _expression: formData.name,
         _department: formData.department,
@@ -133,13 +108,15 @@ export function createRoutingExpressionFromFormData(formData: RoutingExpressionF
     }
 }
 
-
 /* Helper function to convert routing expression form data */
-export function convertRoutingExpressionFormData(formData: RoutingExpressionFormData,) {
-    return {
-        expression:
-            createExpressionFromFormData(formData),
+export type CreateExpressionTransferResult = {
+    expression: ExpressionTransfer
+    routingExpression: RoutingExpressionTransfer
+}
 
+export function mapCreateExpressionFormToTransfers(formData: RoutingExpressionFormData): CreateExpressionTransferResult {
+    return {
+        expression: createExpressionFromFormData(formData),
         routingExpression:
             createRoutingExpressionFromFormData(formData),
     }

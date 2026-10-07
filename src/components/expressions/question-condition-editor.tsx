@@ -1,5 +1,5 @@
 import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
-import type { Questions } from "@/types/routing-expressions.ts"
+import type { Question } from "@/types/domain/reference-data.ts"
 import {getQuestionAnswers, getQuestionLabel, isSupportedQuestion} from "@/utils/routing-expressions-create.ts"
 import { getQuestionCategorySlugs } from "@/utils/routing-expressions-create.ts"
 import { Button } from "@/components/ui/button.tsx"
@@ -8,7 +8,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 type QuestionConditionEditorProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
     groupIndex: number
-    questions: Questions[]
+    questions: Question[]
 }
 
 export function QuestionConditionEditor({form, groupIndex, questions}: QuestionConditionEditorProps) {

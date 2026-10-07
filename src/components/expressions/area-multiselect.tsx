@@ -1,11 +1,11 @@
-import type {AreaTransfer} from "@/types/import-export/expressions.ts";
 import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {ConditionMultiSelect} from "./condition-multiselect";
+import type {Area} from "@/types/domain/reference-data.ts";
 
 type AreaMultiSelectProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
     groupIndex: number
-    areas: AreaTransfer[]
+    areas: Area[]
 }
 
 export function AreaMultiSelect({form, groupIndex, areas}: AreaMultiSelectProps) {

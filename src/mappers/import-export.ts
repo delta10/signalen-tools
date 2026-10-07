@@ -1,11 +1,11 @@
 import type {
-    AreaTransfer,
+    AreaTransfer, CategoryTransfer,
     DepartmentTransfer,
     ExpressionTransfer, QuestionsTransfer,
     RoutingExpressionTransfer,
 } from "@/types/import-export/expressions"
 import type { Expression } from "@/types/domain/routing"
-import type {Area, Department, Question} from "@/types/domain/reference-data"
+import type {Area, Category, Department, Question} from "@/types/domain/reference-data"
 
 export function mapTransfersToDomain(
     routingExpressions: RoutingExpressionTransfer[],
@@ -98,4 +98,12 @@ export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[]): Qu
                 .filter(Boolean),
         }
     })
+}
+
+export function mapCategoryTransfersToDomain(categories: CategoryTransfer[]): Category[] {
+    return categories.map((category, index) => ({
+        id: index,
+        slug: category.slug,
+        name: category.name,
+    }))
 }

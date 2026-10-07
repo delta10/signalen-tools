@@ -9,6 +9,11 @@ import { getAreas } from "@/services/areas.tsx"
 import {ConditionGroup} from "@/components/expressions/condition-group.tsx";
 import {ConditionOperators, type ConditionType, ConditionTypes} from "@/types/forms/create-expression.ts";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
+import {
+    mapAreaTransfersToDomain,
+    mapCategoryTransfersToDomain,
+    mapQuestionTransfersToDomain
+} from "@/mappers/import-export.ts";
 
 type ConditionsProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -29,6 +34,10 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
         queryKey: ["areas"],
         queryFn: getAreas,
     })
+
+    const domainCategories = mapCategoryTransfersToDomain(categories)
+    const domainAreas = mapAreaTransfersToDomain(areas)
+    const domainQuestions = mapQuestionTransfersToDomain(questions)
 
     const isLoading = isCategoriesLoading || isQuestionsLoading || isAreasLoading
 
@@ -136,9 +145,9 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
                                         form={form}
                                         group={group}
                                         groupIndex={groupIndex}
-                                        categories={categories}
-                                        areas={areas}
-                                        questions={questions}
+                                        categories={domainCategories}
+                                        areas={domainAreas}
+                                        questions={domainQuestions}
                                         onRemove={() =>
                                             field.removeValue(groupIndex)
                                         }
