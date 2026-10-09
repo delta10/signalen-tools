@@ -1,11 +1,16 @@
 import type {Area, Expression, Questions, RoutingExpression} from "@/types/routing-expressions.ts";
-import {
-    getRoutingExpressionAreas,
-    getRoutingExpressionCategories,
-    getRoutingExpressionQuestionConditions
-} from "@/utils/routing-expressions.ts";
+import {getRoutingExpressionAreas, getRoutingExpressionCategories, getRoutingExpressionQuestionConditions} from "@/utils/routing-expressions.ts";
 import type {Category} from "@/types/routing-expressions-create.ts";
 import type {RoutingSimulationData} from "@/types/routing-simulations.ts";
+
+{/* Generic helper function to check if anything matches */}
+function matchesAny<T>(conditions: T[], predicate: (condition: T) => boolean,): boolean {
+    if (conditions.length === 0) {
+        return true
+    }
+
+    return conditions.some(predicate)
+}
 
 {/* Helper function to split categories from specific question */}
 export function getQuestionCategorySlugs(question: Questions): string[] {
@@ -30,19 +35,14 @@ export function doesCategoryMatch(
         expressions
     )
 
-    if (expressionCategories.length === 0) {
-        return true
-    }
-
     const selectedCategory = categories.find(
         (category) => category.slug === simulationData.category
     )
 
-    if (!selectedCategory) {
-        return false
-    }
-
-    return expressionCategories.includes(selectedCategory.name)
+    return matchesAny(
+        expressionCategories,
+        (category) => category === selectedCategory?.name
+    )
 }
 
 {/* Helper function to match area with simulated signal */}
@@ -57,20 +57,13 @@ export function doesAreaMatch(
         expressions
     )
 
-    if (expressionAreas.length === 0) {
-        return true
-    }
-
     const selectedArea = areas.find(
         (area) => area.name === simulationData.area
     )
 
-    if (!selectedArea) {
-        return false
-    }
-
-    return expressionAreas.some(
-        (area) => area.code === selectedArea.code
+    return matchesAny(
+        expressionAreas,
+        (area) => area.code === selectedArea?.code
     )
 }
 
@@ -81,17 +74,14 @@ export function doesQuestionAnswerMatch(
     expressions: Expression[],
     questions: Questions[],
 ): boolean {
-    const questionConditions = getRoutingExpressionQuestionConditions(routingExpression, expressions, questions)
+    const questionConditions = getRoutingExpressionQuestionConditions(
+        routingExpression,
+        expressions,
+        questions
+    )
 
-    if (questionConditions.length === 0) {
-        return true
-    }
-
-    if (!simulationData.question || !simulationData.answer) {
-        return false
-    }
-
-    return questionConditions.some(
+    return matchesAny(
+        questionConditions,
         (condition) =>
             condition.key === simulationData.question &&
             condition.value === simulationData.answer
