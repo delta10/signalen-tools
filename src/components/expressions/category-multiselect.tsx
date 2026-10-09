@@ -15,7 +15,7 @@ export function CategoryMultiSelect({form, groupIndex, categories}: CategoryMult
             groupIndex={groupIndex}
             items={categories.map((category) => ({
                 key: `${category.parent}-${category.slug}`,
-                value: category.slug,
+                value: category.name,
                 label: category.name
             }))}
             placeholder="Selecteer categorieën"

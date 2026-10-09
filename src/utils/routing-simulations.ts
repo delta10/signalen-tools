@@ -39,9 +39,13 @@ export function doesCategoryMatch(
         (category) => category.slug === simulationData.category
     )
 
+    console.log("Simulatiecategorie:", simulationData.category)
+    console.log("Geselecteerde categorie:", selectedCategory)
+    console.log("Expression categorieën:", expressionCategories)
+
     return matchesAny(
         expressionCategories,
-        (category) => category === selectedCategory?.slug
+        (category) => category === selectedCategory?.name
     )
 }
 
@@ -63,7 +67,7 @@ export function doesAreaMatch(
 
     return matchesAny(
         expressionAreas,
-        (area) => area.code === selectedArea?.name
+        (area) => area.code === selectedArea?.code
     )
 }
 
