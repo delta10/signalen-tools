@@ -1,27 +1,15 @@
 import {Handle, type NodeProps, Position} from "@xyflow/react"
 import { FlowCard } from "./flow-card"
-
-type ExpressionNodeData = {
-    order: number
-    routingExpression: {
-        _expression: string
-    }
-    matches: boolean
-    checks: {
-        category: boolean
-        area: boolean
-        questionAnswer: boolean
-    }
-}
+import type {SimulationResult} from "@/types/routing-simulations.ts";
 
 export function ExpressionNode({ data }: NodeProps) {
-    const result = data as ExpressionNodeData
+    const result = data as SimulationResult
 
     return (
         <>
             <Handle type="target" position={Position.Left}/>
 
-            <FlowCard title={result.routingExpression._expression}>
+            <FlowCard title={result.expression.name}>
                 <div className="space-y-2">
                     <div>
                         Order: {result.order}

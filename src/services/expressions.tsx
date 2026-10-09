@@ -5,8 +5,5 @@ export async function getExpressions(): Promise<ExpressionTransfer[]> {
     const newExpressions: ExpressionTransfer[] =
         JSON.parse(localStorage.getItem("newExpressions") ?? "[]")
 
-    return [
-        ...expressions,
-        ...newExpressions,
-    ]
+    return [...expressions, ...newExpressions]
 }

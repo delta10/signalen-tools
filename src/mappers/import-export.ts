@@ -13,7 +13,7 @@ export function mapTransfersToDomain(
     departments: Department[]
 ): Expression[] {
     return routingExpressions
-        .map<Expression | null>((routingExpression) => {
+        .map<Expression | null>((routingExpression, index) => {
             const expression = expressions.find(
                 (expression) =>
                     expression.name === routingExpression._expression
@@ -29,7 +29,7 @@ export function mapTransfersToDomain(
             )
 
             return {
-                id: 0,
+                id: index + 1,
                 name: expression.name,
                 code: expression.code,
                 type: expression._type,
@@ -94,7 +94,7 @@ export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[]): Qu
             ),
             categorySlugs: question.categories
                 .split(",")
-                .map((category) => category.trim())
+                .map((category) => category.trim().split("|")[0])
                 .filter(Boolean),
         }
     })

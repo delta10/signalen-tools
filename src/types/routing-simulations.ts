@@ -1,4 +1,4 @@
-import type {RoutingExpression} from "@/types/routing-expressions.ts";
+import type { Expression } from "@/types/domain/routing"
 
 export type RoutingSimulationFormData = {
     category: string
@@ -7,12 +7,7 @@ export type RoutingSimulationFormData = {
     answer: string
 }
 
-export type RoutingSimulationData = {
-    category: string
-    area: string
-    question: string
-    answer: string
-}
+export type RoutingSimulationData = RoutingSimulationFormData
 
 export type SimulationFormProps = {
     onSimulationComplete: (
@@ -23,7 +18,7 @@ export type SimulationFormProps = {
 }
 
 export type SimulationResult = {
-    routingExpression: RoutingExpression
+    expression: Expression
     order: number
     matches: boolean
     checks: {
