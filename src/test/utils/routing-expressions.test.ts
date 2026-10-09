@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import {getExpressionAreas, getExpressionQuestionsAnswers,} from "./routing-expressions"
+import {getExpressionAreas, getExpressionQuestionsAnswers,} from "@/utils/routing-expressions.ts"
 import {expressionsFixture, questionsFixture} from "@/test/fixtures/routing-expressions.ts";
 
 /* Tests for extracting question and answer conditions from Expressions */
