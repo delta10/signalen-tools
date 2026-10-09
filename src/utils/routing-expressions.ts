@@ -46,7 +46,7 @@ export function getExpressionAreas(expression: Expression): RoutingArea[] {
     const matches = [
         ...expression.code.matchAll(
             /areas\.\s*"([^"]+)"\.\s*"([^"]+)"/g
-        ),
+        )
     ]
 
     return matches.map((match) => ({
@@ -120,4 +120,23 @@ function hasQuestion(expressionCode: string): boolean {
     return comparisons.some(
         (match) => match[1] !== "sub"
     )
+}
+
+/* Extract question conditions from an Expression for simulation */
+export function getExpressionQuestionConditions(
+    expression: Expression,
+    questions: Question[],
+): { key: string; value: string }[] {
+    const matches = expression.code.matchAll(
+        /([A-Za-z0-9_]+)\s*==\s*"([^"]+)"/g
+    )
+
+    return [...matches]
+        .filter((match) =>
+            questions.some((question) => question.key === match[1])
+        )
+        .map((match) => ({
+            key: match[1],
+            value: match[2],
+        }))
 }
