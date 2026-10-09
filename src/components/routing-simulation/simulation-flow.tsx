@@ -43,7 +43,7 @@ export function RoutingSimulationFlow({results, report, selectedRoutingExpressio
     }
 
     const expressionNodes = visibleResults.map((result, index) => ({
-        id: `expression-${result.routingExpression._expression}-${result.order}`,
+        id: `expression-${result.expression.id}`,
         type: "expression",
         position: {
             x: 340,
@@ -84,9 +84,8 @@ export function RoutingSimulationFlow({results, report, selectedRoutingExpressio
 
     const selectedExpressionNode = expressionNodes.find(
         (node) =>
-            node.data.routingExpression._expression ===
-            selectedRoutingExpression?.routingExpression._expression &&
-            node.data.order === selectedRoutingExpression?.order
+            node.data.expression.id ===
+            selectedRoutingExpression?.expression.id
     )
 
     const destinationEdge =

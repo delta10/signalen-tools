@@ -1,6 +1,6 @@
 import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
-import type {Category, RoutingConditionGroup,} from "@/types/routing-expressions-create.ts"
-import type {Area, Questions,} from "@/types/routing-expressions.ts"
+import type {RoutingConditionGroup} from "@/types/forms/create-expression.ts"
+import type {Area, Question, Category} from "@/types/domain/reference-data.ts"
 import { Button } from "@/components/ui/button.tsx"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
 
@@ -11,7 +11,7 @@ type ConditionRowProps = {
     conditionIndex: number
     categories: Category[]
     areas: Area[]
-    questions: Questions[]
+    questions: Question[]
     onRemove: () => void
 }
 
@@ -24,7 +24,7 @@ export function ConditionRow({form, group, groupIndex, conditionIndex, categorie
                 return {
                     placeholder: "Selecteer categorie",
                     options: categories.map((category) => ({
-                        key: `${category.parent}-${category.slug}`,
+                        key: String(category.id),
                         value: category.slug,
                         label: category.name,
                     })),

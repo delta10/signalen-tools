@@ -1,9 +1,10 @@
 import { useForm } from "@tanstack/react-form"
-import type { RoutingExpressionFormData } from "@/types/routing-expressions-create.ts"
-import {convertRoutingExpressionFormData} from "@/utils/routing-expressions-create.ts";
+import type { RoutingExpressionFormData } from "@/types/forms/create-expression.ts"
+import {mapCreateExpressionFormToTransfers} from "@/mappers/form-to-transfer.ts";
 import {useNavigate} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
+import type {ExpressionTransfer, RoutingExpressionTransfer} from "@/types/import-export/expressions.ts";
 
 const defaultValues: RoutingExpressionFormData = {
     name: "",
@@ -21,13 +22,13 @@ export function useRoutingExpressionForm() {
     return useForm({
         defaultValues,
         onSubmit: async ({ value }) => {
-            const result = convertRoutingExpressionFormData(value)
+            const result = mapCreateExpressionFormToTransfers(value)
 
             // Temporary storage
-            const existingExpressions =
+            const existingExpressions: ExpressionTransfer[] =
                 JSON.parse(localStorage.getItem("newExpressions") ?? "[]")
 
-            const existingRoutingExpressions =
+            const existingRoutingExpressions: RoutingExpressionTransfer[] =
                 JSON.parse(localStorage.getItem("newRoutingExpressions") ?? "[]")
 
             localStorage.setItem(

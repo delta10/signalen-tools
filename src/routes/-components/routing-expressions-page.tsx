@@ -2,67 +2,42 @@ import {Button} from "@/components/ui/button.tsx";
 import {Link} from "@tanstack/react-router";
 import { IconPlus } from '@tabler/icons-react';
 import { IconFlask } from '@tabler/icons-react';
-import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
-import {getDepartments} from "@/services/departments.tsx";
-import {getExpressions} from "@/services/expressions.tsx";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
 import {useQuery} from "@tanstack/react-query";
-import {mapRoutingExpressionsToTableRows} from "@/utils/routing-expressions-mapper.ts";
+import {mapExpressionsToTableRows} from "@/mappers/routing-expressions-table.ts";
 import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";
+import {getRoutingDomainExpressions} from "@/services/routing-domain-expressions.ts";
 
-;
 
 export function RoutingExpressionsPage() {
     const [globalFilter, setGlobalFilter] = useState("")
 
-    const { data: routingExpressions = [], isLoading: isRoutingExpressionsLoading, error: routingExpressionsError,} = useQuery(
-        {
-            queryKey: ["routing-expressions"],
-            queryFn: getRoutingExpressions,
-        })
+    const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useQuery({
+        queryKey: ["routing-domain-expressions"],
+        queryFn: getRoutingDomainExpressions,
+    })
 
-    const { data: departments = [], isLoading: isDepartmentsLoading, error: departmentsError} = useQuery(
-        {
-            queryKey: ["departments"],
-            queryFn: getDepartments,
-        }
-    )
+    const {data: areas = [], isLoading: isAreasLoading, error: areasError,} = useQuery({
+        queryKey: ["areas"],
+        queryFn: getAreas,
+    })
 
-    const { data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError} = useQuery(
-        {
-            queryKey: ["expressions"],
-            queryFn: getExpressions,
-        }
-    )
+    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuery({
+        queryKey: ["questions"],
+        queryFn: getQuestions,
+    })
 
-    const { data: questions = [], isLoading: isQuestionsLoading, error: questionsError} = useQuery(
-        {
-            queryKey: ["questions"],
-            queryFn: getQuestions,
-        }
-    )
-
-    const { data: areas = [], isLoading: isAreasLoading, error: areasError} = useQuery(
-        {
-            queryKey: ["areas"],
-            queryFn: getAreas,
-        }
-    )
-
-    const tableData = mapRoutingExpressionsToTableRows(
-        routingExpressions,
+    const tableData = mapExpressionsToTableRows(
         expressions,
         areas,
-        questions,
-        departments
+        questions
     )
-
-    const isLoading = isRoutingExpressionsLoading || isDepartmentsLoading || isExpressionsLoading || isQuestionsLoading || isAreasLoading
-    const error = routingExpressionsError || departmentsError || expressionsError || questionsError || areasError
+    const isLoading = isExpressionsLoading || isQuestionsLoading || isAreasLoading
+    const error = expressionsError || questionsError || areasError
 
     if(isLoading) {
         return(
@@ -86,7 +61,7 @@ export function RoutingExpressionsPage() {
         )
     }
 
-    if (routingExpressions.length === 0) {
+    if (expressions.length === 0) {
         return (
             <div className="h-full flex flex-col">
                 <h1>Routing Expressions</h1>

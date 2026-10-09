@@ -1,6 +1,6 @@
-import type {Category} from "@/types/routing-expressions-create.ts";
 import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {ConditionMultiSelect} from "./condition-multiselect";
+import type {Category} from "@/types/domain/reference-data.ts";
 
 type CategoryMultiSelectProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -14,8 +14,8 @@ export function CategoryMultiSelect({form, groupIndex, categories}: CategoryMult
             form={form}
             groupIndex={groupIndex}
             items={categories.map((category) => ({
-                key: `${category.parent}-${category.slug}`,
-                value: category.name,
+                key: String(category.id),
+                value: category.slug,
                 label: category.name
             }))}
             placeholder="Selecteer categorieën"

@@ -1,6 +1,4 @@
-import type {RoutingType} from "@/utils/routing-expressions.ts";
-
-export type RoutingExpression = {
+export type RoutingExpressionTransfer = {
     _expression: string
     _department: string
     _user: string
@@ -8,13 +6,13 @@ export type RoutingExpression = {
     is_active: string
 }
 
-export type Expression = {
+export type ExpressionTransfer = {
     "name": string,
     "code": string,
     "_type": string
 }
 
-export type Department = {
+export type DepartmentTransfer = {
     "code": string,
     "name": string,
     "is_intern": string,
@@ -22,14 +20,14 @@ export type Department = {
     "categories": string
 }
 
-export type Area = {
+export type AreaTransfer = {
     "name": string,
     "code": string,
     "_type": string,
     "geometry": string,
 }
 
-export type Questions = {
+export type QuestionsTransfer = {
     "key": string,
     "field_type": string,
     "meta": string,
@@ -37,13 +35,17 @@ export type Questions = {
     "categories": string
 }
 
-export type RoutingExpressionTableRow = {
-    order: string
-    name: string
-    types: RoutingType[]
-    categories: string[]
-    areas: string[]
-    questionAnswers: string[]
-    department: string
-    isActive: boolean
+export type CategoryTransfer = {
+    parent: string,
+    slug: string,
+    name: string,
+    public_name: string,
+    is_public_accessible: string,
+    configuration: string | null,
+    handling: string,
+    handling_message: string,
+    is_active: string,
+    description: string,
+    note: string,
+    icon: string
 }

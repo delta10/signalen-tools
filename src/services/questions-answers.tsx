@@ -1,7 +1,7 @@
 import questions from "@/data/Question-2026-09-08.json"
-import type {Questions} from "@/types/routing-expressions.ts";
+import type {Question} from "@/types/domain/reference-data.ts";
+import {mapQuestionTransfersToDomain} from "@/mappers/import-export.ts";
 
-{/* Endpoint(s) can eventually be fetched here */}
-export async function getQuestions(): Promise<Questions[]> {
-    return questions
+export async function getQuestions(): Promise<Question[]> {
+    return mapQuestionTransfersToDomain(questions)
 }
