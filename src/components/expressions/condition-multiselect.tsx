@@ -91,7 +91,7 @@ export function ConditionMultiSelect({form, groupIndex, items, placeholder, sear
                                             const checked = selectedValues.includes(item.value)
 
                                             return (
-                                                <CommandItem key={item.key} value={item.key}
+                                                <CommandItem key={item.key} value={item.label}
                                                     onSelect={() =>
                                                         toggleValue(item.value)
                                                     }

@@ -41,7 +41,7 @@ export function doesCategoryMatch(
 
     return matchesAny(
         expressionCategories,
-        (category) => category === selectedCategory?.name
+        (category) => category === selectedCategory?.slug
     )
 }
 
@@ -63,7 +63,7 @@ export function doesAreaMatch(
 
     return matchesAny(
         expressionAreas,
-        (area) => area.code === selectedArea?.code
+        (area) => area.code === selectedArea?.name
     )
 }
 

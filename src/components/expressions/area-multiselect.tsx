@@ -15,8 +15,8 @@ export function AreaMultiSelect({form, groupIndex, areas}: AreaMultiSelectProps)
             groupIndex={groupIndex}
             items={areas.map((area) => ({
                 key: area.code,
-                value: area.code,
-                label: area.name
+                value: area.name,
+                label: area.name,
             }))}
             placeholder="Selecteer gebieden"
             searchPlaceholder="Zoek gebied..."
