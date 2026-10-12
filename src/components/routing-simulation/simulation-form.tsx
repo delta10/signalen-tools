@@ -1,5 +1,5 @@
 import {Separator} from "@/components/ui/separator.tsx";
-import {useRoutingSimulationForm} from "@/hooks/use-routing-simulation-form.ts";
+import {useRoutingSimulationForm} from "@/hooks/forms/use-routing-simulation-form.ts";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {useQuery} from "@tanstack/react-query";
@@ -10,7 +10,7 @@ import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
 import {getSelectedRoutingExpression, simulateRouting} from "@/utils/routing-simulations.ts";
 import type {SimulationFormProps} from "@/types/routing-simulations.ts";
-import {getRoutingDomainExpressions} from "@/services/routing-domain-expressions.ts";
+import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
@@ -34,11 +34,7 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
             queryFn: getQuestions,
         })
 
-    const { data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useQuery(
-        {
-            queryKey: ["routing-domain-expressions"],
-            queryFn: getRoutingDomainExpressions,
-        })
+    const { data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useExpressions()
 
     const isLoading = isCategoriesLoading || isAreasLoading || isQuestionsLoading || isExpressionsLoading
     const hasError = categoriesError || areasError || questionsError || expressionsError
