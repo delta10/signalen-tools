@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
 import {Link} from "@tanstack/react-router";
-import { IconPlus } from '@tabler/icons-react';
+import {IconPlus} from '@tabler/icons-react';
 import { IconFlask } from '@tabler/icons-react';
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getAreas} from "@/services/areas.tsx";
@@ -10,20 +10,24 @@ import {mapExpressionsToTableRows} from "@/mappers/routing-expressions-table.ts"
 import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";
-import {getRoutingDomainExpressions} from "@/services/routing-domain-expressions.ts";
+import {ExpressionFileActions} from "@/components/expressions/expression-file-actions.tsx";
+import {getDepartments} from "@/services/departments.tsx";
+import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
 
 
 export function RoutingExpressionsPage() {
     const [globalFilter, setGlobalFilter] = useState("")
 
-    const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useQuery({
-        queryKey: ["routing-domain-expressions"],
-        queryFn: getRoutingDomainExpressions,
-    })
+    const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useExpressions()
 
     const {data: areas = [], isLoading: isAreasLoading, error: areasError,} = useQuery({
         queryKey: ["areas"],
         queryFn: getAreas,
+    })
+
+    const {data: departments = [], isLoading: isDepartmentsLoading, error: departmentsError,} = useQuery({
+        queryKey: ["departments"],
+        queryFn: getDepartments,
     })
 
     const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuery({
@@ -36,8 +40,8 @@ export function RoutingExpressionsPage() {
         areas,
         questions
     )
-    const isLoading = isExpressionsLoading || isQuestionsLoading || isAreasLoading
-    const error = expressionsError || questionsError || areasError
+    const isLoading = isExpressionsLoading || isDepartmentsLoading || isQuestionsLoading || isAreasLoading
+    const error = expressionsError || departmentsError || questionsError || areasError
 
     if(isLoading) {
         return(
@@ -67,11 +71,14 @@ export function RoutingExpressionsPage() {
                 <h1>Routing Expressions</h1>
                 <div className="flex flex-col items-center justify-center gap-4 flex-1">
                     <p>Er zijn nog geen routeerregels aangemaakt.</p>
-                    <Button className="rounded-sm" size="lg" asChild>
-                        <Link to="/routing-expressions/create" className="flex items-center gap-1">
-                            <IconPlus data-icon="inline-start" /> Routing Expression Toevoegen
-                        </Link>
-                    </Button>
+                    <div className={"flex justify-center gap-4"}>
+                        <Button className="rounded-sm" size="lg" asChild>
+                            <Link to="/routing-expressions/create" className="flex items-center gap-1">
+                                <IconPlus data-icon="inline-start" /> Routing Expression Toevoegen
+                            </Link>
+                        </Button>
+                        <ExpressionFileActions departments={departments} />
+                    </div>
                 </div>
             </div>
         )
@@ -93,6 +100,7 @@ export function RoutingExpressionsPage() {
                         />
                     </div>
                     <div className={"flex flex-col items-end lg:flex-row lg:justify-end gap-4"}>
+                        <ExpressionFileActions departments={departments} />
                         <Button className={"rounded-sm lg:order-2"} size={"lg"} asChild>
                             <Link to={"/routing-expressions/create"} className={"flex items-center gap-1"}>
                                 <IconPlus data-icon={"inline-start"} /> Routing Expression Toevoegen

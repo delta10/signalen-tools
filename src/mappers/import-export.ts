@@ -7,6 +7,7 @@ import type {
 import type { Expression } from "@/types/domain/routing"
 import type {Area, Category, Department, Question} from "@/types/domain/reference-data"
 
+/* Import: Transfer models → Domain models */
 export function mapTransfersToDomain(
     routingExpressions: RoutingExpressionTransfer[],
     expressions: ExpressionTransfer[],
@@ -49,6 +50,30 @@ export function mapTransfersToDomain(
             (expression): expression is Expression =>
                 expression !== null
         )
+}
+
+/* Export: Domain models → Transfer models */
+export function mapDomainToTransfers(expressions: Expression[]): {
+    expressions: ExpressionTransfer[]
+    routingExpressions: RoutingExpressionTransfer[]
+} {
+    return {
+        expressions: expressions.map((expression) => ({
+            name: expression.name,
+            code: expression.code,
+            _type: expression.type,
+        })),
+
+        routingExpressions: expressions
+            .filter((expression) => expression.routing !== null)
+            .map((expression) => ({
+                _expression: expression.name,
+                _department: expression.routing!.department.code,
+                _user: "",
+                order: String(expression.routing!.order),
+                is_active: expression.isActive ? "1" : "0",
+            })),
+    }
 }
 
 export function mapDepartmentTransfersToDomain(departments: DepartmentTransfer[]): Department[] {
