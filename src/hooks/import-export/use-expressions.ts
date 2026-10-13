@@ -30,7 +30,7 @@ export function useExpressionActions() {
         saveAll([...expressions, expression])
     }
 
-    function remove(id: number) {
+    function remove(id: string) {
         const expressions = expressionRepository.getAll()
 
         saveAll(

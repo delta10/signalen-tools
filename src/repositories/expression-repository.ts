@@ -22,11 +22,11 @@ export const expressionRepository = {
         this.saveAll([...expressions, expression])
     },
 
-    remove(id: number): void {
+    remove(id: string): void {
         const expressions = this.getAll()
 
         this.saveAll(
             expressions.filter((expression) => expression.id !== id)
         )
-    },
+    }
 }

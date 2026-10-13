@@ -6,7 +6,6 @@ import { convertConditionGroupToExpression } from "@/mappers/form-to-transfer.ts
 export function mapCreateExpressionFormToDomain(
     values: RoutingExpressionFormData,
     departments: Department[],
-    expressions: Expression[],
     categories: Category[]
 ): Expression {
     const department = departments.find(
@@ -26,7 +25,7 @@ export function mapCreateExpressionFormToDomain(
         .join(" and ")
 
     return {
-        id: Math.max(0, ...expressions.map((expression) => expression.id)) + 1,
+        id: crypto.randomUUID(),
         name: values.name,
         code,
         type: "routing",

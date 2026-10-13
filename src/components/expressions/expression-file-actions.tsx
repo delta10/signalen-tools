@@ -21,7 +21,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /* Temporary: will be checked/validated by endpoint eventually */
 function isExpressionTransferArray(value: unknown): value is ExpressionTransfer[] {
-    return Array.isArray(value) && value.every(
+    return Array.isArray(value) && value.length > 0 &&  value.every(
         (item) =>
             isRecord(item) &&
             typeof item.name === "string" &&
@@ -32,7 +32,7 @@ function isExpressionTransferArray(value: unknown): value is ExpressionTransfer[
 
 /* Temporary: will be checked/validated by endpoint eventually */
 function isRoutingExpressionTransferArray(value: unknown): value is RoutingExpressionTransfer[] {
-    return Array.isArray(value) && value.every(
+    return Array.isArray(value) && value.length > 0 && value.every(
         (item) =>
             isRecord(item) &&
             typeof item._expression === "string" &&
@@ -56,36 +56,30 @@ export function ExpressionFileActions({ departments }: Props) {
         try {
             const selectedFiles = Array.from(files)
 
-            /* Find files in format 'Expression-{YYYY-MM-DD}.json */
-            const expressionFile = selectedFiles.find(
-                (file) => /^expressions?[-_].*\.json$/i.test(file.name)
-            )
-
-            /* Find files in format 'RoutingExpression-{YYYY-MM-DD}.json */
-            const routingFile = selectedFiles.find(
-                (file) => /^routingexpressions?[-_].*\.json$/i.test(file.name)
-            )
-
-            if (!expressionFile || !routingFile || selectedFiles.length !== 2) {
+            if (selectedFiles.length !== 2) {
                 throw new Error(
                     "Selecteer de 2 JSON bestanden van expressions en RoutingExpressions"
                 )
             }
 
-            const [expressions, routingExpressions] = await Promise.all([
-                readJsonFile<unknown>(expressionFile),
-                readJsonFile<unknown>(routingFile),
-            ])
+            const parsedFiles = await Promise.all(
+                selectedFiles.map((file) => readJsonFile<unknown>(file))
+            )
 
-            if (!isExpressionTransferArray(expressions) || !isRoutingExpressionTransferArray(routingExpressions)) {
+            // Identify files by their content
+            const expressions = parsedFiles.find(isExpressionTransferArray)
+            const routingExpressions = parsedFiles.find(isRoutingExpressionTransferArray)
+
+            if (!expressions || !routingExpressions) {
                 throw new Error("De bestanden hebben niet het juiste JSON-formaat.")
             }
 
             // Prevent losing unmatched routing expressions
-            const names = new Set(expressions.map((expression) => expression.name))
+            const names = new Set(
+                expressions.map((expression) => expression.name)
+            )
 
-            if (
-                routingExpressions.some(
+            if (routingExpressions.some(
                     (routing) => !names.has(routing._expression)
                 )
             ) {
@@ -121,18 +115,10 @@ export function ExpressionFileActions({ departments }: Props) {
         try {
             const expressions = expressionRepository.getAll()
             const transfers = mapDomainToTransfers(expressions)
-
             const date = new Date().toLocaleDateString("sv-SE")
 
-            downloadJsonFile(
-                `Expression-${date}.json`,
-                transfers.expressions
-            )
-
-            downloadJsonFile(
-                `RoutingExpression-${date}.json`,
-                transfers.routingExpressions
-            )
+            downloadJsonFile(`Expression-${date}.json`, transfers.expressions)
+            downloadJsonFile(`RoutingExpression-${date}.json`, transfers.routingExpressions)
 
             toast.success("Expressies succesvol geëxporteerd")
         } catch {
