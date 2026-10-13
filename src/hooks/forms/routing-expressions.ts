@@ -3,7 +3,7 @@ import type { RoutingExpressionFormData } from "@/types/forms/create-expression.
 import {useNavigate} from "@tanstack/react-router";
 import {useQuery} from "@tanstack/react-query";
 import {toast} from "sonner";
-import {useExpressionActions, useExpressions} from "@/hooks/import-export/use-expressions.ts"
+import {useExpressionActions} from "@/hooks/import-export/use-expressions.ts"
 import {getDepartments} from "@/services/departments.tsx";
 import {mapCreateExpressionFormToDomain} from "@/mappers/create-expression.ts";
 import {getCategories} from "@/services/categories.tsx";
@@ -20,7 +20,6 @@ const defaultValues: RoutingExpressionFormData = {
 export function useRoutingExpressionForm() {
     const navigate = useNavigate()
     const { add } = useExpressionActions()
-    const { data: expressions = [] } = useExpressions()
 
     const { data: departments = [] } = useQuery({
         queryKey: ["departments"],
@@ -36,7 +35,7 @@ export function useRoutingExpressionForm() {
         defaultValues,
         onSubmit: async ({ value }) => {
             try {
-                const newExpression = mapCreateExpressionFormToDomain(value, departments, expressions, categories)
+                const newExpression = mapCreateExpressionFormToDomain(value, departments, categories)
                 add(newExpression)
 
                 toast.success("Routing Expression succesvol toegevoegd")

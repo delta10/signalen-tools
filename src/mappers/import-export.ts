@@ -14,7 +14,7 @@ export function mapTransfersToDomain(
     departments: Department[]
 ): Expression[] {
     return routingExpressions
-        .map<Expression | null>((routingExpression, index) => {
+        .map<Expression | null>((routingExpression) => {
             const expression = expressions.find(
                 (expression) =>
                     expression.name === routingExpression._expression
@@ -30,7 +30,7 @@ export function mapTransfersToDomain(
             )
 
             return {
-                id: index + 1,
+                id: crypto.randomUUID(),
                 name: expression.name,
                 code: expression.code,
                 type: expression._type,

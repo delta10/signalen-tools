@@ -39,7 +39,7 @@ export const questionsFixture: Question[] = [
 
 export const expressionsFixture: Expression[] = [
     {
-        id: 1,
+        id: "1",
         name: "SingleQuestion",
         code: 'Textielcontainer_type_melding == "De textielcontainer is beschadigd"',
         type: "routing",
@@ -47,7 +47,7 @@ export const expressionsFixture: Expression[] = [
         routing: null,
     },
     {
-        id: 2,
+        id: "2",
         name: "MultipleAnswers",
         code:
             'Textielcontainer_type_melding == "De textielcontainer is beschadigd" or ' +
@@ -57,7 +57,7 @@ export const expressionsFixture: Expression[] = [
         routing: null,
     },
     {
-        id: 3,
+        id: "3",
         name: "CategoryOnly",
         code: 'sub == "Textielcontainer"',
         type: "routing",
@@ -65,7 +65,7 @@ export const expressionsFixture: Expression[] = [
         routing: null,
     },
     {
-        id: 4,
+        id: "4",
         name: "SubjectQuestion",
         code: 'Onderwerp == "De textielcontainer is beschadigd"',
         type: "routing",
@@ -73,7 +73,7 @@ export const expressionsFixture: Expression[] = [
         routing: null,
     },
     {
-        id: 5,
+        id: "5",
         name: "DistrictArea",
         code: 'location in areas."district"."WK199101"',
         type: "routing",
@@ -81,7 +81,7 @@ export const expressionsFixture: Expression[] = [
         routing: null,
     },
     {
-        id: 6,
+        id: "6",
         name: "DifferentAreaType",
         code: 'location in areas."neighbourhood"."BU19910101"',
         type: "routing",
