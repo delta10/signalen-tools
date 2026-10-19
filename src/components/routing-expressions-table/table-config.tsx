@@ -8,7 +8,7 @@ import {
     type ReactTable,
     rowSortingFeature,
     createSortedRowModel,
-    sortFns,
+    sortFns, createPaginatedRowModel, rowPaginationFeature,
 } from "@tanstack/react-table"
 import type { RoutingExpressionTableRow } from "@/types/routing-expressions"
 
@@ -17,8 +17,10 @@ export const features = tableFeatures({
     globalFilteringFeature,
     columnVisibilityFeature,
     rowSortingFeature,
+    rowPaginationFeature,
     filteredRowModel: createFilteredRowModel(),
     sortedRowModel: createSortedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
     filterFns: {
         includesString: filterFn_includesString,
     },

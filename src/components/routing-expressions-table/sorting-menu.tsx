@@ -9,7 +9,6 @@ type SortingMenuProps = {
 
 export function SortingMenu({ table }: SortingMenuProps) {
     const sorting = table.state.sorting
-
     const currentSort = sorting?.[0]
 
     const isSelected = (id: string, desc: boolean) =>
@@ -22,7 +21,6 @@ export function SortingMenu({ table }: SortingMenuProps) {
                     <IconArrowsSort />
                 </Button>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent align="end" className="w-64">
                 <DropdownMenuItem
                     disabled={isSelected("name", false)}
@@ -32,7 +30,6 @@ export function SortingMenu({ table }: SortingMenuProps) {
                 >
                     Naam: A–Z
                 </DropdownMenuItem>
-
                 <DropdownMenuItem
                     disabled={isSelected("name", true)}
                     onSelect={() =>
@@ -41,7 +38,6 @@ export function SortingMenu({ table }: SortingMenuProps) {
                 >
                     Naam: Z–A
                 </DropdownMenuItem>
-
                 <DropdownMenuItem
                     disabled={isSelected("order", false)}
                     onSelect={() =>
@@ -50,7 +46,6 @@ export function SortingMenu({ table }: SortingMenuProps) {
                 >
                     Prioriteit: hoog naar laag
                 </DropdownMenuItem>
-
                 <DropdownMenuItem
                     disabled={isSelected("order", true)}
                     onSelect={() =>

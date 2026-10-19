@@ -13,7 +13,7 @@ import {mapRoutingExpressionsToTableRows} from "@/utils/routing-expressions-mapp
 import {RoutingExpressionsTable} from "@/components/routing-expressions-table/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useEffect, useMemo, useState} from "react";
-import { useTable } from "@tanstack/react-table"
+import {type PaginationState, useTable} from "@tanstack/react-table"
 import { getColumns } from "@/components/routing-expressions-table/routing-expressions-columns"
 import { features } from "@/components/routing-expressions-table/table-config"
 import { ColumnVisibilityMenu } from "@/components/routing-expressions-table/column-visibility-menu"
@@ -21,6 +21,10 @@ import type { ColumnVisibilityState, SortingState } from "@tanstack/react-table"
 import { SortingMenu } from "@/components/routing-expressions-table/sorting-menu"
 
 export function RoutingExpressionsPage() {
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 8,
+    })
     const [sorting, setSorting] = useState<SortingState>([{ id: "order", desc: false }])
     const [globalFilter, setGlobalFilter] = useState("")
     const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(() => {
@@ -70,12 +74,21 @@ export function RoutingExpressionsPage() {
         }
     )
 
-    const tableData = mapRoutingExpressionsToTableRows(
-        routingExpressions,
-        expressions,
-        areas,
-        questions,
-        departments
+    const tableData = useMemo(() =>
+            mapRoutingExpressionsToTableRows(
+                routingExpressions,
+                expressions,
+                areas,
+                questions,
+                departments
+            ),
+        [
+            routingExpressions,
+            expressions,
+            areas,
+            questions,
+            departments,
+        ]
     )
 
     const columns = useMemo(() => getColumns(globalFilter),
@@ -93,10 +106,14 @@ export function RoutingExpressionsPage() {
             globalFilter,
             columnVisibility,
             sorting,
+            pagination
         },
         onGlobalFilterChange: setGlobalFilter,
         onColumnVisibilityChange: setColumnVisibility,
         onSortingChange: setSorting,
+        onPaginationChange: setPagination,
+
+        autoResetPageIndex: true,
     })
 
     const isLoading = isRoutingExpressionsLoading || isDepartmentsLoading || isExpressionsLoading || isQuestionsLoading || isAreasLoading
