@@ -12,10 +12,12 @@ export function getColumns(globalFilter: string): ColumnDef<typeof features, Rou
         {
             accessorKey: "order",
             header: "Order",
+            sortFn: "basic",
         },
         {
             accessorKey: "name",
             header: "Naam",
+            sortFn: "text",
             cell: ({ row }) => (
                 <HighlightText
                     text={row.original.name}

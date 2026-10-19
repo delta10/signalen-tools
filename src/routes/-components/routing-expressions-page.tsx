@@ -17,9 +17,11 @@ import { useTable } from "@tanstack/react-table"
 import { getColumns } from "@/components/routing-expressions-table/routing-expressions-columns"
 import { features } from "@/components/routing-expressions-table/table-config"
 import { ColumnVisibilityMenu } from "@/components/routing-expressions-table/column-visibility-menu"
-import type { ColumnVisibilityState } from "@tanstack/react-table"
+import type { ColumnVisibilityState, SortingState } from "@tanstack/react-table"
+import { SortingMenu } from "@/components/routing-expressions-table/sorting-menu"
 
 export function RoutingExpressionsPage() {
+    const [sorting, setSorting] = useState<SortingState>([{ id: "order", desc: false }])
     const [globalFilter, setGlobalFilter] = useState("")
     const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(() => {
         const stored = localStorage.getItem("routing-expressions-column-visibility")
@@ -90,9 +92,11 @@ export function RoutingExpressionsPage() {
         state: {
             globalFilter,
             columnVisibility,
+            sorting,
         },
         onGlobalFilterChange: setGlobalFilter,
         onColumnVisibilityChange: setColumnVisibility,
+        onSortingChange: setSorting,
     })
 
     const isLoading = isRoutingExpressionsLoading || isDepartmentsLoading || isExpressionsLoading || isQuestionsLoading || isAreasLoading
@@ -151,6 +155,7 @@ export function RoutingExpressionsPage() {
                             }}
                         />
 
+                        <SortingMenu table={table} />
                         <ColumnVisibilityMenu table={table} onReset={() => setColumnVisibility({})} />
                     </div>
                     <div className={"flex flex-col items-end lg:flex-row lg:justify-end gap-4"}>
