@@ -1,29 +1,23 @@
-import {Table} from "@/components/ui/table.tsx"
-import {TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
-import type {RoutingExpressionTableRow} from "@/types/routing-expressions.ts";
-import {Badge} from "@/components/ui/badge.tsx";
+import {HighlightText} from "@/components/ui/highlight-text.tsx";
 import {routingTypeLabels} from "@/utils/routing-expressions.ts";
+import {Badge} from "@/components/ui/badge.tsx";
 import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
 import {IconCheck, IconX} from "@tabler/icons-react";
-import {type ColumnDef, columnFilteringFeature} from "@tanstack/react-table"
-import {tableFeatures, useTable, createFilteredRowModel, filterFn_includesString, globalFilteringFeature,} from "@tanstack/react-table"
-import {HighlightText} from "@/components/ui/highlight-text.tsx";
+import type {ColumnDef} from "@tanstack/react-table";
+import type {features} from "@/components/routing-expressions-table/table-config.tsx";
+import type {RoutingExpressionTableRow} from "@/types/routing-expressions.ts";
 
-type RoutingExpressionsTableProps = {
-    tableData: RoutingExpressionTableRow[],
-    globalFilter: string,
-    onGlobalFilterChange: (value: string) => void
-}
-
-function getColumns(globalFilter: string): ColumnDef<typeof features, RoutingExpressionTableRow>[] {
+export function getColumns(globalFilter: string): ColumnDef<typeof features, RoutingExpressionTableRow>[] {
     return [
         {
             accessorKey: "order",
             header: "Order",
+            sortFn: "basic",
         },
         {
             accessorKey: "name",
             header: "Naam",
+            sortFn: "text",
             cell: ({ row }) => (
                 <HighlightText
                     text={row.original.name}
@@ -122,62 +116,4 @@ function getColumns(globalFilter: string): ColumnDef<typeof features, RoutingExp
             ),
         },
     ]
-}
-
-const features = tableFeatures({
-    columnFilteringFeature,
-    globalFilteringFeature,
-    filteredRowModel: createFilteredRowModel(),
-    filterFns: {
-        includesString: filterFn_includesString
-    }
-})
-
-export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange }: RoutingExpressionsTableProps ) {
-    const columns = getColumns(globalFilter)
-    const table = useTable({features, data: tableData, columns, globalFilterFn: "includesString", state: {globalFilter}, onGlobalFilterChange})
-    const filteredRows = table.getRowModel().rows
-
-    if(globalFilter && filteredRows.length === 0) {
-        return(
-            <div className="flex flex-col items-center justify-center gap-2 text-center">
-                <p className="font-medium">
-                    Geen resultaten gevonden
-                </p>
-                <p className="text-sm text-muted-foreground">
-                    Er zijn geen routing expressions die overeenkomen met "{globalFilter}".
-                </p>
-            </div>
-        )
-    }
-
-    return(
-        <>
-            <Table className={"bg-muted"}>
-                <TableCaption>Routing Expressions</TableCaption>
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <TableHead key={header.id}>
-                                    <table.FlexRender header={header} />
-                                </TableHead>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
-                            {row.getAllCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                    <table.FlexRender cell={cell} />
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </>
-    )
 }

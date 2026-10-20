@@ -10,14 +10,35 @@ import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {mapRoutingExpressionsToTableRows} from "@/utils/routing-expressions-mapper.ts";
-import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
+import {RoutingExpressionsTable} from "@/components/routing-expressions-table/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {useState} from "react";
-
-;
+import {useEffect, useMemo, useState} from "react";
+import {type PaginationState, useTable} from "@tanstack/react-table"
+import { getColumns } from "@/components/routing-expressions-table/routing-expressions-columns"
+import { features } from "@/components/routing-expressions-table/table-config"
+import { ColumnVisibilityMenu } from "@/components/routing-expressions-table/column-visibility-menu"
+import type { ColumnVisibilityState, SortingState } from "@tanstack/react-table"
+import { SortingMenu } from "@/components/routing-expressions-table/sorting-menu"
 
 export function RoutingExpressionsPage() {
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 8,
+    })
+    const [sorting, setSorting] = useState<SortingState>([{ id: "order", desc: false }])
     const [globalFilter, setGlobalFilter] = useState("")
+    const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(() => {
+        const stored = localStorage.getItem("routing-expressions-column-visibility")
+        return stored ? JSON.parse(stored) : {}
+    })
+
+    /* Save selected filters in localstorage */
+    useEffect(() => {
+        localStorage.setItem(
+            "routing-expressions-column-visibility",
+            JSON.stringify(columnVisibility)
+        )
+    }, [columnVisibility])
 
     const { data: routingExpressions = [], isLoading: isRoutingExpressionsLoading, error: routingExpressionsError,} = useQuery(
         {
@@ -53,13 +74,47 @@ export function RoutingExpressionsPage() {
         }
     )
 
-    const tableData = mapRoutingExpressionsToTableRows(
-        routingExpressions,
-        expressions,
-        areas,
-        questions,
-        departments
+    const tableData = useMemo(() =>
+            mapRoutingExpressionsToTableRows(
+                routingExpressions,
+                expressions,
+                areas,
+                questions,
+                departments
+            ),
+        [
+            routingExpressions,
+            expressions,
+            areas,
+            questions,
+            departments,
+        ]
     )
+
+    const columns = useMemo(() => getColumns(globalFilter),
+        [globalFilter]
+    )
+
+    const table = useTable({
+        features,
+        data: tableData,
+        columns,
+        globalFilterFn: "includesString",
+        getColumnCanGlobalFilter: (column) =>
+            columnVisibility[column.id] !== false,
+        state: {
+            globalFilter,
+            columnVisibility,
+            sorting,
+            pagination
+        },
+        onGlobalFilterChange: setGlobalFilter,
+        onColumnVisibilityChange: setColumnVisibility,
+        onSortingChange: setSorting,
+        onPaginationChange: setPagination,
+
+        autoResetPageIndex: true,
+    })
 
     const isLoading = isRoutingExpressionsLoading || isDepartmentsLoading || isExpressionsLoading || isQuestionsLoading || isAreasLoading
     const error = routingExpressionsError || departmentsError || expressionsError || questionsError || areasError
@@ -107,15 +162,18 @@ export function RoutingExpressionsPage() {
             <div>
                 <h1>Routing Expressions</h1>
                 <div className={"flex justify-between items-center mt-4"}>
-                    <div>
+                    <div className="flex items-center gap-2">
                         <Input
-                            className={"w-full"}
-                            placeholder={"Zoeken..."}
+                            className="w-64"
+                            placeholder="Zoeken..."
                             value={globalFilter}
                             onChange={(event) => {
                                 setGlobalFilter(event.target.value)
                             }}
                         />
+
+                        <SortingMenu table={table} />
+                        <ColumnVisibilityMenu table={table} onReset={() => setColumnVisibility({})} />
                     </div>
                     <div className={"flex flex-col items-end lg:flex-row lg:justify-end gap-4"}>
                         <Button className={"rounded-sm lg:order-2"} size={"lg"} asChild>
@@ -132,11 +190,7 @@ export function RoutingExpressionsPage() {
                 </div>
             </div>
             <div className={"py-6"}>
-                <RoutingExpressionsTable
-                    tableData={tableData}
-                    globalFilter={globalFilter}
-                    onGlobalFilterChange={setGlobalFilter}
-                />
+                <RoutingExpressionsTable table={table} />
             </div>
         </div>
     )
