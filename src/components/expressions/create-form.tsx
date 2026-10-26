@@ -2,14 +2,14 @@ import {Button} from "@/components/ui/button.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
 import {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {GeneralFields} from "@/components/expressions/general-fields.tsx";
-import {ConditionsBuilder} from "@/components/expressions/conditions-builder.tsx";
 import {DestinationsField} from "@/components/expressions/destinations-field.tsx";
+import {RoutingQueryBuilder} from "@/components/expressions/query-builder.tsx";
 
 export function CreateForm() {
     const form = useRoutingExpressionForm()
 
     return (
-        <form className={"flex flex-col justify-start items-start gap-2"}
+        <form className={"flex w-full min-w-0 flex-col items-start gap-2"}
             onSubmit={(e) => {
             e.preventDefault()
             form.handleSubmit()
@@ -18,7 +18,9 @@ export function CreateForm() {
 
             <Separator className={"my-4"} />
 
-            <ConditionsBuilder form={form} />
+            <div className="w-full min-w-0">
+                <RoutingQueryBuilder form={form} />
+            </div>
 
             <Separator className={"my-4"} />
 
