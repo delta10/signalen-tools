@@ -13,6 +13,17 @@ export type RoutingConditionGroup = {
     answer: string
 }
 
+export type ConditionsFormValue = {
+    combinator: string
+    rules: unknown[]
+}
+
+export type CategoryRuleValue = {
+    category: string
+    question: string
+    answer: string
+}
+
 export type RoutingExpressionFormData = {
     name: string
     order: number
@@ -20,6 +31,7 @@ export type RoutingExpressionFormData = {
     conditionOperator: ConditionOperator
     conditionGroups: RoutingConditionGroup[]
     department: string
+    conditions: ConditionsFormValue
 }
 
 export const ConditionTypes = {

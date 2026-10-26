@@ -1,4 +1,5 @@
 import {CreateForm} from "@/components/expressions/create-form.tsx";
+import {QueryBuilder} from "react-querybuilder";
 
 export function RoutingExpressionsCreatePage() {
     return(
@@ -18,6 +19,7 @@ export function RoutingExpressionsCreatePage() {
                     />
                 </div>
             </div>
+            <QueryBuilder />
         </>
     )
 }
