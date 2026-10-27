@@ -1,9 +1,9 @@
 import {RuleGroupBodyComponents, useRuleGroup, type RuleGroupProps,} from "react-querybuilder"
 import {IconDots, IconGitBranch, IconPlus, IconTrash,} from "@tabler/icons-react"
-import {Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu"
+import {Card, CardContent} from "@/components/ui/card.tsx"
+import { Button } from "@/components/ui/button.tsx"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select.tsx"
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
 
 export function RoutingGroupCard(props: RuleGroupProps) {
     const group = useRuleGroup(props)
@@ -13,19 +13,12 @@ export function RoutingGroupCard(props: RuleGroupProps) {
 
     return (
         <Card className="min-w-0 gap-4 p-4">
-            {isRoot && (
-                <CardHeader className="px-0">
-                    <CardTitle>
-                        Wanneer geldt deze routering?
-                    </CardTitle>
-                </CardHeader>
-            )}
             <CardContent className="min-w-0 space-y-4 px-0">
 
                 {/* Group combinator */}
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm">
-                        De melding voldoet aan
+                    <span className="text-sm font-medium">
+                        Voorwaarden combineren:
                     </span>
                     <Select
                         value={combinator}
@@ -37,14 +30,13 @@ export function RoutingGroupCard(props: RuleGroupProps) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="and">
-                                Alle voorwaarden
+                                Alles moet kloppen (EN)
                             </SelectItem>
                             <SelectItem value="or">
-                                Minstens één voorwaarde
+                                Eén is voldoende (OF)
                             </SelectItem>
                         </SelectContent>
                     </Select>
-
                     {!isRoot && (
                         <Button
                             type="button"
@@ -53,6 +45,7 @@ export function RoutingGroupCard(props: RuleGroupProps) {
                             className="ml-auto shrink-0"
                             disabled={disabled}
                             onClick={group.removeGroup}
+                            aria-label="Verwijder groep"
                         >
                             <IconTrash size={16} />
                         </Button>
@@ -97,7 +90,7 @@ export function RoutingGroupCard(props: RuleGroupProps) {
                                 onSelect={() => group.addGroup()}
                             >
                                 <IconGitBranch size={16} />
-                                Combinatie toevoegen
+                                Groep voorwaarden toevoegen
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

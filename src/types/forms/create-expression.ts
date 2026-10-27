@@ -18,10 +18,14 @@ export type ConditionsFormValue = {
     rules: unknown[]
 }
 
-export type CategoryRuleValue = {
+export type CategoryCondition = {
     category: string
     question: string
     answer: string
+}
+
+export type CategoryRuleValue = {
+    categories: CategoryCondition[]
 }
 
 export type RoutingExpressionFormData = {

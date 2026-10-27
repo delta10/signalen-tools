@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
 import {QueryBuilder, type Field, type RuleGroupType} from "react-querybuilder"
-import { getCategories } from "@/services/categories"
-import { getAreas } from "@/services/areas"
-import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions"
+import { getCategories } from "@/services/categories.tsx"
+import { getAreas } from "@/services/areas.tsx"
+import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
 import {getQuestions} from "@/services/questions-answers.tsx";
-import {CategoryValueEditor} from "@/components/expressions/category-value-editor.tsx";
-import {RoutingRuleCard} from "@/components/expressions/routing-rule-card.tsx";
-import {RoutingGroupCard} from "@/components/expressions/routing-group-card.tsx";
+import {CategoryValueEditor} from "@/components/expressions/create-nested-conditions/category-value-editor.tsx";
+import {RoutingRuleCard} from "@/components/expressions/create-nested-conditions/routing-rule-card.tsx";
+import {RoutingGroupCard} from "@/components/expressions/create-nested-conditions/routing-group-card.tsx";
 import {RoutingCombinator} from "@/components/ui/routing-combinator.tsx";
+import {RoutingFieldSelector} from "@/components/expressions/create-nested-conditions/routing-field-selector.tsx";
+import {RoutingRemoveRule} from "@/components/expressions/create-nested-conditions/routing-remove-rule.tsx";
 
 type ConditionsBuilderProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -32,6 +34,9 @@ export function RoutingQueryBuilder({ form }: ConditionsBuilderProps) {
         {
             name: "category",
             label: "Categorie",
+            defaultValue: {
+                categories: [],
+            }
         },
         {
             name: "area",
@@ -55,6 +60,8 @@ export function RoutingQueryBuilder({ form }: ConditionsBuilderProps) {
                             rule: RoutingRuleCard,
                             ruleGroup: RoutingGroupCard,
                             valueEditor: CategoryValueEditor,
+                            fieldSelector: RoutingFieldSelector,
+                            removeRuleAction: RoutingRemoveRule,
                             inlineCombinator: RoutingCombinator,
                             operatorSelector: () => null,
                         }}
