@@ -54,12 +54,6 @@ export function RoutingGroupCard(props: RuleGroupProps) {
 
                 {/* Conditions */}
                 <div className="min-w-0 space-y-3 border-l-2 border-primary/30 pl-4">
-                    {props.ruleGroup.rules.length === 0 && (
-                        <p className="text-sm text-muted-foreground">
-                            Nog geen voorwaarden toegevoegd.
-                        </p>
-                    )}
-
                     <RuleGroupBodyComponents {...group} />
                 </div>
 
