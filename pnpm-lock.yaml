@@ -60,7 +60,7 @@ importers:
         specifier: 5.7.0
         version: 5.7.0(react@19.2.8)
       react-querybuilder:
-        specifier: ^8.25.0
+        specifier: 8.25.0
         version: 8.25.0(@types/react@19.2.18)(react@19.2.8)(redux@5.0.1)
       shadcn:
         specifier: 4.19.0

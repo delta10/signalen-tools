@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { IconCheck, IconSelector } from "@tabler/icons-react"
-import { Button } from "@/components/ui/button"
-import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
-import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "@/components/ui/command"
+import { Button } from "@/components/ui/button.tsx"
+import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover.tsx"
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "@/components/ui/command.tsx"
 
 type SearchableOption = {
     value: string
@@ -17,9 +17,18 @@ type SearchableMultiSelectProps = {
     placeholder: string
     searchPlaceholder: string
     disabled?: boolean
+    selectedLabel?: string
 }
 
-export function SearchableMultiSelect({options, value, onChange, placeholder, searchPlaceholder, disabled = false,}: SearchableMultiSelectProps) {
+export function SearchableMultiSelect({
+                                          options,
+                                          value,
+                                          onChange,
+                                          placeholder,
+                                          searchPlaceholder,
+                                          disabled = false,
+                                          selectedLabel = "items",}
+                                      : SearchableMultiSelectProps) {
     const [open, setOpen] = useState(false)
 
     function toggleValue(selectedValue: string) {
@@ -42,9 +51,9 @@ export function SearchableMultiSelect({options, value, onChange, placeholder, se
                     className="w-full max-w-md min-w-0 justify-between"
                 >
                     <span className="truncate">
-                        {value.length === 0
-                            ? placeholder
-                            : `${value.length} gebieden geselecteerd`}
+                        {value.length > 0
+                            ? `${value.length} ${selectedLabel} geselecteerd`
+                            : placeholder}
                     </span>
                     <IconSelector
                         size={16}

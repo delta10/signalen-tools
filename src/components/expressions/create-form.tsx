@@ -3,7 +3,7 @@ import {Separator} from "@/components/ui/separator.tsx";
 import {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {GeneralFields} from "@/components/expressions/general-fields.tsx";
 import {DestinationsField} from "@/components/expressions/destinations-field.tsx";
-import {RoutingQueryBuilder} from "@/components/expressions/query-builder.tsx";
+import {RoutingQueryBuilder} from "@/components/expressions/create-nested-conditions/query-builder.tsx";
 
 export function CreateForm() {
     const form = useRoutingExpressionForm()
