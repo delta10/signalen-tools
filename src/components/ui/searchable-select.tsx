@@ -3,6 +3,7 @@ import { IconCheck, IconSelector } from "@tabler/icons-react"
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "@/components/ui/command"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export type SearchableOption = {
     value: string
@@ -17,9 +18,10 @@ type SearchableSelectProps = {
     placeholder: string
     searchPlaceholder: string
     disabled?: boolean
+    className?: string
 }
 
-export function SearchableSelect({options, value, onChange, placeholder, searchPlaceholder, disabled = false,}: SearchableSelectProps) {
+export function SearchableSelect({options, value, onChange, placeholder, searchPlaceholder, disabled = false, className}: SearchableSelectProps) {
     const [open, setOpen] = useState(false)
 
     const selectedOption = options.find(
@@ -35,7 +37,10 @@ export function SearchableSelect({options, value, onChange, placeholder, searchP
                     role="combobox"
                     aria-expanded={open}
                     disabled={disabled}
-                    className="w-full max-w-md min-w-0 justify-between"
+                    className={cn(
+                        "w-full max-w-md min-w-0 justify-between",
+                        className
+                    )}
                 >
                     <span className="truncate">
                         {selectedOption?.label ?? placeholder}

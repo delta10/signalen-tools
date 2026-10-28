@@ -21,9 +21,4 @@ export type SimulationResult = {
     expression: Expression
     order: number
     matches: boolean
-    checks: {
-        category: boolean
-        area: boolean
-        questionAnswer: boolean
-    }
 }

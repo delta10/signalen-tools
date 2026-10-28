@@ -11,6 +11,7 @@ import {getQuestions} from "@/services/questions-answers.tsx";
 import {getSelectedRoutingExpression, simulateRouting} from "@/utils/routing-simulations.ts";
 import type {SimulationFormProps} from "@/types/routing-simulations.ts";
 import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import {SearchableSelect} from "@/components/ui/searchable-select.tsx";
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
@@ -74,75 +75,52 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                           form.handleSubmit()
                       }}>
                     <form.Field name="category">
-                        {(field) => {
-                            const selectedCategory = categories.find(
-                                (category) => category.slug === field.state.value
-                            )
+                        {(field) => (
+                            <div className="flex items-center gap-4">
+                                <label className="w-24" htmlFor={field.name}>
+                                    Categorie:
+                                </label>
+                                <SearchableSelect
+                                    options={categories.map((category) => ({
+                                        value: category.slug,
+                                        label: category.name,
+                                        searchTerms: category.slug,
+                                    }))}
+                                    value={field.state.value}
+                                    onChange={(category) => {
+                                        field.handleChange(category)
 
-                            return (
-                                <>
-                                    <div className={"flex flex-row gap-4 items-center"}>
-                                        <label htmlFor={field.name}>Categorie: </label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button type="button" variant="outline">
-                                                    {selectedCategory?.name ?? "Selecteer een categorie"}
-                                                </Button>
-                                            </DropdownMenuTrigger>
-
-                                            <DropdownMenuContent>
-                                                {categories.map((category) => (
-                                                    <DropdownMenuItem
-                                                        key={category.id}
-                                                        onSelect={() => {
-                                                            field.handleChange(category.slug)
-
-                                                            form.setFieldValue("question", "")
-                                                            form.setFieldValue("answer", "")
-                                                        }}
-                                                    >
-                                                        {category.name}
-                                                    </DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                </>
-                            )
-                        }}
+                                        form.setFieldValue("question", "")
+                                        form.setFieldValue("answer", "")
+                                    }}
+                                    placeholder="Selecteer een categorie"
+                                    searchPlaceholder="Zoek categorie..."
+                                    className="max-w-60"
+                                />
+                            </div>
+                        )}
                     </form.Field>
                     <form.Field name="area">
-                        {(field) => {
-                            const selectedArea = areas.find(
-                                (area) => area.code === field.state.value
-                            )
+                        {(field) => (
+                            <div className="flex items-center gap-4">
+                                <label className="w-24" htmlFor={field.name}>
+                                    Gebied:
+                                </label>
 
-                            return (
-                                <div className="flex flex-row gap-4 items-center">
-                                    <label>Gebied:</label>
-
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button type="button" variant="outline">
-                                                {selectedArea?.name ?? "Selecteer een gebied"}
-                                            </Button>
-                                        </DropdownMenuTrigger>
-
-                                        <DropdownMenuContent>
-                                            {areas.map((area) => (
-                                                <DropdownMenuItem key={area.code}
-                                                    onSelect={() =>
-                                                        field.handleChange(area.code)
-                                                    }
-                                                >
-                                                    {area.name}
-                                                </DropdownMenuItem>
-                                            ))}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            )
-                        }}
+                                <SearchableSelect
+                                    options={areas.map((area) => ({
+                                        value: area.code,
+                                        label: area.name,
+                                        searchTerms: area.code,
+                                    }))}
+                                    value={field.state.value}
+                                    onChange={field.handleChange}
+                                    placeholder="Selecteer een gebied"
+                                    searchPlaceholder="Zoek gebied..."
+                                    className="max-w-60"
+                                />
+                            </div>
+                        )}
                     </form.Field>
                     <form.Subscribe selector={(state) => state.values.category}>
                         {(selectedCategory) => (
@@ -246,8 +224,6 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                     value,
                                     expressions,
                                     categories,
-                                    areas,
-                                    questions,
                                 )
 
                             const selectedRoutingExpression = getSelectedRoutingExpression(results)
