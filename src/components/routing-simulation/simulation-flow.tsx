@@ -1,10 +1,10 @@
-import { Background, MarkerType, ReactFlow } from "@xyflow/react"
-import { useState } from "react"
+import {Background, MarkerType, Panel, ReactFlow} from "@xyflow/react"
 import { ExpressionNode } from "@/components/routing-simulation/expression-node.tsx"
 import { ReportNode } from "@/components/routing-simulation/report-node.tsx"
 import { DestinationNode } from "@/components/routing-simulation/destination-node.tsx"
 import { UnmatchedGroupNode } from "@/components/routing-simulation/unmatched-group-node.tsx"
 import type {RoutingSimulationFormData, SimulationResult,} from "@/types/routing-simulations.ts"
+import {UnmatchedPanel} from "@/components/routing-simulation/unmatched-panel.tsx";
 
 const nodeTypes = {
     report: ReportNode,
@@ -20,7 +20,6 @@ type RoutingSimulationFlowProps = {
 }
 
 export function RoutingSimulationFlow({results, report, selectedRoutingExpression,}: RoutingSimulationFlowProps) {
-    const [showUnmatched, setShowUnmatched] = useState(false)
     const matchedResults = results.filter(result => result.matches)
     const unmatchedResults = results.filter(result => !result.matches)
 
@@ -56,44 +55,6 @@ export function RoutingSimulationFlow({results, report, selectedRoutingExpressio
                 result.order === selectedRoutingExpression?.order,
         },
     }))
-
-    const groupNode = {
-        id: "unmatched-group",
-        type: "unmatchedGroup",
-        position: {
-            x: 340,
-            y: matchedResults.length * 250 + 50,
-        },
-        style: {
-            width: 350,
-            height: showUnmatched
-                ? 100 + unmatchedResults.length * 250
-                : 75,
-        },
-        data: {
-            count: unmatchedResults.length,
-            expanded: showUnmatched,
-            onToggle: () => setShowUnmatched(prev => !prev),
-        },
-    }
-
-    const unmatchedNodes = showUnmatched
-        ? unmatchedResults.map((result, index) => ({
-            id: `unmatched-${result.expression.name}-${result.order}`,
-            type: "expression",
-            parentId: "unmatched-group",
-            extent: "parent" as const,
-            draggable: false,
-            position: {
-                x: 20,
-                y: 80 + index * 250,
-            },
-            data: {
-                ...result,
-                isSelected: false,
-            },
-        }))
-        : []
 
     const destinationNode = selectedRoutingExpression
         ? {
@@ -155,8 +116,6 @@ export function RoutingSimulationFlow({results, report, selectedRoutingExpressio
     const nodes = [
         reportNode,
         ...expressionNodes,
-        ...(unmatchedResults.length > 0 ? [groupNode] : []),
-        ...unmatchedNodes,
         ...(destinationNode ? [destinationNode] : []),
     ]
 
@@ -174,6 +133,14 @@ export function RoutingSimulationFlow({results, report, selectedRoutingExpressio
                 fitView
             >
                 <Background />
+
+                {unmatchedResults.length > 0 && (
+                    <Panel position="bottom-center" className="w-[90%]">
+                        <UnmatchedPanel
+                            results={unmatchedResults}
+                        />
+                    </Panel>
+                )}
             </ReactFlow>
         </div>
     )
