@@ -8,9 +8,11 @@ export function DestinationNode({ data }: NodeProps) {
     return (
         <>
             <Handle type="target" position={Position.Left}/>
-            <FlowCard title={result.routingExpression._expression} className={"border-2 rounded-lg border-green-500"}>
-                {/* TO-DO: Department toevoegen na merge met domeinmodellen-branch */}
-                <p>{result.routingExpression._expression}</p>
+            <FlowCard
+                title={result.expression.routing?.department.name ?? "Onbekende afdeling"}
+                className="border-2 rounded-lg border-success"
+            >
+                <p>Routeerregel: {result.expression.name}</p>
                 <p>Order: {result.order}</p>
             </FlowCard>
         </>

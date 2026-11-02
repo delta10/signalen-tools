@@ -5,26 +5,16 @@ import { GoDash } from "react-icons/go";
 import {IoMdCheckmark} from "react-icons/io";
 import type {SimulationResult} from "@/types/routing-simulations.ts";
 
-type ExpressionNodeData = {
-    order: number
-    routingExpression: {
-        _expression: string
-    }
-    matches: boolean
+type ExpressionNodeData = SimulationResult & {
     isSelected: boolean
-    checks: {
-        category: boolean
-        area: boolean
-        questionAnswer: boolean
-    }
 }
 
 export function ExpressionNode({ data }: NodeProps) {
     const result = data as ExpressionNodeData
     const borderColor = !result.matches
-        ? "border-red-600"
+        ? "border-destructive"
         : result.isSelected
-            ? "border-green-500"
+            ? "border-success"
             : "border-orange-400"
 
     const statusIcon = !result.matches
@@ -41,7 +31,7 @@ export function ExpressionNode({ data }: NodeProps) {
                 title={
                     <div className="flex items-center gap-2">
                         {statusIcon}
-                        {result.routingExpression._expression}
+                        {result.expression.name}
                     </div>
                 }
                 className={`border-3 border-solid rounded-lg ${borderColor}`}
@@ -51,17 +41,25 @@ export function ExpressionNode({ data }: NodeProps) {
                         Order: {result.order}
                     </div>
 
-                    <div>
-                        Categorie: {result.checks.category ? "✓" : "✕"}
+                    <div className={"flex justify-start items-center"}>
+                        Categorie: {result.checks.category
+                        ?  <IoMdCheckmark className={"text-2xl text-success"} />
+                        : <HiMiniXMark className={"text-2xl text-destructive"} />
+                    }
                     </div>
 
-                    <div>
-                        Gebied: {result.checks.area ? "✓" : "✕"}
+                    <div className={"flex justify-start items-center"}>
+                        Gebied: {result.checks.area
+                        ?  <IoMdCheckmark className={"text-2xl text-success"} />
+                        : <HiMiniXMark className={"text-2xl text-destructive"} />
+                    }
                     </div>
 
-                    <div>
-                        Vraag/antwoord:{" "}
-                        {result.checks.questionAnswer ? "✓" : "✕"}
+                    <div className={"flex justify-start items-center"}>
+                        Vraag en/of Antwoord: {result.checks.questionAnswer
+                        ?  <IoMdCheckmark className={"text-2xl text-success"} />
+                        : <HiMiniXMark className={"text-2xl text-destructive"} />
+                    }
                     </div>
                 </div>
             </FlowCard>
