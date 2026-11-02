@@ -1,4 +1,5 @@
 import type { Expression } from "@/types/domain/routing"
+import type {Department} from "@/types/domain/reference-data.ts";
 
 export type RoutingSimulationFormData = {
     category: string
@@ -21,6 +22,7 @@ export type SimulationResult = {
     expression: Expression
     order: number
     matches: boolean
+    department: Department | null
     checks: {
         category: boolean
         area: boolean

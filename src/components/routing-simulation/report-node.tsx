@@ -13,7 +13,7 @@ export function ReportNode({data}: NodeProps) {
 
     return(
         <>
-            <FlowCard title={nodeData.title}>
+            <FlowCard title={nodeData.title} className={"border-2 rounded-lg border-green-500"}>
                 <div>
                     Categorie: {nodeData.category}
                 </div>
