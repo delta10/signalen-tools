@@ -5,6 +5,7 @@ import {useNavigate} from "@tanstack/react-router";
 import {useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
 import type {ExpressionTransfer, RoutingExpressionTransfer} from "@/types/import-export/expressions.ts";
+import {validateManualExpression} from "@/utils/validate-manual-expression.ts";
 
 const defaultValues: RoutingExpressionFormData = {
     name: "",
@@ -12,7 +13,9 @@ const defaultValues: RoutingExpressionFormData = {
     isActive: true,
     department: "",
     conditionGroups: [],
-    conditionOperator: "AND"
+    conditionOperator: "AND",
+    inputMode: "visual",
+    manualCode: "",
 }
 
 export function useRoutingExpressionForm() {
@@ -22,6 +25,15 @@ export function useRoutingExpressionForm() {
     return useForm({
         defaultValues,
         onSubmit: async ({ value }) => {
+            if (value.inputMode === "manual") {
+                const error = validateManualExpression(value.manualCode)
+
+                if (error) {
+                    toast.error(error)
+                    return
+                }
+            }
+
             const result = mapCreateExpressionFormToTransfers(value)
 
             // Temporary storage
