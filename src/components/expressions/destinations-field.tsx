@@ -1,4 +1,4 @@
-import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
+import type {RoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {useQuery} from "@tanstack/react-query";
 import {getDepartments} from "@/services/departments.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 
 type DestinationsFieldProps = {
-    form: ReturnType<typeof useRoutingExpressionForm>
+    form: RoutingExpressionForm
 }
 
 export function DestinationsField({form}: DestinationsFieldProps) {

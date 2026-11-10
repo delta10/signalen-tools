@@ -7,16 +7,23 @@ import {DestinationsField} from "@/components/expressions/destinations-field.tsx
 import {Textarea} from "@/components/ui/textarea.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {validateManualExpression} from "@/utils/validate-manual-expression.ts";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu.tsx";
+import {IconDots} from "@tabler/icons-react";
 
 export function CreateForm() {
-    const form = useRoutingExpressionForm()
+    const { form, submitWithAction } = useRoutingExpressionForm()
 
     return (
         <form className={"flex flex-col justify-start items-start gap-2"}
-            onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit()
-        }}>
+              onSubmit={(e) => {
+                  e.preventDefault()
+                  submitWithAction("save")
+              }}>
             <GeneralFields form={form} />
 
             <Separator className={"my-4"} />
@@ -98,9 +105,51 @@ export function CreateForm() {
             <DestinationsField form={form} />
 
             <p className={"text-muted-foreground my-4"}>* Verplicht Veld</p>
-            <Button type="submit">
-                Opslaan
-            </Button>
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+                {(isSubmitting) => (
+                    <div className="flex items-center gap-2">
+                        <Button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() => submitWithAction("save")}
+                        >
+                            Opslaan
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            disabled={isSubmitting}
+                            onClick={() => submitWithAction("save-and-test")}
+                        >
+                            Opslaan en testen
+                        </Button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon"
+                                    disabled={isSubmitting}
+                                >
+                                    <IconDots />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className={"min-w-60"}>
+                                <DropdownMenuItem
+                                    onSelect={() => submitWithAction("save-and-new")}
+                                >
+                                    Opslaan en nieuwe toevoegen
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onSelect={() => submitWithAction("save-and-duplicate")}
+                                >
+                                    Opslaan en dupliceren
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                )}
+            </form.Subscribe>
         </form>
     )
 }
