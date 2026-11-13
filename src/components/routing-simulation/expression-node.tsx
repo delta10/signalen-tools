@@ -1,39 +1,27 @@
-import {Handle, type NodeProps, Position} from "@xyflow/react"
+import { Handle, type NodeProps, Position } from "@xyflow/react"
 import { FlowCard } from "./flow-card"
-import type {SimulationResult} from "@/types/routing-simulations.ts";
+import type { SimulationResult } from "@/types/routing-simulations"
 
 export function ExpressionNode({ data }: NodeProps) {
     const result = data as SimulationResult
 
     return (
         <>
-            <Handle type="target" position={Position.Left}/>
-
+            <Handle type="target" position={Position.Left} />
             <FlowCard title={result.expression.name}>
                 <div className="space-y-2">
                     <div>
-                        Order: {result.order}
-                    </div>
-                    <div>
-                        Match: {result.matches ? "JA" : "NEE"}
+                        Volgorde: {result.order}
                     </div>
 
                     <div>
-                        Categorie: {result.checks.category ? "✓" : "✕"}
-                    </div>
-
-                    <div>
-                        Gebied: {result.checks.area ? "✓" : "✕"}
-                    </div>
-
-                    <div>
-                        Vraag/antwoord:{" "}
-                        {result.checks.questionAnswer ? "✓" : "✕"}
+                        Routering: {result.matches
+                        ? "Komt overeen"
+                        : "Komt niet overeen"}
                     </div>
                 </div>
             </FlowCard>
-
-            <Handle type="source" position={Position.Right}/>
+            <Handle type="source" position={Position.Right} />
         </>
     )
 }
