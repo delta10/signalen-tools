@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
-import type {Area, Questions} from "@/types/routing-expressions.ts";
-import type {Category, RoutingConditionGroup} from "@/types/routing-expressions-create.ts";
+import type {Area, Question, Category} from "@/types//domain/reference-data.ts";
+import type {RoutingConditionGroup} from "@/types/forms/create-expression.ts";
 import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {CategoryMultiSelect} from "@/components/expressions/category-multiselect.tsx";
 import {AreaMultiSelect} from "@/components/expressions/area-multiselect.tsx";
@@ -12,7 +12,7 @@ type ConditionGroupProps = {
     groupIndex: number
     categories: Category[]
     areas: Area[]
-    questions: Questions[]
+    questions: Question[]
     onRemove: () => void
 }
 

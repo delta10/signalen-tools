@@ -8,10 +8,9 @@ import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {getAreas} from "@/services/areas.tsx";
 import {getQuestions} from "@/services/questions-answers.tsx";
-import {getQuestionCategorySlugs, getSelectedRoutingExpression, simulateRouting} from "@/utils/routing-simulations.ts";
+import {getSelectedRoutingExpression, simulateRouting} from "@/utils/routing-simulations.ts";
 import type {SimulationFormProps} from "@/types/routing-simulations.ts";
-import {getRoutingExpressions} from "@/services/routing-expressions.tsx";
-import {getExpressions} from "@/services/expressions.tsx";
+import {getRoutingDomainExpressions} from "@/services/routing-domain-expressions.ts";
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
@@ -35,24 +34,14 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
             queryFn: getQuestions,
         })
 
-    const { data: routingExpressions = [], isLoading: isRoutingExpressionsLoading, error: routingExpressionsError,} = useQuery(
-        {
-            queryKey: ["routingExpressions"],
-            queryFn: getRoutingExpressions,
-        })
-
     const { data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useQuery(
         {
-            queryKey: ["expressions"],
-            queryFn: getExpressions,
+            queryKey: ["routing-domain-expressions"],
+            queryFn: getRoutingDomainExpressions,
         })
 
-    const localExpressions = JSON.parse(localStorage.getItem("expressions") ?? "[]")
-
-    const localRoutingExpressions = JSON.parse(localStorage.getItem("routingExpressions") ?? "[]")
-
-    const isLoading = isCategoriesLoading || isAreasLoading || isQuestionsLoading || isRoutingExpressionsLoading || isExpressionsLoading
-    const hasError = categoriesError || areasError || questionsError || routingExpressionsError || expressionsError
+    const isLoading = isCategoriesLoading || isAreasLoading || isQuestionsLoading || isExpressionsLoading
+    const hasError = categoriesError || areasError || questionsError || expressionsError
 
     if(isLoading) {
         return(
@@ -108,7 +97,7 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                             <DropdownMenuContent>
                                                 {categories.map((category) => (
                                                     <DropdownMenuItem
-                                                        key={`${category.parent}-${category.slug}`}
+                                                        key={category.id}
                                                         onSelect={() => {
                                                             field.handleChange(category.slug)
 
@@ -126,38 +115,45 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                             )
                         }}
                     </form.Field>
-                    <form.Field name={"area"}>
-                        {(field) => (
-                            <div className={"flex flex-row gap-4 items-center"}>
-                                <label htmlFor={field.name}>Gebied: </label>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button type="button" variant="outline">
-                                            {field.state.value || "Selecteer een gebied"}
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        {areas.map((area) => (
-                                            <DropdownMenuItem
-                                                key={area.name}
-                                                onSelect={() => {
-                                                    field.handleChange(area.name)
-                                                }}
-                                            >
-                                                {area.name}
-                                            </DropdownMenuItem>
-                                        ))}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        )}
+                    <form.Field name="area">
+                        {(field) => {
+                            const selectedArea = areas.find(
+                                (area) => area.code === field.state.value
+                            )
+
+                            return (
+                                <div className="flex flex-row gap-4 items-center">
+                                    <label>Gebied:</label>
+
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button type="button" variant="outline">
+                                                {selectedArea?.name ?? "Selecteer een gebied"}
+                                            </Button>
+                                        </DropdownMenuTrigger>
+
+                                        <DropdownMenuContent>
+                                            {areas.map((area) => (
+                                                <DropdownMenuItem key={area.code}
+                                                    onSelect={() =>
+                                                        field.handleChange(area.code)
+                                                    }
+                                                >
+                                                    {area.name}
+                                                </DropdownMenuItem>
+                                            ))}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                            )
+                        }}
                     </form.Field>
                     <form.Subscribe selector={(state) => state.values.category}>
                         {(selectedCategory) => (
                             <form.Field name="question">
                                 {(field) => {
                                     const relevantQuestions = questions.filter((question) =>
-                                        getQuestionCategorySlugs(question).includes(selectedCategory)
+                                        question.categorySlugs.includes(selectedCategory)
                                     )
 
                                     if (relevantQuestions.length === 0) {
@@ -172,7 +168,9 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button type="button" variant="outline">
-                                                        {field.state.value || "Selecteer een vraag"}
+                                                        {relevantQuestions.find(
+                                                            (question) => question.key === field.state.value
+                                                        )?.label ?? "Selecteer een vraag"}
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
@@ -184,7 +182,7 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                                                 form.setFieldValue("answer", "")
                                                             }}
                                                         >
-                                                            {question.key}
+                                                            {question.label}
                                                         </DropdownMenuItem>
                                                     ))}
                                                 </DropdownMenuContent>
@@ -205,10 +203,8 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                 return null
                             }
 
-                            const meta = JSON.parse(selectedQuestion.meta)
-                            const values = meta.values ?? {}
-
-                            if (Object.keys(values).length === 0) {
+                            const answers = selectedQuestion.answers
+                            if (answers.length === 0) {
                                 return null
                             }
 
@@ -222,22 +218,19 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button type="button" variant="outline">
-                                                        {values[field.state.value] ?? "Selecteer een antwoord"}
+                                                        {answers.find(
+                                                            (answer) => answer.value === field.state.value
+                                                        )?.label ?? "Selecteer een antwoord"}
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
-                                                    {Object.entries(values).map(
-                                                        ([value, label]) => (
-                                                            <DropdownMenuItem
-                                                                key={value}
-                                                                onSelect={() => {
-                                                                    field.handleChange(value)
-                                                                }}
-                                                            >
-                                                                {label as string}
-                                                            </DropdownMenuItem>
-                                                        )
-                                                    )}
+                                                    {answers.map((answer) => (
+                                                        <DropdownMenuItem key={answer.value}
+                                                            onSelect={() => field.handleChange(answer.value)}
+                                                        >
+                                                            {answer.label}
+                                                        </DropdownMenuItem>
+                                                    ))}
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </>
@@ -255,18 +248,14 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
 
                                 const results = simulateRouting(
                                     value,
-                                    routingExpressions,
                                     expressions,
                                     categories,
                                     areas,
                                     questions,
-                                    localRoutingExpressions,
-                                    localExpressions
                                 )
 
                             const selectedRoutingExpression = getSelectedRoutingExpression(results)
-
-                                onSimulationComplete(value, results, selectedRoutingExpression)
+                            onSimulationComplete(value, results, selectedRoutingExpression)
                             }}
                         >
                             Testen

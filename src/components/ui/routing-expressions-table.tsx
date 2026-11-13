@@ -1,6 +1,6 @@
 import {Table} from "@/components/ui/table.tsx"
 import {TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
-import type {RoutingExpressionTableRow} from "@/types/routing-expressions.ts";
+import type {RoutingExpressionTableRow} from "@/types/view-models/table.ts";
 import {Badge} from "@/components/ui/badge.tsx";
 import {routingTypeLabels} from "@/utils/routing-expressions.ts";
 import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";

@@ -7,7 +7,7 @@ import { Link } from "@tanstack/react-router"
 import { getQuestions } from "@/services/questions-answers.tsx"
 import { getAreas } from "@/services/areas.tsx"
 import {ConditionGroup} from "@/components/expressions/condition-group.tsx";
-import {ConditionOperators, type ConditionType, ConditionTypes} from "@/types/routing-expressions-create.ts";
+import {ConditionOperators, type ConditionType, ConditionTypes} from "@/types/forms/create-expression.ts";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 
 type ConditionsProps = {
@@ -31,7 +31,6 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
     })
 
     const isLoading = isCategoriesLoading || isQuestionsLoading || isAreasLoading
-
     const hasError = categoriesError || questionsError || areasError
 
     if (isLoading) {

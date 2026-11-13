@@ -1,6 +1,6 @@
-import type {Area} from "@/types/routing-expressions.ts";
 import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {ConditionMultiSelect} from "./condition-multiselect";
+import type {Area} from "@/types/domain/reference-data.ts";
 
 type AreaMultiSelectProps = {
     form: ReturnType<typeof useRoutingExpressionForm>

@@ -1,10 +1,13 @@
-import type {Area, Expression, Questions, RoutingExpression} from "@/types/routing-expressions.ts";
-import {getRoutingExpressionAreas, getRoutingExpressionCategories, getRoutingExpressionQuestionConditions} from "@/utils/routing-expressions.ts";
-import type {Category} from "@/types/routing-expressions-create.ts";
-import type {RoutingSimulationData, SimulationResult} from "@/types/routing-simulations.ts";
+import type { Area, Category, Question } from "@/types/domain/reference-data"
+import type { Expression } from "@/types/domain/routing"
+import type {RoutingSimulationData, SimulationResult,} from "@/types/routing-simulations"
+import {extractCategories, getExpressionAreas, getExpressionQuestionConditions,} from "@/utils/routing-expressions"
 
-{/* Generic helper function to check if anything matches */}
-function matchesAny<T>(conditions: T[], predicate: (condition: T) => boolean,): boolean {
+/* Generic helper function to check if anything matches */
+function matchesAny<T>(
+    conditions: T[],
+    predicate: (condition: T) => boolean,
+): boolean {
     if (conditions.length === 0) {
         return true
     }
@@ -12,36 +15,17 @@ function matchesAny<T>(conditions: T[], predicate: (condition: T) => boolean,): 
     return conditions.some(predicate)
 }
 
-{/* Helper function to split categories from specific question */}
-export function getQuestionCategorySlugs(question: Questions): string[] {
-    if (!question.categories) {
-        return []
-    }
-
-    return question.categories
-        .split(",")
-        .map((category) => category.trim().split("|")[0])
-}
-
-{/* Helper function to match category with simulated signal */}
+/* Match category with simulated signal */
 export function doesCategoryMatch(
     simulationData: RoutingSimulationData,
-    routingExpression: RoutingExpression,
-    expressions: Expression[],
+    expression: Expression,
     categories: Category[],
 ): boolean {
-    const expressionCategories = getRoutingExpressionCategories(
-        routingExpression,
-        expressions
-    )
+    const expressionCategories = extractCategories(expression.code)
 
     const selectedCategory = categories.find(
         (category) => category.slug === simulationData.category
     )
-
-    console.log("Simulatiecategorie:", simulationData.category)
-    console.log("Geselecteerde categorie:", selectedCategory)
-    console.log("Expression categorieën:", expressionCategories)
 
     return matchesAny(
         expressionCategories,
@@ -49,20 +33,16 @@ export function doesCategoryMatch(
     )
 }
 
-{/* Helper function to match area with simulated signal */}
+/* Match area with simulated signal */
 export function doesAreaMatch(
     simulationData: RoutingSimulationData,
-    routingExpression: RoutingExpression,
-    expressions: Expression[],
+    expression: Expression,
     areas: Area[],
 ): boolean {
-    const expressionAreas = getRoutingExpressionAreas(
-        routingExpression,
-        expressions
-    )
+    const expressionAreas = getExpressionAreas(expression)
 
     const selectedArea = areas.find(
-        (area) => area.name === simulationData.area
+        (area) => area.code === simulationData.area
     )
 
     return matchesAny(
@@ -71,16 +51,14 @@ export function doesAreaMatch(
     )
 }
 
-{/* Helper function to match question/answer with simulated signal */}
+/* Match question and answer with simulated signal */
 export function doesQuestionAnswerMatch(
     simulationData: RoutingSimulationData,
-    routingExpression: RoutingExpression,
-    expressions: Expression[],
-    questions: Questions[],
+    expression: Expression,
+    questions: Question[],
 ): boolean {
-    const questionConditions = getRoutingExpressionQuestionConditions(
-        routingExpression,
-        expressions,
+    const questionConditions = getExpressionQuestionConditions(
+        expression,
         questions
     )
 
@@ -92,67 +70,55 @@ export function doesQuestionAnswerMatch(
     )
 }
 
-{/* Helper function to check all matches with simulated signal */}
+/* Simulate routing for all expressions */
 export function simulateRouting(
     simulationData: RoutingSimulationData,
-    routingExpressions: RoutingExpression[],
     expressions: Expression[],
     categories: Category[],
     areas: Area[],
-    questions: Questions[],
-    localRoutingExpressions: RoutingExpression[],
-    localExpressions: Expression[],
-) {
-    const allRoutingExpressions = [
-        ...routingExpressions,
-        ...localRoutingExpressions,
-    ]
+    questions: Question[],
+): SimulationResult[] {
+    return expressions
+        .filter((expression) => expression.routing !== null)
+        .map((expression) => {
+            const categoryMatches = doesCategoryMatch(
+                simulationData,
+                expression,
+                categories
+            )
 
-    const allExpressions = [
-        ...expressions,
-        ...localExpressions,
-    ]
+            const areaMatches = doesAreaMatch(
+                simulationData,
+                expression,
+                areas
+            )
 
-    return allRoutingExpressions.map((routingExpression) => {
-        const categoryMatches = doesCategoryMatch(
-            simulationData,
-            routingExpression,
-            allExpressions,
-            categories
-        )
+            const questionAnswerMatches = doesQuestionAnswerMatch(
+                simulationData,
+                expression,
+                questions
+            )
 
-        const areaMatches = doesAreaMatch(
-            simulationData,
-            routingExpression,
-            allExpressions,
-            areas
-        )
-
-        const questionAnswerMatches = doesQuestionAnswerMatch(
-            simulationData,
-            routingExpression,
-            allExpressions,
-            questions
-        )
-
-        return {
-            routingExpression,
-            order: Number(routingExpression.order),
-            matches:
-                categoryMatches &&
-                areaMatches &&
-                questionAnswerMatches,
-            checks: {
-                category: categoryMatches,
-                area: areaMatches,
-                questionAnswer: questionAnswerMatches,
-            },
-        }
-    })
+            return {
+                expression,
+                order: expression.routing!.order,
+                matches:
+                    categoryMatches &&
+                    areaMatches &&
+                    questionAnswerMatches,
+                checks: {
+                    category: categoryMatches,
+                    area: areaMatches,
+                    questionAnswer: questionAnswerMatches,
+                },
+            }
+        })
 }
 
-{/* Helper function that determines which routing is chosen based off order number */}
-export function getSelectedRoutingExpression(results: SimulationResult[]): SimulationResult | null {
+/* Select matching expression with highest priority (lowest order) */
+export function getSelectedRoutingExpression(
+    results: SimulationResult[],
+): SimulationResult | null {
     const matches = results.filter((result) => result.matches)
 
     if (matches.length === 0) {

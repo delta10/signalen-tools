@@ -9,7 +9,7 @@ export function DestinationNode({ data }: NodeProps) {
         <>
             <Handle type="target" position={Position.Left}/>
             <FlowCard title={"Gekozen Routeerregel"}>
-                <p>{result.routingExpression._expression}</p>
+                <p>{result.expression.name}</p>
                 <p>Order: {result.order}</p>
             </FlowCard>
         </>

@@ -1,15 +1,9 @@
 import expressions from "@/data/Expression-2026-09-08.json"
-import type {Expression} from "@/types/routing-expressions.ts";
+import type {ExpressionTransfer} from "@/types/import-export/expressions.ts";
 
-{/* Endpoint(s) can eventually be fetched here */}
-export async function getExpressions(): Promise<Expression[]> {
-    {/* Only applicable to test environment */}
-    const storedExpressions = JSON.parse(
-        localStorage.getItem("newExpressions") ?? "[]"
-    )
+export async function getExpressions(): Promise<ExpressionTransfer[]> {
+    const newExpressions: ExpressionTransfer[] =
+        JSON.parse(localStorage.getItem("newExpressions") ?? "[]")
 
-    return [
-        ...expressions,
-        ...storedExpressions,
-    ]
+    return [...expressions, ...newExpressions]
 }
