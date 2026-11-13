@@ -1,11 +1,11 @@
-import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
+import type {RoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts"
 import type {RoutingConditionGroup} from "@/types/forms/create-expression.ts"
 import type {Area, Question, Category} from "@/types/domain/reference-data.ts"
 import { Button } from "@/components/ui/button.tsx"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
 
 type ConditionRowProps = {
-    form: ReturnType<typeof useRoutingExpressionForm>
+    form: RoutingExpressionForm
     group: RoutingConditionGroup
     groupIndex: number
     conditionIndex: number

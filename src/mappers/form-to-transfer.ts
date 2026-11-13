@@ -75,7 +75,9 @@ export function convertConditionsToExpression(formData: RoutingExpressionFormDat
 export function createExpressionFromFormData(formData: RoutingExpressionFormData): ExpressionTransfer {
     return {
         name: formData.name,
-        code: convertConditionsToExpression(formData),
+        code: formData.inputMode === "manual"
+            ? formData.manualCode.trim()
+            : convertConditionsToExpression(formData),
         _type: "routing",
     }
 }

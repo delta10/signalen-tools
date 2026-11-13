@@ -11,9 +11,20 @@ import {Fragment} from "react";
 export function AppHeader() {
     const matches = useMatches();
 
-    const breadcrumbMatches = matches.filter(
-        (match) => match.staticData?.breadcrumb
+    const routeBreadcrumbs = matches
+        .filter((match) => match.staticData?.breadcrumb)
+        .map((match) => match.staticData.breadcrumb!)
+
+    const isHome = matches.some(
+        (match) => match.routeId === "/"
     )
+
+    const breadcrumbs = isHome
+        ? routeBreadcrumbs
+        : [
+            { label: "Home", to: "/" as const },
+            ...routeBreadcrumbs,
+        ]
 
     return(
         <>
@@ -21,11 +32,10 @@ export function AppHeader() {
                 <div className="flex items-center gap-1 text-sm lg:gap-2 lg:text-base">
                     <Breadcrumb>
                         <BreadcrumbList>
-                            {breadcrumbMatches.map((match, index) => {
-                                const breadcrumb = match.staticData.breadcrumb!
-                                const isLast = index === breadcrumbMatches.length - 1
+                            {breadcrumbs.map((breadcrumb, index) => {
+                                const isLast = index === breadcrumbs.length - 1
                                 return (
-                                    <Fragment key={match.id}>
+                                    <Fragment key={breadcrumb.to}>
                                         <BreadcrumbItem>
                                             {isLast ? (
                                                 <BreadcrumbPage>

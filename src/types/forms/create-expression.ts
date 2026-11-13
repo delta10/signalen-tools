@@ -20,6 +20,8 @@ export type RoutingExpressionFormData = {
     conditionOperator: ConditionOperator
     conditionGroups: RoutingConditionGroup[]
     department: string
+    inputMode: "visual" | "manual"
+    manualCode: string
 }
 
 export const ConditionTypes = {

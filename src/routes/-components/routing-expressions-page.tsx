@@ -81,26 +81,43 @@ export function RoutingExpressionsPage() {
         <div className={"flex flex-col"}>
             <div>
                 <h1>Routing Expressions</h1>
-                <div className={"flex justify-between items-center mt-4"}>
-                    <div>
+                <div className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="w-full lg:w-72 xl:w-80">
                         <Input
-                            className={"w-full"}
-                            placeholder={"Zoeken..."}
+                            placeholder="Zoeken..."
                             value={globalFilter}
-                            onChange={(event) => {
+                            onChange={(event) =>
                                 setGlobalFilter(event.target.value)
-                            }}
+                            }
                         />
                     </div>
-                    <div className={"flex flex-col items-end lg:flex-row lg:justify-end gap-4"}>
-                        <Button className={"rounded-sm lg:order-2"} size={"lg"} asChild>
-                            <Link to={"/routing-expressions/create"} className={"flex items-center gap-1"}>
-                                <IconPlus data-icon={"inline-start"} /> Routing Expression Toevoegen
+
+                    <div className="flex w-full gap-3 lg:w-auto lg:justify-end">
+                        <Button
+                            className="flex-1 rounded-sm lg:flex-none"
+                            variant="secondary"
+                            size="lg"
+                            asChild
+                        >
+                            <Link
+                                to="/routing-expressions/simulate"
+                                className="flex items-center gap-1"
+                            >
+                                <IconFlask data-icon="inline-start" />
+                                Routing simuleren
                             </Link>
                         </Button>
-                        <Button className={"rounded-sm lg:order-1"} variant={"secondary"} size={"lg"} asChild>
-                            <Link to={"/routing-expressions/simulate"} className={"flex items-center gap-1"}>
-                                <IconFlask data-icon={"inline-start"} /> Routing simuleren
+                        <Button
+                            className="flex-1 rounded-sm lg:flex-none"
+                            size="lg"
+                            asChild
+                        >
+                            <Link
+                                to="/routing-expressions/create"
+                                className="flex items-center gap-1"
+                            >
+                                <IconPlus data-icon="inline-start" />
+                                Routing Expression Toevoegen
                             </Link>
                         </Button>
                     </div>
