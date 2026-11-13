@@ -7,13 +7,14 @@ import type {
 import type { Expression } from "@/types/domain/routing"
 import type {Area, Category, Department, Question} from "@/types/domain/reference-data"
 
+/* Import: Transfer models → Domain models */
 export function mapTransfersToDomain(
     routingExpressions: RoutingExpressionTransfer[],
     expressions: ExpressionTransfer[],
     departments: Department[]
 ): Expression[] {
     return routingExpressions
-        .map<Expression | null>((routingExpression, index) => {
+        .map<Expression | null>((routingExpression) => {
             const expression = expressions.find(
                 (expression) =>
                     expression.name === routingExpression._expression
@@ -29,7 +30,7 @@ export function mapTransfersToDomain(
             )
 
             return {
-                id: index + 1,
+                id: crypto.randomUUID(),
                 name: expression.name,
                 code: expression.code,
                 type: expression._type,
@@ -49,6 +50,30 @@ export function mapTransfersToDomain(
             (expression): expression is Expression =>
                 expression !== null
         )
+}
+
+/* Export: Domain models → Transfer models */
+export function mapDomainToTransfers(expressions: Expression[]): {
+    expressions: ExpressionTransfer[]
+    routingExpressions: RoutingExpressionTransfer[]
+} {
+    return {
+        expressions: expressions.map((expression) => ({
+            name: expression.name,
+            code: expression.code,
+            _type: expression.type,
+        })),
+
+        routingExpressions: expressions
+            .filter((expression) => expression.routing !== null)
+            .map((expression) => ({
+                _expression: expression.name,
+                _department: expression.routing!.department.code,
+                _user: "",
+                order: String(expression.routing!.order),
+                is_active: expression.isActive ? "1" : "0",
+            })),
+    }
 }
 
 export function mapDepartmentTransfersToDomain(departments: DepartmentTransfer[]): Department[] {

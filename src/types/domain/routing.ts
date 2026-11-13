@@ -1,7 +1,7 @@
 import type {Department} from "@/types/domain/reference-data.ts";
 
 export type Expression = {
-    id: number
+    id: string
     name: string
     code: string
     type: string
