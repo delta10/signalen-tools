@@ -3,16 +3,19 @@ import {TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} fr
 import type {RoutingExpressionTableRow} from "@/types/view-models/table.ts";
 import {Badge} from "@/components/ui/badge.tsx";
 import {routingTypeLabels} from "@/utils/routing-expressions.ts";
-import {ExpandableCategoryList} from "@/components/ui/category-list.tsx";
 import {IconCheck, IconX} from "@tabler/icons-react";
 import {type ColumnDef, columnFilteringFeature} from "@tanstack/react-table"
 import {tableFeatures, useTable, createFilteredRowModel, filterFn_includesString, globalFilteringFeature,} from "@tanstack/react-table"
 import {HighlightText} from "@/components/ui/highlight-text.tsx";
+import {useState} from "react";
+import {RoutingExpressionDetailDialog} from "@/components/expressions/expression-detail-dialog.tsx";
 
 type RoutingExpressionsTableProps = {
     tableData: RoutingExpressionTableRow[],
     globalFilter: string,
-    onGlobalFilterChange: (value: string) => void
+    onGlobalFilterChange: (value: string) => void,
+    onEdit: (expression: RoutingExpressionTableRow) => void
+    onDelete: (expression: RoutingExpressionTableRow) => void
 }
 
 function getColumns(globalFilter: string): ColumnDef<typeof features, RoutingExpressionTableRow>[] {
@@ -55,9 +58,31 @@ function getColumns(globalFilter: string): ColumnDef<typeof features, RoutingExp
             id: "categories",
             header: "Categorie",
             accessorFn: (row) => row.categories.join(" "),
-            cell: ({ row }) => (
-                <ExpandableCategoryList categories={row.original.categories} searchTerm={globalFilter}/>
-            ),
+            cell: ({ row }) => {
+                const categories = row.original.categories
+                const remainingCount = categories.length - 3
+
+                return (
+                    <div className="text-sm">
+                        {categories.length > 0 ? (
+                            <>
+                                <HighlightText
+                                    text={categories.slice(0, 3).join(", ")}
+                                    searchTerm={globalFilter}
+                                />
+
+                                {remainingCount > 0 && (
+                                    <span className="ml-1 text-muted-foreground">
+                                +{remainingCount} meer
+                            </span>
+                                )}
+                            </>
+                        ) : (
+                            "-"
+                        )}
+                    </div>
+                )
+            },
         },
         {
             id: "areas",
@@ -133,7 +158,8 @@ const features = tableFeatures({
     }
 })
 
-export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange }: RoutingExpressionsTableProps ) {
+export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange, onEdit, onDelete }: RoutingExpressionsTableProps ) {
+    const [selectedExpression, setSelectedExpression] = useState<RoutingExpressionTableRow | null>(null)
     const columns = getColumns(globalFilter)
     const table = useTable({features, data: tableData, columns, globalFilterFn: "includesString", state: {globalFilter}, onGlobalFilterChange})
     const filteredRows = table.getRowModel().rows
@@ -168,7 +194,18 @@ export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilte
                 </TableHeader>
                 <TableBody>
                     {table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id}>
+                        <TableRow
+                            key={row.id}
+                            onClick={() => setSelectedExpression(row.original)}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault()
+                                    setSelectedExpression(row.original)
+                                }
+                            }}
+                            tabIndex={0}
+                            className="cursor-pointer hover:bg-background focus-visible:outline-2 focus-visible:outline-ring"
+                        >
                             {row.getAllCells().map((cell) => (
                                 <TableCell key={cell.id}>
                                     <table.FlexRender cell={cell} />
@@ -178,6 +215,18 @@ export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilte
                     ))}
                 </TableBody>
             </Table>
+            <RoutingExpressionDetailDialog
+                expression={selectedExpression}
+                onClose={() => setSelectedExpression(null)}
+                onEdit={(expression) => {
+                    setSelectedExpression(null)
+                    onEdit(expression)
+                }}
+                onDelete={(expression) => {
+                    onDelete(expression)
+                    setSelectedExpression(null)
+                }}
+            />
         </>
     )
 }
