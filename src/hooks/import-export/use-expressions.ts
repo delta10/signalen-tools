@@ -30,7 +30,21 @@ export function useExpressionActions() {
         saveAll([...expressions, expression])
     }
 
-    function remove(id: string) {
+    function update(expression: Expression) {
+        const expressions = expressionRepository.getAll()
+
+        if (!expressions.some((item) => item.id === expression.id)) {
+            throw new Error("Routing expression niet gevonden")
+        }
+
+        saveAll(
+            expressions.map((item) =>
+                item.id === expression.id ? expression : item
+            )
+        )
+    }
+
+    function remove(id: Expression["id"]) {
         const expressions = expressionRepository.getAll()
 
         saveAll(
@@ -38,5 +52,5 @@ export function useExpressionActions() {
         )
     }
 
-    return { saveAll, add, remove }
+    return { saveAll, add, update, remove }
 }

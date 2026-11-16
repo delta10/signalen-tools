@@ -1,7 +1,7 @@
 import type {RoutingType} from "@/utils/routing-expressions.ts";
 
 export type RoutingExpressionTableRow = {
-    id: number,
+    id: string,
     order: string
     name: string
     types: RoutingType[]

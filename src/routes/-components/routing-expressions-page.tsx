@@ -12,7 +12,8 @@ import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";
 import {ExpressionFileActions} from "@/components/expressions/expression-file-actions.tsx";
 import {getDepartments} from "@/services/departments.tsx";
-import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import {useExpressionActions, useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import {toast} from "sonner";
 
 
 export function RoutingExpressionsPage() {
@@ -41,6 +42,8 @@ export function RoutingExpressionsPage() {
         areas,
         questions
     )
+
+    const { remove } = useExpressionActions()
     const isLoading = isExpressionsLoading || isDepartmentsLoading || isQuestionsLoading || isAreasLoading
     const error = expressionsError || departmentsError || questionsError || areasError
 
@@ -124,12 +127,21 @@ export function RoutingExpressionsPage() {
                         navigate({
                             to: "/routing-expressions/$expressionId/edit",
                             params: {
-                                expressionId: String(expression.id),
+                                expressionId: expression.id,
                             },
                         })
                     }}
                     onDelete={(expression) => {
-                        console.log("Verwijderen:", expression)
+                        try {
+                            remove(expression.id)
+                            toast.success("Routing expression verwijderd", {
+                                description: `"${expression.name}" is succesvol verwijderd.`,
+                            })
+                        } catch {
+                            toast.error("Verwijderen mislukt", {
+                                description: "De routing expression kon niet worden verwijderd.",
+                            })
+                        }
                     }}
                 />
             </div>

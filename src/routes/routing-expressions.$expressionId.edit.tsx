@@ -5,7 +5,7 @@ export const Route = createFileRoute('/routing-expressions/$expressionId/edit')(
   {
       staticData: {
           breadcrumb: {
-              label: "Aanpassen",
+              label: "Bewerken",
           },
       },
     component: RoutingExpressionsEditPage
