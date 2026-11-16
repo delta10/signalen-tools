@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
-import {Link} from "@tanstack/react-router";
-import {IconPlus} from '@tabler/icons-react';
+import {Link, useNavigate} from "@tanstack/react-router";
+import { IconPlus } from '@tabler/icons-react';
 import { IconFlask } from '@tabler/icons-react';
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getAreas} from "@/services/areas.tsx";
@@ -16,6 +16,7 @@ import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
 
 
 export function RoutingExpressionsPage() {
+    const navigate = useNavigate()
     const [globalFilter, setGlobalFilter] = useState("")
 
     const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useExpressions()
@@ -119,6 +120,17 @@ export function RoutingExpressionsPage() {
                     tableData={tableData}
                     globalFilter={globalFilter}
                     onGlobalFilterChange={setGlobalFilter}
+                    onEdit={(expression) => {
+                        navigate({
+                            to: "/routing-expressions/$expressionId/edit",
+                            params: {
+                                expressionId: String(expression.id),
+                            },
+                        })
+                    }}
+                    onDelete={(expression) => {
+                        console.log("Verwijderen:", expression)
+                    }}
                 />
             </div>
         </div>

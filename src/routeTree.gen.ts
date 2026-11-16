@@ -14,6 +14,7 @@ import { Route as RoutingExpressionsRouteImport } from './routes/routing-express
 import { Route as RoutingExpressionsIndexRouteImport } from './routes/routing-expressions.index'
 import { Route as RoutingExpressionsCreateRouteImport } from './routes/routing-expressions.create'
 import { Route as RoutingExpressionsSimulateRouteImport } from './routes/routing-expressions.simulate'
+import { Route as RoutingExpressionsExpressionIdEditRouteImport } from './routes/routing-expressions.$expressionId.edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -42,6 +43,12 @@ const RoutingExpressionsSimulateRoute =
     path: '/simulate',
     getParentRoute: () => RoutingExpressionsRoute,
   } as any)
+const RoutingExpressionsExpressionIdEditRoute =
+  RoutingExpressionsExpressionIdEditRouteImport.update({
+    id: '/$expressionId/edit',
+    path: '/$expressionId/edit',
+    getParentRoute: () => RoutingExpressionsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -49,12 +56,14 @@ export interface FileRoutesByFullPath {
   '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
   '/routing-expressions/': typeof RoutingExpressionsIndexRoute
+  '/routing-expressions/$expressionId/edit': typeof RoutingExpressionsExpressionIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
   '/routing-expressions': typeof RoutingExpressionsIndexRoute
+  '/routing-expressions/$expressionId/edit': typeof RoutingExpressionsExpressionIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -63,6 +72,7 @@ export interface FileRoutesById {
   '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
   '/routing-expressions/': typeof RoutingExpressionsIndexRoute
+  '/routing-expressions/$expressionId/edit': typeof RoutingExpressionsExpressionIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -72,12 +82,14 @@ export interface FileRouteTypes {
     | '/routing-expressions/create'
     | '/routing-expressions/simulate'
     | '/routing-expressions/'
+    | '/routing-expressions/$expressionId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/routing-expressions/create'
     | '/routing-expressions/simulate'
     | '/routing-expressions'
+    | '/routing-expressions/$expressionId/edit'
   id:
     | '__root__'
     | '/'
@@ -85,6 +97,7 @@ export interface FileRouteTypes {
     | '/routing-expressions/create'
     | '/routing-expressions/simulate'
     | '/routing-expressions/'
+    | '/routing-expressions/$expressionId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutingExpressionsSimulateRouteImport
       parentRoute: typeof RoutingExpressionsRoute
     }
+    '/routing-expressions/$expressionId/edit': {
+      id: '/routing-expressions/$expressionId/edit'
+      path: '/$expressionId/edit'
+      fullPath: '/routing-expressions/$expressionId/edit'
+      preLoaderRoute: typeof RoutingExpressionsExpressionIdEditRouteImport
+      parentRoute: typeof RoutingExpressionsRoute
+    }
   }
 }
 
@@ -136,12 +156,15 @@ interface RoutingExpressionsRouteChildren {
   RoutingExpressionsCreateRoute: typeof RoutingExpressionsCreateRoute
   RoutingExpressionsSimulateRoute: typeof RoutingExpressionsSimulateRoute
   RoutingExpressionsIndexRoute: typeof RoutingExpressionsIndexRoute
+  RoutingExpressionsExpressionIdEditRoute: typeof RoutingExpressionsExpressionIdEditRoute
 }
 
 const RoutingExpressionsRouteChildren: RoutingExpressionsRouteChildren = {
   RoutingExpressionsCreateRoute: RoutingExpressionsCreateRoute,
   RoutingExpressionsSimulateRoute: RoutingExpressionsSimulateRoute,
   RoutingExpressionsIndexRoute: RoutingExpressionsIndexRoute,
+  RoutingExpressionsExpressionIdEditRoute:
+    RoutingExpressionsExpressionIdEditRoute,
 }
 
 const RoutingExpressionsRouteWithChildren =

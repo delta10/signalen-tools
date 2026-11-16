@@ -9,6 +9,7 @@ export function mapExpressionsToTableRows(
     questions: Question[]
 ): RoutingExpressionTableRow[] {
     return expressions.map((expression) => ({
+        id: expression.id,
         order: String(expression.routing?.order ?? ""),
         name: expression.name,
         types: getExpressionTypes(expression),

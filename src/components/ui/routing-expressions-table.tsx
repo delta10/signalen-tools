@@ -9,6 +9,7 @@ import {tableFeatures, useTable, createFilteredRowModel, filterFn_includesString
 import {HighlightText} from "@/components/ui/highlight-text.tsx";
 import {useState} from "react";
 import {RoutingExpressionDetailDialog} from "@/components/expressions/expression-detail-dialog.tsx";
+import {useNavigate} from "@tanstack/react-router";
 
 type RoutingExpressionsTableProps = {
     tableData: RoutingExpressionTableRow[],
@@ -159,6 +160,7 @@ const features = tableFeatures({
 })
 
 export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange, onEdit, onDelete }: RoutingExpressionsTableProps ) {
+    const navigate = useNavigate()
     const [selectedExpression, setSelectedExpression] = useState<RoutingExpressionTableRow | null>(null)
     const columns = getColumns(globalFilter)
     const table = useTable({features, data: tableData, columns, globalFilterFn: "includesString", state: {globalFilter}, onGlobalFilterChange})
@@ -219,8 +221,12 @@ export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilte
                 expression={selectedExpression}
                 onClose={() => setSelectedExpression(null)}
                 onEdit={(expression) => {
-                    setSelectedExpression(null)
-                    onEdit(expression)
+                    navigate({
+                        to: "/routing-expressions/$expressionId/edit",
+                        params: {
+                            expressionId: String(expression.id),
+                        },
+                    })
                 }}
                 onDelete={(expression) => {
                     onDelete(expression)
