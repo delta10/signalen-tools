@@ -159,7 +159,7 @@ const features = tableFeatures({
     }
 })
 
-export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange, onEdit, onDelete }: RoutingExpressionsTableProps ) {
+export function RoutingExpressionsTable({ tableData, globalFilter, onGlobalFilterChange, onDelete }: RoutingExpressionsTableProps ) {
     const navigate = useNavigate()
     const [selectedExpression, setSelectedExpression] = useState<RoutingExpressionTableRow | null>(null)
     const columns = getColumns(globalFilter)
