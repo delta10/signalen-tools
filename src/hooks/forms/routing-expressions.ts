@@ -14,6 +14,11 @@ import { getCategories } from "@/services/categories"
 import { validateRoutingQuery } from "@/utils/validate-routing-query"
 import { mapRoutingQueryToCode } from "@/mappers/query-to-expression"
 
+type UseRoutingExpressionFormOptions = {
+    initialValues?: RoutingExpressionFormData
+    expression?: Expression
+}
+
 const defaultValues: RoutingExpressionFormData = {
     name: "",
     order: 0,
@@ -25,9 +30,9 @@ const defaultValues: RoutingExpressionFormData = {
     },
 }
 
-export function useRoutingExpressionForm() {
+export function useRoutingExpressionForm({initialValues, expression}: UseRoutingExpressionFormOptions) {
     const navigate = useNavigate()
-    const { add } = useExpressionActions()
+    const { add, update } = useExpressionActions()
 
     const { data: departments } = useQuery({
         queryKey: ["departments"],
@@ -40,7 +45,7 @@ export function useRoutingExpressionForm() {
     })
 
     return useForm({
-        defaultValues,
+        defaultValues: initialValues ?? defaultValues,
 
         onSubmit: async ({ value }) => {
             if (!departments || !categories) {
@@ -73,11 +78,11 @@ export function useRoutingExpressionForm() {
             try {
                 const code = mapRoutingQueryToCode(query, { categories })
 
-                const newExpression: Expression = {
-                    id: crypto.randomUUID(),
+                const savedExpression: Expression = {
+                    id: expression?.id ?? crypto.randomUUID(),
                     name: value.name.trim(),
                     code,
-                    type: "routing",
+                    type: expression?.type ?? "routing",
                     isActive: value.isActive,
                     routing: {
                         department,
@@ -85,9 +90,13 @@ export function useRoutingExpressionForm() {
                     },
                 }
 
-                add(newExpression)
-
-                toast.success("Routeringsregel succesvol toegevoegd")
+                if (expression) {
+                    update(savedExpression)
+                    toast.success("Routeringsregel succesvol aangepast")
+                } else {
+                    add(savedExpression)
+                    toast.success("Routeringsregel succesvol toegevoegd")
+                }
 
                 await navigate({
                     to: "/routing-expressions",

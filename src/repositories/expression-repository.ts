@@ -22,7 +22,35 @@ export const expressionRepository = {
         this.saveAll([...expressions, expression])
     },
 
-    remove(id: string): void {
+    getById(id: Expression["id"]): Expression | undefined {
+        return this.getAll().find(
+            (expression) => expression.id === id
+        )
+    },
+
+    update(expression: Expression): void {
+        const expressions = this.getAll()
+
+        const exists = expressions.some(
+            (existing) => existing.id === expression.id
+        )
+
+        if (!exists) {
+            throw new Error(
+                `Expression met ID ${expression.id} niet gevonden`
+            )
+        }
+
+        this.saveAll(
+            expressions.map((existing) =>
+                existing.id === expression.id
+                    ? expression
+                    : existing
+            )
+        )
+    },
+
+    remove(id: Expression["id"]): void {
         const expressions = this.getAll()
 
         this.saveAll(

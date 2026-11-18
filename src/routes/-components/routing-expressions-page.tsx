@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button.tsx";
-import {Link} from "@tanstack/react-router";
-import {IconPlus} from '@tabler/icons-react';
+import {Link, useNavigate} from "@tanstack/react-router";
+import { IconPlus } from '@tabler/icons-react';
 import { IconFlask } from '@tabler/icons-react';
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getAreas} from "@/services/areas.tsx";
@@ -12,10 +12,12 @@ import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";
 import {ExpressionFileActions} from "@/components/expressions/expression-file-actions.tsx";
 import {getDepartments} from "@/services/departments.tsx";
-import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import {useExpressionActions, useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import {toast} from "sonner";
 
 
 export function RoutingExpressionsPage() {
+    const navigate = useNavigate()
     const [globalFilter, setGlobalFilter] = useState("")
 
     const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useExpressions()
@@ -40,6 +42,8 @@ export function RoutingExpressionsPage() {
         areas,
         questions
     )
+
+    const { remove } = useExpressionActions()
     const isLoading = isExpressionsLoading || isDepartmentsLoading || isQuestionsLoading || isAreasLoading
     const error = expressionsError || departmentsError || questionsError || areasError
 
@@ -119,6 +123,26 @@ export function RoutingExpressionsPage() {
                     tableData={tableData}
                     globalFilter={globalFilter}
                     onGlobalFilterChange={setGlobalFilter}
+                    onEdit={(expression) => {
+                        navigate({
+                            to: "/routing-expressions/$expressionId/edit",
+                            params: {
+                                expressionId: expression.id,
+                            },
+                        })
+                    }}
+                    onDelete={(expression) => {
+                        try {
+                            remove(expression.id)
+                            toast.success("Routing expression verwijderd", {
+                                description: `"${expression.name}" is succesvol verwijderd.`,
+                            })
+                        } catch {
+                            toast.error("Verwijderen mislukt", {
+                                description: "De routing expression kon niet worden verwijderd.",
+                            })
+                        }
+                    }}
                 />
             </div>
         </div>
