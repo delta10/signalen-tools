@@ -14,7 +14,8 @@ const defaultValues: RoutingExpressionFormData = {
     isActive: true,
     department: "",
     conditionGroups: [],
-    conditionOperator: "AND"
+    conditionOperator: "AND",
+    user: ""
 }
 
 export function useRoutingExpressionForm() {

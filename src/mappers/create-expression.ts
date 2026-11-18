@@ -33,6 +33,7 @@ export function mapCreateExpressionFormToDomain(
         routing: {
             department,
             order: values.order,
+            user: values.user.trim() || null,
         },
     }
 }
