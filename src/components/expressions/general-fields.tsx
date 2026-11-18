@@ -1,9 +1,9 @@
-import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
+import type {RoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {Input} from "@/components/ui/input.tsx";
 import {Switch} from "@/components/ui/switch.tsx";
 
 type GeneralFieldsProps = {
-    form: ReturnType<typeof useRoutingExpressionForm>
+    form: RoutingExpressionForm
 }
 export function GeneralFields({form}: GeneralFieldsProps) {
     return(

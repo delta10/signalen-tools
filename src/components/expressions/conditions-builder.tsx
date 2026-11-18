@@ -1,4 +1,4 @@
-import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
+import type {RoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts"
 import { Button } from "@/components/ui/button.tsx"
 import { useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/services/categories.tsx"
@@ -11,7 +11,7 @@ import {ConditionOperators, type ConditionType, ConditionTypes} from "@/types/fo
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 
 type ConditionsProps = {
-    form: ReturnType<typeof useRoutingExpressionForm>
+    form: RoutingExpressionForm
 }
 
 export function ConditionsBuilder({ form }: ConditionsProps) {

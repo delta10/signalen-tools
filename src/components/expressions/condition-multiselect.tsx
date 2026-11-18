@@ -1,4 +1,4 @@
-import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
+import type {RoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator} from "@/components/ui/command.tsx";
@@ -12,7 +12,7 @@ type MultiSelectItem = {
 }
 
 type ConditionMultiSelectProps = {
-    form: ReturnType<typeof useRoutingExpressionForm>
+    form: RoutingExpressionForm
     groupIndex: number
     items: MultiSelectItem[]
     placeholder: string
