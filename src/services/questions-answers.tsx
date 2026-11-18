@@ -1,7 +1,6 @@
-import questions from "@/data/Question-2026-09-08.json"
-import type {Question} from "@/types/domain/reference-data.ts";
-import {mapQuestionTransfersToDomain} from "@/mappers/import-export.ts";
+import type { Question } from "@/types/domain/reference-data"
+import { questionRepository } from "@/repositories/reference-data"
 
 export async function getQuestions(): Promise<Question[]> {
-    return mapQuestionTransfersToDomain(questions)
+    return questionRepository.getAll()
 }

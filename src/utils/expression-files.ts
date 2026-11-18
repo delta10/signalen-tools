@@ -24,3 +24,15 @@ export function downloadJsonFile(filename: string, data: unknown): void {
 
     URL.revokeObjectURL(url)
 }
+
+export function getExportFilename(type: string): string {
+    const date = new Date()
+
+    const formattedDate = [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+    ].join("-")
+
+    return `${type}-${formattedDate}.json`
+}

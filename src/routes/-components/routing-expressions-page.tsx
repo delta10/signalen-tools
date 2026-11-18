@@ -10,13 +10,15 @@ import {mapExpressionsToTableRows} from "@/mappers/routing-expressions-table.ts"
 import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {useState} from "react";
-import {ExpressionFileActions} from "@/components/expressions/expression-file-actions.tsx";
+import {ExpressionFileActions} from "@/components/import-export/expression-file-actions.tsx";
 import {getDepartments} from "@/services/departments.tsx";
 import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import { getReferenceDataStatus } from "@/utils/reference-data-status";
 
 
 export function RoutingExpressionsPage() {
     const [globalFilter, setGlobalFilter] = useState("")
+    const { isReady } = getReferenceDataStatus()
 
     const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useExpressions()
 
@@ -72,12 +74,27 @@ export function RoutingExpressionsPage() {
                 <div className="flex flex-col items-center justify-center gap-4 flex-1">
                     <p>Er zijn nog geen routeerregels aangemaakt.</p>
                     <div className={"flex justify-center gap-4"}>
-                        <Button className="rounded-sm" size="lg" asChild>
-                            <Link to="/routing-expressions/create" className="flex items-center gap-1">
-                                <IconPlus data-icon="inline-start" /> Routing Expression Toevoegen
-                            </Link>
-                        </Button>
-                        <ExpressionFileActions departments={departments} />
+                        {isReady ? (
+                            <Button className="rounded-sm" size="lg" asChild>
+                                <Link to="/routing-expressions/create">
+                                    <IconPlus data-icon="inline-start" />
+                                    Routing Expression Toevoegen
+                                </Link>
+                            </Button>
+                        ) : (
+                            <div className={"flex flex-col justify-center items-center gap-4"}>
+                            <Button className="rounded-sm" size="lg" disabled>
+                                <IconPlus data-icon="inline-start" />
+                                Routing Expression Toevoegen
+                            </Button>
+                            <p className="text-xs text-muted-foreground">
+                                Importeer eerst de verplichte referentiegegevens via de{" "}
+                                <Link to="/" className="underline">
+                                    homepagina
+                                </Link>.
+                            </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -101,11 +118,27 @@ export function RoutingExpressionsPage() {
                     </div>
                     <div className={"flex flex-col items-end lg:flex-row lg:justify-end gap-4"}>
                         <ExpressionFileActions departments={departments} />
-                        <Button className={"rounded-sm lg:order-2"} size={"lg"} asChild>
-                            <Link to={"/routing-expressions/create"} className={"flex items-center gap-1"}>
-                                <IconPlus data-icon={"inline-start"} /> Routing Expression Toevoegen
-                            </Link>
-                        </Button>
+                        {isReady ? (
+                            <Button className="rounded-sm lg:order-2" size="lg" asChild>
+                                <Link to="/routing-expressions/create">
+                                    <IconPlus data-icon="inline-start" />
+                                    Routing Expression Toevoegen
+                                </Link>
+                            </Button>
+                        ) : (
+                            <div className={"flex flex-col justify-center items-center gap-4"}>
+                                <Button className="rounded-sm lg:order-2" size="lg" disabled>
+                                    <IconPlus data-icon="inline-start" />
+                                    Routing Expression Toevoegen
+                                </Button>
+                                <p className="text-xs text-muted-foreground">
+                                    Importeer eerst de verplichte referentiegegevens via de{" "}
+                                    <Link to="/" className="underline">
+                                        homepagina
+                                    </Link>.
+                                </p>
+                            </div>
+                        )}
                         <Button className={"rounded-sm lg:order-1"} variant={"secondary"} size={"lg"} asChild>
                             <Link to={"/routing-expressions/simulate"} className={"flex items-center gap-1"}>
                                 <IconFlask data-icon={"inline-start"} /> Routing simuleren
