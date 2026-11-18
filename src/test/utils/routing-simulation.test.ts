@@ -21,6 +21,7 @@ describe("Routing simulation", () => {
                 isIntern: true,
             },
             order: 10,
+            user: null,
         },
     }
 
