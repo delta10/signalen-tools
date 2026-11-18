@@ -6,7 +6,7 @@ import type { RoutingSimulationData } from "@/types/routing-simulations"
 
 describe("Routing simulation", () => {
     const expression: Expression = {
-        id: 1,
+        id: "1",
         name: "Straatverlichting Uden",
         code:
             'sub == "Straatverlichting" and ' +
@@ -21,6 +21,7 @@ describe("Routing simulation", () => {
                 isIntern: true,
             },
             order: 10,
+            user: null,
         },
     }
 
@@ -161,7 +162,7 @@ describe("Routing simulation", () => {
         it("selects the matching expression with the lowest order", () => {
             const higherPriority: Expression = {
                 ...expression,
-                id: 2,
+                id: "2",
                 name: "Higher priority",
                 routing: {
                     ...expression.routing!,
@@ -179,7 +180,7 @@ describe("Routing simulation", () => {
 
             const selected = getSelectedRoutingExpression(results)
 
-            expect(selected?.expression.id).toBe(2)
+            expect(selected?.expression.id).toBe("2")
             expect(selected?.order).toBe(1)
         })
 

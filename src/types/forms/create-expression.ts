@@ -20,6 +20,7 @@ export type RoutingExpressionFormData = {
     conditionOperator: ConditionOperator
     conditionGroups: RoutingConditionGroup[]
     department: string
+    user: string
 }
 
 export const ConditionTypes = {
@@ -30,8 +31,6 @@ export const ConditionTypes = {
 
 export type ConditionType =
     typeof ConditionTypes[keyof typeof ConditionTypes]
-
-export type FormConditionType = ConditionType | ""
 
 export const ConditionOperators = {
     AND: "AND",

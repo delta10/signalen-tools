@@ -56,7 +56,7 @@ describe("mapTransfersToDomain", () => {
 
         expect(result).toEqual([
             {
-                id: 1,
+                id: expect.any(String),
                 name: "Straatverlichting",
                 code: 'sub == "Straatverlichting"',
                 type: "routing",
