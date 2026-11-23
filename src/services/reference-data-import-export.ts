@@ -7,7 +7,7 @@ import type {
 import {
     mapAreaTransfersToDomain,
     mapCategoryTransfersToDomain,
-    mapDepartmentTransfersToDomain,
+    mapDepartmentTransfersToDomain, mapQuestionDomainToTransfers,
     mapQuestionTransfersToDomain
 } from "@/mappers/import-export.ts"
 import {
@@ -37,14 +37,35 @@ async function importReferenceData<TTransfer, TDomain>(
     save(mapped, data as TTransfer[])
 }
 
+
 export async function importCategories(file: File): Promise<void> {
-    return importReferenceData<CategoryTransfer, Category>(
-        file,
-        "categories",
-        mapCategoryTransfersToDomain,
-        (data, original) =>
-            categoryRepository.saveImported(data, original)
-    )
+    const data = await readJsonFile<unknown>(file)
+    validateReferenceData(data, "categories")
+
+    const original = data as CategoryTransfer[]
+    const mapped = mapCategoryTransfersToDomain(original)
+
+    if (questionRepository.hasData()) {
+        const existingCategories = categoryRepository.getAll()
+
+        const changed = existingCategories.some(existing => {
+            const replacement = mapped.find(
+                category => category.id === existing.id
+            )
+
+            return replacement?.slug !== existing.slug
+        })
+
+        if (changed) {
+            throw new Error(
+                "De categorie-import verandert bestaande categorie-IDs. " +
+                "Dit kan de koppelingen met vragen beschadigen. " +
+                "Import is daarom geblokkeerd."
+            )
+        }
+    }
+
+    categoryRepository.saveImported(mapped, original)
 }
 
 export async function importAreas(file: File): Promise<void> {
@@ -67,15 +88,28 @@ export async function importDepartments(file: File): Promise<void> {
     )
 }
 
+
 export async function importQuestions(file: File): Promise<void> {
+    const categories = categoryRepository.getAll()
+
+    if (!categoryRepository.hasData()) {
+        throw new Error(
+            "Importeer eerst de categorieën voordat je vragen importeert."
+        )
+    }
+
     return importReferenceData<QuestionsTransfer, Question>(
         file,
         "questions",
-        mapQuestionTransfersToDomain,
+        data => mapQuestionTransfersToDomain(
+            data,
+            categories
+        ),
         (data, original) =>
             questionRepository.saveImported(data, original)
     )
 }
+
 
 export function exportCategories(): void {
     downloadJsonFile(
@@ -99,8 +133,18 @@ export function exportDepartments(): void {
 }
 
 export function exportQuestions(): void {
+    const questions = questionRepository.getAll()
+    const categories = categoryRepository.getAll()
+    const originalQuestions = questionRepository.getOriginal()
+
+    const transfers = mapQuestionDomainToTransfers(
+        questions,
+        categories,
+        originalQuestions
+    )
+
     downloadJsonFile(
         getExportFilename("Question"),
-        questionRepository.getOriginal()
+        transfers
     )
 }

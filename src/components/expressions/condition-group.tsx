@@ -49,6 +49,7 @@ export function ConditionGroup({form, group, groupIndex, categories, areas, ques
                         form={form}
                         groupIndex={groupIndex}
                         questions={questions}
+                        categories={categories}
                     />
                 )
         }

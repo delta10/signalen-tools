@@ -22,6 +22,19 @@ function createReferenceRepository<TDomain, TTransfer>(type: string) {
             return getStored()?.data ?? []
         },
 
+        saveAll(data: TDomain[]): void {
+            const stored = getStored()
+
+            localStorage.setItem(
+                storageKey,
+                JSON.stringify({
+                    data,
+                    original: stored?.original ?? [],
+                })
+            )
+        },
+
+
         getOriginal(): TTransfer[] {
             return getStored()?.original ?? []
         },
@@ -55,5 +68,56 @@ export const areaRepository =
 export const departmentRepository =
     createReferenceRepository<Department, DepartmentTransfer>("departments")
 
-export const questionRepository =
+
+const baseQuestionRepository =
     createReferenceRepository<Question, QuestionsTransfer>("questions")
+
+export const questionRepository = {
+    ...baseQuestionRepository,
+
+    getById(id: number): Question | undefined {
+        return this.getAll().find(
+            (question) => question.id === id
+        )
+    },
+
+    add(question: Question): void {
+        const questions = this.getAll()
+
+        if (questions.some(q => q.id === question.id)) {
+            throw new Error("Question ID already exists")
+        }
+
+        if (questions.some(q => q.key === question.key)) {
+            throw new Error("Question key already exists")
+        }
+
+        this.saveAll([...questions, question])
+    },
+
+    update(question: Question): void {
+        const questions = this.getAll()
+
+        if (!questions.some(q => q.id === question.id)) {
+            throw new Error("Question not found")
+        }
+
+        if (questions.some(
+            q => q.key === question.key && q.id !== question.id
+        )) {
+            throw new Error("Question key already exists")
+        }
+
+        this.saveAll(
+            questions.map(q =>
+                q.id === question.id ? question : q
+            )
+        )
+    },
+
+    remove(id: number): void {
+        this.saveAll(
+            this.getAll().filter(q => q.id !== id)
+        )
+    },
+}

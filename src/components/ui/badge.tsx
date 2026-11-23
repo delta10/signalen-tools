@@ -20,7 +20,9 @@ const badgeVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         area: "px-4 bg-green-100 text-green-600",
         question: "px-4 bg-red-100 text-red-600",
-        category: "px-4 bg-orange-100 text-orange-600"
+        category: "px-4 bg-orange-100 text-orange-600",
+        radio: "px-4 bg-blue-100 text-blue-600",
+        checkbox: "px-4 bg-pink-100 text-pink-600"
       },
     },
     defaultVariants: {

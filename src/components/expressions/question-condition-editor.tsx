@@ -1,5 +1,5 @@
 import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
-import type { Question } from "@/types/domain/reference-data.ts"
+import type {Category, Question} from "@/types/domain/reference-data.ts"
 import {isSupportedQuestion} from "@/mappers/form-to-transfer.ts"
 import { Button } from "@/components/ui/button.tsx"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
@@ -8,9 +8,10 @@ type QuestionConditionEditorProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
     groupIndex: number
     questions: Question[]
+    categories: Category[]
 }
 
-export function QuestionConditionEditor({form, groupIndex, questions}: QuestionConditionEditorProps) {
+export function QuestionConditionEditor({form, groupIndex, questions, categories}: QuestionConditionEditorProps) {
     return (
         <form.Subscribe selector={(state) => state.values.conditionGroups}>
             {(conditionGroups) => {
@@ -20,15 +21,17 @@ export function QuestionConditionEditor({form, groupIndex, questions}: QuestionC
 
                 const selectedCategories = categoryGroup?.values ?? []
 
+                const selectedCategoryIds = categories
+                    .filter(category => selectedCategories.includes(category.slug))
+                    .map(category => category.id)
+
                 const relevantQuestions = questions
                     .filter(isSupportedQuestion)
-                    .filter((question) => {
-                    const questionCategories = question.categorySlugs
-
-                    return selectedCategories.some((category) =>
-                        questionCategories.includes(category)
+                    .filter(question =>
+                        question.categoryIds.some(id =>
+                            selectedCategoryIds.includes(id)
+                        )
                     )
-                })
 
                 if (!selectedCategories.length) {
                     return (
