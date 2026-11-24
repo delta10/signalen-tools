@@ -18,7 +18,7 @@ import {
 } from "@/repositories/reference-data"
 import {downloadJsonFile, getExportFilename, readJsonFile} from "@/utils/expression-files.ts"
 import { validateReferenceData } from "@/utils/reference-data-validation"
-import type {Area, Category, Department, Question} from "@/types/domain/reference-data.ts";
+import type {Area, Department, Question} from "@/types/domain/reference-data.ts";
 
 // Generic import helper
 async function importReferenceData<TTransfer, TDomain>(
