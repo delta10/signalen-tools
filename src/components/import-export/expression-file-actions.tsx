@@ -70,19 +70,30 @@ export function ExpressionFileActions({ departments, variant = "dropdown", }: Pr
     }
 
     function handleExport() {
-        const warnings = questionRepository.hasData()
-            ? validateQuestionReferences(
-                expressionRepository.getAll(),
-                questionRepository.getAll()
+        try {
+            const warnings = questionRepository.hasData()
+                ? validateQuestionReferences(
+                    expressionRepository.getAll(),
+                    questionRepository.getAll()
+                )
+                : [
+                    "Er zijn geen vraaggegevens geïmporteerd. " +
+                    "Vraagverwijzingen konden niet worden gecontroleerd."
+                ]
+
+            if (warnings.length > 0) {
+                setExportWarnings(warnings)
+                return
+            }
+
+            performExport()
+        } catch (error) {
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "De exportcontrole kon niet worden uitgevoerd."
             )
-            : ["Er zijn geen vraaggegevens geïmporteerd. Vraagverwijzingen konden niet worden gecontroleerd."]
-
-        if (warnings.length > 0) {
-            setExportWarnings(warnings)
-            return
         }
-
-        performExport()
     }
 
     return (

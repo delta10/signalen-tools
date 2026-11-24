@@ -7,6 +7,7 @@ import { questionRepository } from "@/repositories/reference-data"
 import { getCategories } from "@/services/categories"
 import { questionsQueryKey } from "@/hooks/questions/use-questions"
 import { Skeleton } from "@/components/ui/skeleton"
+import {toast} from "sonner";
 
 export function QuestionsCreatePage() {
     const navigate = useNavigate()
@@ -40,6 +41,7 @@ export function QuestionsCreatePage() {
                 questionRepository.getAll()
             )
 
+            toast.success("Aanvullende vraag succesvol toegevoegd.")
             navigate({ to: "/questions" })
         } catch (err) {
             setError(

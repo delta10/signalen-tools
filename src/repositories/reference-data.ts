@@ -85,11 +85,11 @@ export const questionRepository = {
         const questions = this.getAll()
 
         if (questions.some(q => q.id === question.id)) {
-            throw new Error("Question ID already exists")
+            throw new Error("Er bestaat al een vraag met dit ID.")
         }
 
         if (questions.some(q => q.key === question.key)) {
-            throw new Error("Question key already exists")
+            throw new Error(`Er bestaat al een aanvullende vraag met de key "${question.key}".`)
         }
 
         this.saveAll([...questions, question])
@@ -99,13 +99,13 @@ export const questionRepository = {
         const questions = this.getAll()
 
         if (!questions.some(q => q.id === question.id)) {
-            throw new Error("Question not found")
+            throw new Error("De aanvullende vraag kon niet worden gevonden.")
         }
 
         if (questions.some(
             q => q.key === question.key && q.id !== question.id
         )) {
-            throw new Error("Question key already exists")
+            throw new Error(`Er bestaat al een aanvullende vraag met de key "${question.key}".`)
         }
 
         this.saveAll(

@@ -15,7 +15,6 @@ import {toast} from "sonner";
 import {isSupportedQuestion} from "@/utils/questions.ts";
 import { getExpressionsUsingQuestion } from "@/utils/questions"
 import { useExpressions } from "@/hooks/import-export/use-expressions"
-import { IconAlertTriangle } from "@tabler/icons-react"
 import { QuestionDependencyWarning } from "@/components/questions/question-dependency-warning"
 
 export function QuestionsPage() {
@@ -90,7 +89,7 @@ export function QuestionsPage() {
             refreshQuestions()
             setEditingQuestion(null)
             setError("")
-            toast.success("De aanvullende vraag is succesvol bewerkt!")
+            toast.success("Aanvullende vraag succesvol bewerkt.")
         } catch (err) {
             setError(
                 err instanceof Error
@@ -109,7 +108,7 @@ export function QuestionsPage() {
             refreshQuestions()
             setDeletingQuestion(null)
             setError("")
-            toast.success("Aanvullende vraag succesvol verwijderd")
+            toast.success("Aanvullende vraag succesvol verwijderd.")
         } catch (err) {
             setError(
                 err instanceof Error
@@ -185,40 +184,18 @@ export function QuestionsPage() {
                         wilt verwijderen? Dit kan niet ongedaan worden gemaakt.
                     </p>
                     {dependentExpressions.length > 0 && (
-                        <div className="mt-4 flex items-start gap-3 rounded-md border border-amber-500/30 bg-amber-500/10 p-4">
-                            <IconAlertTriangle className="size-5 shrink-0 text-amber-600" />
-                            <div className="flex min-w-0 flex-col gap-2">
-                                <p className="text-sm font-medium">
-                                    Deze vraag wordt gebruikt in{" "}
-                                    {dependentExpressions.length}{" "}
-                                    {dependentExpressions.length === 1
+                        <div className="mt-4">
+                            <QuestionDependencyWarning
+                                expressions={dependentExpressions}
+                                title={`Deze vraag wordt gebruikt in ${
+                                    dependentExpressions.length
+                                } ${
+                                    dependentExpressions.length === 1
                                         ? "routing expression"
-                                        : "routing expressions"}.
-                                </p>
-
-                                <p className="text-sm text-muted-foreground">
-                                    Het verwijderen van deze vraag kan ervoor zorgen
-                                    dat onderstaande routeringen niet meer correct werken.
-                                </p>
-
-                                <ul className="max-h-40 list-disc space-y-1 overflow-y-auto pl-5 text-sm">
-                                    {dependentExpressions.length > 0 && (
-                                        <div className="mt-4">
-                                            <QuestionDependencyWarning
-                                                expressions={dependentExpressions}
-                                                title={`Deze vraag wordt gebruikt in ${
-                                                    dependentExpressions.length
-                                                } ${
-                                                    dependentExpressions.length === 1
-                                                        ? "routing expression"
-                                                        : "routing expressions"
-                                                }.`}
-                                                description="Het verwijderen van deze vraag kan ervoor zorgen dat onderstaande routeringen niet meer correct werken."
-                                            />
-                                        </div>
-                                    )}
-                                </ul>
-                            </div>
+                                        : "routing expressions"
+                                }.`}
+                                description="Het verwijderen van deze vraag kan ervoor zorgen dat onderstaande routeringen niet meer correct werken."
+                            />
                         </div>
                     )}
 
@@ -278,6 +255,7 @@ export function QuestionsPage() {
                             categories={categories}
                             onEdit={handleEdit}
                             onDelete={question => {
+                                setError("")
                                 setEditingQuestion(null)
                                 setDeletingQuestion(question)
                             }}

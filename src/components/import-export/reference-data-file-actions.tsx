@@ -13,6 +13,7 @@ import {
     exportDepartments,
     exportQuestions,
 } from "@/services/reference-data-import-export"
+import {questionsQueryKey} from "@/hooks/questions/use-questions.ts";
 
 type ReferenceDataType =
     | "categories"
@@ -45,7 +46,7 @@ const actions = {
     questions: {
         import: importQuestions,
         export: exportQuestions,
-        queryKey: ["questions"],
+        queryKey: questionsQueryKey,
     },
 }
 
@@ -90,9 +91,11 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
         try {
             action.export()
             toast.success("Gegevens succesvol geëxporteerd.")
-        } catch {
+        } catch (error) {
             toast.error(
-                "Er is iets misgegaan tijdens het exporteren."
+                error instanceof Error
+                    ? error.message
+                    : "Er is iets misgegaan tijdens het exporteren."
             )
         }
     }
