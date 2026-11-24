@@ -148,8 +148,12 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                         {(selectedCategory) => (
                             <form.Field name="question">
                                 {(field) => {
-                                    const relevantQuestions = questions.filter((question) =>
-                                        question.categorySlugs.includes(selectedCategory)
+                                    const selectedCategoryIds = categories
+                                        .filter(category => category.slug === selectedCategory)
+                                        .map(category => category.id)
+
+                                    const relevantQuestions = questions.filter(question =>
+                                        question.categoryIds.some(id => selectedCategoryIds.includes(id))
                                     )
 
                                     if (relevantQuestions.length === 0) {

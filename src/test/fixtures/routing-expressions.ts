@@ -19,7 +19,7 @@ export const questionsFixture: Question[] = [
                 label: "Anders",
             },
         ],
-        categorySlugs: [],
+        categoryIds: [],
     },
     {
         id: 2,
@@ -33,7 +33,7 @@ export const questionsFixture: Question[] = [
                 label: "De textielcontainer is beschadigd",
             },
         ],
-        categorySlugs: [],
+        categoryIds: [],
     },
 ]
 
