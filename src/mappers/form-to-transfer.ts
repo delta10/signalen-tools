@@ -1,13 +1,5 @@
 import type {ConditionType, RoutingConditionGroup} from "@/types/forms/create-expression.ts"
-import type {Category, Question} from "@/types/domain/reference-data.ts";
-
-/* Helper function to identify radio & checkbox input questions */
-export function isSupportedQuestion(question: Question): boolean {
-    return (
-        question.fieldType === "radio_input" ||
-        question.fieldType === "checkbox_input"
-    )
-}
+import type {Category} from "@/types/domain/reference-data.ts";
 
 /* Convert one condition value to expression code based on its group type */
 export function convertConditionValueToExpression(type: ConditionType, value: string,): string {

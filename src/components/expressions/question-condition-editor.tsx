@@ -1,6 +1,6 @@
 import type { useRoutingExpressionForm } from "@/hooks/forms/routing-expressions.ts"
 import type {Category, Question} from "@/types/domain/reference-data.ts"
-import {isSupportedQuestion} from "@/mappers/form-to-transfer.ts"
+import { getQuestionsForCategories } from "@/utils/questions"
 import { Button } from "@/components/ui/button.tsx"
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu.tsx"
 
@@ -20,18 +20,7 @@ export function QuestionConditionEditor({form, groupIndex, questions, categories
                 )
 
                 const selectedCategories = categoryGroup?.values ?? []
-
-                const selectedCategoryIds = categories
-                    .filter(category => selectedCategories.includes(category.slug))
-                    .map(category => category.id)
-
-                const relevantQuestions = questions
-                    .filter(isSupportedQuestion)
-                    .filter(question =>
-                        question.categoryIds.some(id =>
-                            selectedCategoryIds.includes(id)
-                        )
-                    )
+                const relevantQuestions = getQuestionsForCategories(questions, categories, selectedCategories)
 
                 if (!selectedCategories.length) {
                     return (
@@ -57,9 +46,7 @@ export function QuestionConditionEditor({form, groupIndex, questions, categories
                                         question.key === questionField.state.value
                                 )
 
-                            const answers = selectedQuestion
-                                ? selectedQuestion.answers.map((answer) => answer.label)
-                                : []
+                            const answers = selectedQuestion?.answers ?? []
 
                             return (
                                 <div className="flex flex-col gap-3">
@@ -77,9 +64,15 @@ export function QuestionConditionEditor({form, groupIndex, questions, categories
                                                 (question) => (
                                                     <DropdownMenuItem
                                                         key={question.key}
-                                                        onSelect={() =>
-                                                            questionField.handleChange(question.key)
-                                                        }
+                                                        onSelect={() => {
+                                                            if (questionField.state.value !== question.key) {
+                                                                questionField.handleChange(question.key)
+                                                                form.setFieldValue(
+                                                                    `conditionGroups[${groupIndex}].answer`,
+                                                                    ""
+                                                                )
+                                                            }
+                                                        }}
                                                     >
                                                         {question.label}
                                                     </DropdownMenuItem>
@@ -94,23 +87,28 @@ export function QuestionConditionEditor({form, groupIndex, questions, categories
                                             {(answerField) => (
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button type="button" variant="outline" className="w-fit">
-                                                            {answerField.state.value || "Selecteer antwoord"}
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            className="w-fit"
+                                                        >
+                                                            {answers.find(
+                                                                answer => answer.value === answerField.state.value
+                                                            )?.label ?? "Selecteer antwoord"}
                                                         </Button>
                                                     </DropdownMenuTrigger>
 
                                                     <DropdownMenuContent>
-                                                        {answers.map(
-                                                            (answer) => (
-                                                                <DropdownMenuItem key={answer}
-                                                                    onSelect={() =>
-                                                                        answerField.handleChange(answer)
-                                                                    }
-                                                                >
-                                                                    {answer}
-                                                                </DropdownMenuItem>
-                                                            )
-                                                        )}
+                                                        {answers.map(answer => (
+                                                            <DropdownMenuItem
+                                                                key={answer.value}
+                                                                onSelect={() =>
+                                                                    answerField.handleChange(answer.value)
+                                                                }
+                                                            >
+                                                                {answer.label}
+                                                            </DropdownMenuItem>
+                                                        ))}
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
                                             )}

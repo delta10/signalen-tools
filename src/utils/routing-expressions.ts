@@ -140,3 +140,30 @@ export function getExpressionQuestionConditions(
             value: match[2],
         }))
 }
+
+export function extractQuestionReferences(code: string): { key: string; value: string }[] {
+    const matches = code.matchAll(
+        /"(?:\\.|[^"\\])*"|([A-Za-z_][A-Za-z0-9_]*)\s*==\s*("(?:\\.|[^"\\])*")/g
+    )
+
+    const references: { key: string; value: string }[] = []
+
+    for (const match of matches) {
+        const [, key, rawValue] = match
+
+        if (!key || key === "sub") {
+            continue
+        }
+
+        try {
+            references.push({
+                key,
+                value: JSON.parse(rawValue) as string,
+            })
+        } catch {
+            continue
+        }
+    }
+
+    return references
+}

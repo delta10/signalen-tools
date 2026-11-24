@@ -1,13 +1,12 @@
 import type { Category, Question } from "@/types/domain/reference-data"
 import { mapCategorySlugsToIds } from "@/mappers/question-categories"
+import {isSupportedQuestionType} from "@/utils/questions.ts";
 
 type LegacyQuestion = Omit<Question, "categoryIds"> & {
     categorySlugs: string[]
 }
 
 type StoredQuestion = Question | LegacyQuestion
-
-const supportedTypes = ["radio_input", "checkbox_input"]
 
 function isLegacyQuestion(question: StoredQuestion): question is LegacyQuestion {
     return !("categoryIds" in question)
@@ -30,21 +29,13 @@ export function migrateQuestionCategories(
 
         migrated = true
 
-        if (!supportedTypes.includes(question.fieldType)) {
-            return {
-                ...question,
-                categoryIds: [],
-            }
-        }
-
         const { categorySlugs, ...rest } = question
 
         return {
             ...rest,
-            categoryIds: mapCategorySlugsToIds(
-                categorySlugs,
-                categories
-            ),
+            categoryIds: isSupportedQuestionType(question.fieldType)
+                ? mapCategorySlugsToIds(categorySlugs, categories)
+                : [],
         }
     })
 

@@ -8,13 +8,16 @@ import {IconChevronDown, IconX} from "@tabler/icons-react"
 import { QuestionCategorySelector } from "./question-category-selector"
 import { QuestionAnswerFields } from "./question-answer-field"
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuRadioGroup, DropdownMenuRadioItem,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu.tsx";
-
-export type SupportedQuestionType = "radio_input" | "checkbox_input"
+    type SupportedQuestionType,
+    validateQuestionKey,
+    getExpressionsUsingQuestion,
+    getExpressionsAffectedByAnswerChanges,
+    getExpressionsAffectedByCategoryChanges,
+    getNextAnswerValue
+} from "@/utils/questions"
+import {DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
+import type { Expression } from "@/types/domain/routing"
+import { QuestionDependencyWarning } from "./question-dependency-warning"
 
 export type QuestionFormData = Omit<Question, "id" | "fieldType"> & {
     fieldType: SupportedQuestionType
@@ -25,6 +28,7 @@ type QuestionFormProps = {
     categories: Category[]
     onSave: (question: QuestionFormData) => void
     onCancel: () => void
+    expressions?: Expression[]
 }
 
 const fieldTypes: {
@@ -35,7 +39,7 @@ const fieldTypes: {
     { value: "checkbox_input", label: "Meerdere keuzes (checkbox)" },
 ]
 
-export function QuestionForm({question, categories, onSave, onCancel,}: QuestionFormProps) {
+export function QuestionForm({question, categories, expressions = [], onSave, onCancel}: QuestionFormProps) {
     const [form, setForm] = useState<QuestionFormData>({
         key: question?.key ?? "",
         label: question?.label ?? "",
@@ -43,9 +47,29 @@ export function QuestionForm({question, categories, onSave, onCancel,}: Question
         required: question?.required ?? true,
         categoryIds: [...(question?.categoryIds ?? [])],
         answers: question?.answers.map(a => ({ ...a })) ?? [],
+        nextAnswerValue: getNextAnswerValue(
+            question?.answers ?? [],
+            question?.nextAnswerValue
+        ),
     })
-
     const [error, setError] = useState("")
+
+    const hasKeyChanged = question !== undefined && question.key !== form.key.trim()
+
+    const affectedByKeyChange =
+        question && hasKeyChanged
+            ? getExpressionsUsingQuestion(question.key, expressions)
+            : []
+    const affectedByAnswerChanges =
+        question && !hasKeyChanged
+            ? getExpressionsAffectedByAnswerChanges(question, form.answers, expressions)
+            : []
+    const affectedByCategoryChanges =
+        question && !hasKeyChanged
+            ? getExpressionsAffectedByCategoryChanges(question, form.categoryIds, categories, expressions)
+            : []
+
+    const hasDependencyWarnings = affectedByKeyChange.length > 0 || affectedByAnswerChanges.length > 0 || affectedByCategoryChanges.length > 0
 
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -54,16 +78,18 @@ export function QuestionForm({question, categories, onSave, onCancel,}: Question
         const key = form.key.trim()
         const label = form.label.trim()
 
-        if (!key || !label) {
-            setError("Vul een key en vraagtekst in.")
+        if (!label) {
+            setError("Vul een vraagtekst in.")
             return
         }
 
-        if (!/^[A-Za-z0-9_-]+$/.test(key)) {
-            setError(
-                "De key mag alleen letters, cijfers, _ en - bevatten."
-            )
-            return
+        if (!question || key !== question.key) {
+            const keyError = validateQuestionKey(key)
+
+            if (keyError) {
+                setError(keyError)
+                return
+            }
         }
 
         const answers = form.answers.map(answer => ({
@@ -77,7 +103,7 @@ export function QuestionForm({question, categories, onSave, onCancel,}: Question
         }
 
         if (answers.some(a => !a.value || !a.label)) {
-            setError("Vul alle antwoordwaarden en labels in.")
+            setError("Vul alle antwoordopties in.")
             return
         }
 
@@ -147,6 +173,7 @@ export function QuestionForm({question, categories, onSave, onCancel,}: Question
 
                     <p className="text-xs text-muted-foreground">
                         Unieke identifier van de vraag.
+                        Gebruik letters, cijfers en underscores.
                     </p>
                 </div>
 
@@ -250,10 +277,30 @@ export function QuestionForm({question, categories, onSave, onCancel,}: Question
 
             <QuestionAnswerFields
                 answers={form.answers}
-                onChange={answers => setForm(current => ({
-                    ...current,
-                    answers,
-                }))}
+                nextAnswerValue={getNextAnswerValue(form.answers, form.nextAnswerValue)}
+                onChange={(answers, nextAnswerValue) =>
+                    setForm(current => ({
+                        ...current,
+                        answers,
+                        nextAnswerValue,
+                    }))
+                }
+            />
+
+            <QuestionDependencyWarning
+                expressions={affectedByKeyChange}
+                title="De oorspronkelijke key wordt gebruikt in bestaande routeringen."
+                description="Door de key te wijzigen, verwijzen onderstaande routing expressions niet meer naar deze vraag."
+            />
+            <QuestionDependencyWarning
+                expressions={affectedByAnswerChanges}
+                title="Gewijzigde antwoorden worden gebruikt in bestaande routeringen."
+                description="Je hebt een antwoordoptie gewijzigd of verwijderd. Dit kan gevolgen hebben voor onderstaande routing expressions."
+            />
+            <QuestionDependencyWarning
+                expressions={affectedByCategoryChanges}
+                title="Verwijderde categoriekoppelingen worden mogelijk gebruikt in bestaande routeringen."
+                description="Door de gewijzigde categoriekoppelingen werken onderstaande routing expressions mogelijk niet meer zoals bedoeld. Controleer deze routeringen na het opslaan."
             />
 
             {error && (
@@ -272,9 +319,11 @@ export function QuestionForm({question, categories, onSave, onCancel,}: Question
                 </Button>
 
                 <Button type="submit">
-                    {question
-                        ? "Wijzigingen opslaan"
-                        : "Vraag toevoegen"}
+                    {hasDependencyWarnings
+                        ? "Toch wijzigingen opslaan"
+                        : question
+                            ? "Wijzigingen opslaan"
+                            : "Vraag toevoegen"}
                 </Button>
             </div>
         </form>

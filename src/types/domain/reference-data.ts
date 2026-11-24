@@ -32,6 +32,7 @@ export type Question = {
     required: boolean
     answers: QuestionAnswer[]
     categoryIds: number[]
+    nextAnswerValue?: number
 }
 
 export type QuestionAnswer = {

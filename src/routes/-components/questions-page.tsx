@@ -12,12 +12,11 @@ import { questionRepository } from "@/repositories/reference-data"
 import {useQuestions, questionsQueryKey} from "@/hooks/questions/use-questions"
 import type { Question } from "@/types/domain/reference-data"
 import {toast} from "sonner";
-
-const supportedTypes = ["radio_input", "checkbox_input"]
-
-function isSupportedQuestion(question: Question): question is Question & QuestionFormData {
-    return supportedTypes.includes(question.fieldType)
-}
+import {isSupportedQuestion} from "@/utils/questions.ts";
+import { getExpressionsUsingQuestion } from "@/utils/questions"
+import { useExpressions } from "@/hooks/import-export/use-expressions"
+import { IconAlertTriangle } from "@tabler/icons-react"
+import { QuestionDependencyWarning } from "@/components/questions/question-dependency-warning"
 
 export function QuestionsPage() {
     const queryClient = useQueryClient()
@@ -26,6 +25,8 @@ export function QuestionsPage() {
     const [editingQuestion, setEditingQuestion] = useState<(Question & QuestionFormData) | null>(null)
     const [deletingQuestion, setDeletingQuestion] = useState<Question | null>(null)
     const [error, setError] = useState("")
+
+    const {data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError} = useExpressions()
 
     const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuestions()
 
@@ -57,6 +58,10 @@ export function QuestionsPage() {
 
         return searchable.includes(globalFilter.trim().toLowerCase())
     })
+
+    const dependentExpressions = deletingQuestion
+        ? getExpressionsUsingQuestion(deletingQuestion.key, expressions)
+        : []
 
     function refreshQuestions() {
         queryClient.setQueryData(
@@ -114,7 +119,7 @@ export function QuestionsPage() {
         }
     }
 
-    const queryError = questionsError || categoriesError
+    const queryError = questionsError || categoriesError || expressionsError
 
     if (queryError) {
         return (
@@ -130,7 +135,7 @@ export function QuestionsPage() {
         )
     }
 
-    if (isQuestionsLoading || isCategoriesLoading) {
+    if (isQuestionsLoading || isCategoriesLoading || isExpressionsLoading) {
         return <Skeleton className="h-12 w-full" />
     }
 
@@ -179,6 +184,43 @@ export function QuestionsPage() {
                         Weet je zeker dat je "{deletingQuestion.label}"
                         wilt verwijderen? Dit kan niet ongedaan worden gemaakt.
                     </p>
+                    {dependentExpressions.length > 0 && (
+                        <div className="mt-4 flex items-start gap-3 rounded-md border border-amber-500/30 bg-amber-500/10 p-4">
+                            <IconAlertTriangle className="size-5 shrink-0 text-amber-600" />
+                            <div className="flex min-w-0 flex-col gap-2">
+                                <p className="text-sm font-medium">
+                                    Deze vraag wordt gebruikt in{" "}
+                                    {dependentExpressions.length}{" "}
+                                    {dependentExpressions.length === 1
+                                        ? "routing expression"
+                                        : "routing expressions"}.
+                                </p>
+
+                                <p className="text-sm text-muted-foreground">
+                                    Het verwijderen van deze vraag kan ervoor zorgen
+                                    dat onderstaande routeringen niet meer correct werken.
+                                </p>
+
+                                <ul className="max-h-40 list-disc space-y-1 overflow-y-auto pl-5 text-sm">
+                                    {dependentExpressions.length > 0 && (
+                                        <div className="mt-4">
+                                            <QuestionDependencyWarning
+                                                expressions={dependentExpressions}
+                                                title={`Deze vraag wordt gebruikt in ${
+                                                    dependentExpressions.length
+                                                } ${
+                                                    dependentExpressions.length === 1
+                                                        ? "routing expression"
+                                                        : "routing expressions"
+                                                }.`}
+                                                description="Het verwijderen van deze vraag kan ervoor zorgen dat onderstaande routeringen niet meer correct werken."
+                                            />
+                                        </div>
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="mt-4 flex gap-2">
                         <Button
@@ -186,7 +228,9 @@ export function QuestionsPage() {
                             variant="destructive"
                             onClick={handleDelete}
                         >
-                            Verwijderen
+                            {dependentExpressions.length > 0
+                                ? "Toch verwijderen"
+                                : "Verwijderen"}
                         </Button>
 
                         <Button
@@ -205,6 +249,7 @@ export function QuestionsPage() {
                     key={editingQuestion.id}
                     question={editingQuestion}
                     categories={categories}
+                    expressions={expressions}
                     onSave={handleUpdate}
                     onCancel={() => {
                         setEditingQuestion(null)
@@ -229,6 +274,7 @@ export function QuestionsPage() {
                     <>
                         <QuestionsTable
                             questions={filteredQuestions}
+                            globalFilter={globalFilter}
                             categories={categories}
                             onEdit={handleEdit}
                             onDelete={question => {

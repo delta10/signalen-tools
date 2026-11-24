@@ -7,6 +7,7 @@ import type {
 import type { Expression } from "@/types/domain/routing"
 import type {Area, Category, Department, Question} from "@/types/domain/reference-data"
 import {mapCategorySlugsToIds, parseQuestionCategorySlugs} from "@/mappers/question-categories.ts";
+import { isSupportedQuestionType, getAmbiguousCategorySlugs } from "@/utils/questions"
 
 /* Import: Transfer models → Domain models */
 export function mapTransfersToDomain(
@@ -100,11 +101,6 @@ export function mapAreaTransfersToDomain(areas: AreaTransfer[]): Area[] {
 }
 
 export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[], categories: Category[]): Question[] {
-    const supportedTypes = new Set([
-        "radio_input",
-        "checkbox_input",
-    ])
-
     const keys = new Set<string>()
 
     return questions.map((question, index) => {
@@ -133,7 +129,7 @@ export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[], cat
             values?: Record<string, string>
         }
 
-        const supported = supportedTypes.has(question.field_type)
+        const supported = isSupportedQuestionType(question.field_type)
 
         return {
             id: index,
@@ -161,32 +157,17 @@ export function mapCategoryTransfersToDomain(categories: CategoryTransfer[]): Ca
 
 
 export function mapQuestionDomainToTransfers(questions: Question[], categories: Category[], originalQuestions: QuestionsTransfer[]): QuestionsTransfer[] {
-    const supportedTypes = new Set([
-        "radio_input",
-        "checkbox_input",
-    ])
-
-    const originalByKey = new Map<string, QuestionsTransfer>()
-
-    for (const original of originalQuestions) {
-        if (originalByKey.has(original.key)) {
-            throw new Error(
-                `Dubbele vraag-key "${original.key}" in de importdata.`
-            )
-        }
-
-        originalByKey.set(original.key, original)
-    }
-
     const categoryById = new Map(
         categories.map(category => [category.id, category])
     )
 
+    const ambiguousSlugs = getAmbiguousCategorySlugs(categories)
+
     return questions.map(question => {
-        const original = originalByKey.get(question.key)
+        const original = originalQuestions[question.id]
 
         // Niet-ondersteunde vraagtypes exact behouden
-        if (!supportedTypes.has(question.fieldType)) {
+        if (!isSupportedQuestionType(question.fieldType)) {
             if (!original) {
                 throw new Error(
                     `Geen originele gegevens gevonden voor "${question.key}".`
@@ -196,7 +177,7 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
             return { ...original }
         }
 
-        // Ontbrekende data niet stilzwijgend exporteren
+        // Ontbrekende data niet exporteren
         if (!Array.isArray(question.categoryIds)) {
             throw new Error(
                 `Vraag "${question.key}" heeft geen geldige categoryIds.`
@@ -216,14 +197,11 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
         })
 
         const hasDuplicateSlugs = slugs.some(slug =>
-            categories.filter(category => category.slug === slug).length > 1
+            ambiguousSlugs.has(slug)
         )
 
         const originalSlugs = original
-            ? original.categories
-                .split(",")
-                .map(value => value.trim().split("|")[0])
-                .filter(Boolean)
+            ? parseQuestionCategorySlugs(original.categories)
             : []
 
         const unchangedCategories =

@@ -46,21 +46,42 @@ export async function importCategories(file: File): Promise<void> {
     const mapped = mapCategoryTransfersToDomain(original)
 
     if (questionRepository.hasData()) {
+        const questions = questionRepository.getAll()
         const existingCategories = categoryRepository.getAll()
+        const originalCategories = categoryRepository.getOriginal()
 
-        const changed = existingCategories.some(existing => {
-            const replacement = mapped.find(
-                category => category.id === existing.id
+        const usedCategoryIds = new Set(
+            questions.flatMap(question => question.categoryIds ?? [])
+        )
+
+        const affectedCategories = [...usedCategoryIds].filter(id => {
+            const existing = existingCategories.find(
+                category => category.id === id
             )
 
-            return replacement?.slug !== existing.slug
+            const replacement = mapped.find(
+                category => category.id === id
+            )
+
+            if (!existing || !replacement) {
+                return true
+            }
+
+            const existingTransfer = originalCategories[id]
+            const replacementTransfer = original[id]
+
+            return (
+                existing.slug !== replacement.slug ||
+                !existingTransfer ||
+                !replacementTransfer ||
+                existingTransfer.parent !== replacementTransfer.parent
+            )
         })
 
-        if (changed) {
+        if (affectedCategories.length > 0) {
             throw new Error(
-                "De categorie-import verandert bestaande categorie-IDs. " +
-                "Dit kan de koppelingen met vragen beschadigen. " +
-                "Import is daarom geblokkeerd."
+                "De categorie-import verandert bestaande categoriekoppelingen " +
+                "van aanvullende vragen. De import is daarom geblokkeerd."
             )
         }
     }

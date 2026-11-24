@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import {Popover, PopoverTrigger, PopoverContent,} from "@/components/ui/popover"
 import {IconCheck, IconChevronDown, IconX,} from "@tabler/icons-react"
+import {getAmbiguousCategorySlugs} from "@/utils/questions.ts";
 
 type QuestionCategorySelectorProps = {
     categories: Category[]
@@ -15,6 +16,7 @@ type QuestionCategorySelectorProps = {
 export function QuestionCategorySelector({categories, selectedIds, onChange,}: QuestionCategorySelectorProps) {
     const [open, setOpen] = useState(false)
     const [search, setSearch] = useState("")
+    const ambiguousSlugs = getAmbiguousCategorySlugs(categories)
 
     const filteredCategories = categories.filter(category =>
         `${category.name} ${category.slug}`
@@ -79,18 +81,23 @@ export function QuestionCategorySelector({categories, selectedIds, onChange,}: Q
                         ) : (
                             filteredCategories.map(category => {
                                 const selected = selectedIds.includes(category.id)
+                                const isAmbiguous = ambiguousSlugs.has(category.slug)
+                                const disabled = isAmbiguous && !selected
 
                                 return (
                                     <button
                                         key={category.id}
                                         type="button"
                                         aria-pressed={selected}
+                                        disabled={disabled}
                                         onClick={() => toggleCategory(category.id)}
-                                        className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                                        className="flex w-full items-center gap-2 rounded-md
+                                                   px-2 py-2 text-left text-sm
+                                                   hover:bg-muted focus-visible:bg-muted
+                                                   focus-visible:outline-none
+                                                   disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                        <IconCheck
-                                            className={
-                                                selected
+                                        <IconCheck className={selected
                                                     ? "size-4 shrink-0 opacity-100"
                                                     : "size-4 shrink-0 opacity-0"
                                             }
@@ -98,6 +105,11 @@ export function QuestionCategorySelector({categories, selectedIds, onChange,}: Q
 
                                         <span className="min-w-0 flex-1">
                                             {category.name}
+                                            {isAmbiguous && (
+                                                <span className="block text-xs text-muted-foreground">
+                                                    Niet-unieke categorie-slug
+                                                </span>
+                                            )}
                                         </span>
                                     </button>
                                 )
