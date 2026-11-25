@@ -4,7 +4,7 @@ declare module "@tanstack/react-router" {
     interface StaticDataRouteOption {
         breadcrumb?: {
             label: string,
-            to: string,
+            to?: string,
         }
     }
 }

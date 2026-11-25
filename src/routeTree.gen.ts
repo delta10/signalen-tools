@@ -17,6 +17,7 @@ import { Route as QuestionsCreateRouteImport } from './routes/questions.create'
 import { Route as RoutingExpressionsIndexRouteImport } from './routes/routing-expressions.index'
 import { Route as RoutingExpressionsCreateRouteImport } from './routes/routing-expressions.create'
 import { Route as RoutingExpressionsSimulateRouteImport } from './routes/routing-expressions.simulate'
+import { Route as QuestionsQuestionIdEditRouteImport } from './routes/questions.$questionId.edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -60,6 +61,11 @@ const RoutingExpressionsSimulateRoute =
     path: '/simulate',
     getParentRoute: () => RoutingExpressionsRoute,
   } as any)
+const QuestionsQuestionIdEditRoute = QuestionsQuestionIdEditRouteImport.update({
+  id: '/$questionId/edit',
+  path: '/$questionId/edit',
+  getParentRoute: () => QuestionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
   '/questions/': typeof QuestionsIndexRoute
   '/routing-expressions/': typeof RoutingExpressionsIndexRoute
+  '/questions/$questionId/edit': typeof QuestionsQuestionIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
   '/questions': typeof QuestionsIndexRoute
   '/routing-expressions': typeof RoutingExpressionsIndexRoute
+  '/questions/$questionId/edit': typeof QuestionsQuestionIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
   '/questions/': typeof QuestionsIndexRoute
   '/routing-expressions/': typeof RoutingExpressionsIndexRoute
+  '/questions/$questionId/edit': typeof QuestionsQuestionIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/routing-expressions/simulate'
     | '/questions/'
     | '/routing-expressions/'
+    | '/questions/$questionId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/routing-expressions/simulate'
     | '/questions'
     | '/routing-expressions'
+    | '/questions/$questionId/edit'
   id:
     | '__root__'
     | '/'
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/routing-expressions/simulate'
     | '/questions/'
     | '/routing-expressions/'
+    | '/questions/$questionId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -185,17 +197,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutingExpressionsSimulateRouteImport
       parentRoute: typeof RoutingExpressionsRoute
     }
+    '/questions/$questionId/edit': {
+      id: '/questions/$questionId/edit'
+      path: '/$questionId/edit'
+      fullPath: '/questions/$questionId/edit'
+      preLoaderRoute: typeof QuestionsQuestionIdEditRouteImport
+      parentRoute: typeof QuestionsRoute
+    }
   }
 }
 
 interface QuestionsRouteChildren {
   QuestionsCreateRoute: typeof QuestionsCreateRoute
   QuestionsIndexRoute: typeof QuestionsIndexRoute
+  QuestionsQuestionIdEditRoute: typeof QuestionsQuestionIdEditRoute
 }
 
 const QuestionsRouteChildren: QuestionsRouteChildren = {
   QuestionsCreateRoute: QuestionsCreateRoute,
   QuestionsIndexRoute: QuestionsIndexRoute,
+  QuestionsQuestionIdEditRoute: QuestionsQuestionIdEditRoute,
 }
 
 const QuestionsRouteWithChildren = QuestionsRoute._addFileChildren(
