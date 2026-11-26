@@ -39,3 +39,9 @@ export type QuestionAnswer = {
     value: string
     label: string
 }
+
+export type User = {
+    email: string
+    isActive: boolean
+    departments: string[]
+}

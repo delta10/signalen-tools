@@ -20,10 +20,11 @@ import {
 
 type Props = {
     departments: Department[],
-    variant?: "dropdown" | "buttons"
+    variant?: "dropdown" | "buttons",
+    onImported?: () => void
 }
 
-export function ExpressionFileActions({ departments, variant = "dropdown", }: Props) {
+export function ExpressionFileActions({ departments, variant = "dropdown", onImported }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
     const [exportWarnings, setExportWarnings] = useState<string[]>([])
     const { saveAll } = useExpressionActions()
@@ -39,6 +40,8 @@ export function ExpressionFileActions({ departments, variant = "dropdown", }: Pr
             const expressions = await importExpressions(files, departments)
 
             saveAll(expressions)
+            expressionRepository.setImportedAt()
+            onImported?.()
 
             toast.success(
                 `${expressions.length} expressies succesvol geïmporteerd.`

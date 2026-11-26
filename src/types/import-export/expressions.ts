@@ -49,3 +49,10 @@ export type CategoryTransfer = {
     note: string,
     icon: string
 }
+
+/* Specific fields of relevant csv files  */
+export type UserTransfer = {
+    "E-mailadres": string
+    "Actief": string
+    "Afdeling(en)": string
+}

@@ -5,11 +5,12 @@ type Props = {
     title: string
     count: number
     imported: boolean
+    importedAt?: string | null
     optional?: boolean
     children: ReactNode
 }
 
-export function DataManagementCard({title, count, imported, optional = false, children,}: Props) {
+export function DataManagementCard({title, count, imported, importedAt, optional = false, children,}: Props) {
     const status = imported
         ? {
             label: "Geïmporteerd",
@@ -29,6 +30,12 @@ export function DataManagementCard({title, count, imported, optional = false, ch
             }
 
     const StatusIcon = status.icon
+    const formattedImportedAt = importedAt
+        ? new Date(importedAt).toLocaleString("nl-NL", {
+            dateStyle: "short",
+            timeStyle: "short",
+        })
+        : null
 
     return (
         <div className="flex h-full flex-col gap-4 rounded-lg border p-4">
@@ -39,7 +46,7 @@ export function DataManagementCard({title, count, imported, optional = false, ch
                         {imported
                             ? `${count} records beschikbaar`
                             : optional
-                                ? `${count} routeringsregels beschikbaar`
+                                ? `${count} records beschikbaar`
                                 : "Nog niet geïmporteerd"}
                     </p>
                 </div>
@@ -47,9 +54,14 @@ export function DataManagementCard({title, count, imported, optional = false, ch
                 <StatusIcon className={`size-5 ${status.color}`} />
             </div>
 
-            <p className={`text-sm font-medium ${status.color}`}>
-                {status.label}
-            </p>
+            <div className="space-y-1">
+                <p className={`text-sm font-medium ${status.color}`}>
+                    {status.label}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                    Laatst geïmporteerd: {formattedImportedAt ?? "—"}
+                </p>
+            </div>
 
             <div className="mt-auto">
                 {children}

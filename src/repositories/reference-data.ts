@@ -1,9 +1,16 @@
-import type {Area, Category, Department, Question,} from "@/types/domain/reference-data"
-import type {AreaTransfer, CategoryTransfer, DepartmentTransfer, QuestionsTransfer,} from "@/types/import-export/expressions"
+import type {Area, Category, Department, Question, User,} from "@/types/domain/reference-data"
+import type {
+    AreaTransfer,
+    CategoryTransfer,
+    DepartmentTransfer,
+    QuestionsTransfer,
+    UserTransfer,
+} from "@/types/import-export/expressions"
 
 type StoredReferenceData<TDomain, TTransfer> = {
     data: TDomain[]
     original: TTransfer[]
+    importedAt?: string
 }
 
 function createReferenceRepository<TDomain, TTransfer>(type: string) {
@@ -30,6 +37,7 @@ function createReferenceRepository<TDomain, TTransfer>(type: string) {
                 JSON.stringify({
                     data,
                     original: stored?.original ?? [],
+                    importedAt: stored?.importedAt,
                 })
             )
         },
@@ -39,13 +47,18 @@ function createReferenceRepository<TDomain, TTransfer>(type: string) {
             return getStored()?.original ?? []
         },
 
-        saveImported(
-            data: TDomain[],
-            original: TTransfer[]
-        ): void {
+        getImportedAt(): string | null {
+            return getStored()?.importedAt ?? null
+        },
+
+        saveImported(data: TDomain[], original: TTransfer[]): void {
             localStorage.setItem(
                 storageKey,
-                JSON.stringify({ data, original })
+                JSON.stringify({
+                    data,
+                    original,
+                    importedAt: new Date().toISOString(),
+                })
             )
         },
 
@@ -71,6 +84,9 @@ export const departmentRepository =
 
 const baseQuestionRepository =
     createReferenceRepository<Question, QuestionsTransfer>("questions")
+
+export const userRepository =
+    createReferenceRepository<User, UserTransfer>("users")
 
 export const questionRepository = {
     ...baseQuestionRepository,

@@ -11,15 +11,17 @@ import {
     exportCategories,
     exportAreas,
     exportDepartments,
-    exportQuestions,
+    exportQuestions, importUsers,
 } from "@/services/reference-data-import-export"
 import {questionsQueryKey} from "@/hooks/questions/use-questions.ts";
+import {usersQueryKey} from "@/hooks/users/use-users.ts";
 
 type ReferenceDataType =
     | "categories"
     | "areas"
     | "departments"
     | "questions"
+    | "users"
 
 type Props = {
     type: ReferenceDataType
@@ -32,21 +34,31 @@ const actions = {
         import: importCategories,
         export: exportCategories,
         queryKey: ["categories"],
+        accept: ".json,application/json",
     },
     areas: {
         import: importAreas,
         export: exportAreas,
         queryKey: ["areas"],
+        accept: ".json,application/json",
     },
     departments: {
         import: importDepartments,
         export: exportDepartments,
         queryKey: ["departments"],
+        accept: ".json,application/json",
     },
     questions: {
         import: importQuestions,
         export: exportQuestions,
         queryKey: questionsQueryKey,
+        accept: ".json,application/json",
+    },
+    users: {
+        import: importUsers,
+        export: undefined,
+        queryKey: usersQueryKey,
+        accept: ".csv,text/csv",
     },
 }
 
@@ -88,6 +100,8 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
     }
 
     function handleExport() {
+        if (!action.export) return
+
         try {
             action.export()
             toast.success("Gegevens succesvol geëxporteerd.")
@@ -105,7 +119,7 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
             <input
                 ref={inputRef}
                 type="file"
-                accept=".json,application/json"
+                accept={action.accept}
                 className="hidden"
                 aria-label={`Importeer ${type}`}
                 onChange={(event) => {
@@ -123,15 +137,17 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
                 {isImporting ? "Importeren..." : "Importeren"}
             </Button>
 
-            <Button
-                type="button"
-                variant="outline"
-                disabled={!hasData}
-                onClick={handleExport}
-            >
-                <IconDownload />
-                Exporteren
-            </Button>
+            {action.export && (
+                <Button
+                    type="button"
+                    variant="outline"
+                    disabled={!hasData}
+                    onClick={handleExport}
+                >
+                    <IconDownload />
+                    Exporteren
+                </Button>
+            )}
         </div>
     )
 }

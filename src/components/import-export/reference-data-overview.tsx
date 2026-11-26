@@ -4,7 +4,7 @@ import {
     categoryRepository,
     areaRepository,
     departmentRepository,
-    questionRepository,
+    questionRepository, userRepository,
 } from "@/repositories/reference-data"
 import { ReferenceDataFileActions } from "./reference-data-file-actions"
 import {DataManagementCard} from "@/components/import-export/data-management-card.tsx";
@@ -13,6 +13,7 @@ import type {Department} from "@/types/domain/reference-data.ts";
 import {Link} from "@tanstack/react-router";
 import {Button} from "@/components/ui/button.tsx";
 import { useExpressions } from "@/hooks/import-export/use-expressions"
+import {expressionRepository} from "@/repositories/expression-repository.ts";
 
 const datasets = [
     {
@@ -39,6 +40,12 @@ const datasets = [
         repository: questionRepository,
         required: true,
     },
+    {
+        type: "users",
+        label: "Gebruikers",
+        repository: userRepository,
+        required: false,
+    },
 ] as const
 
 type Props = {
@@ -51,11 +58,15 @@ export function ReferenceDataOverview({departments}: Props) {
 
     const refresh = () => setRevision((value) => value + 1)
 
-    const importedCount = datasets.filter(
+    const requiredDatasets = datasets.filter(
+        (dataset) => dataset.required
+    )
+
+    const importedCount = requiredDatasets.filter(
         (dataset) => dataset.repository.hasData()
     ).length
 
-    const isReady = importedCount === datasets.length
+    const isReady = importedCount === requiredDatasets.length
 
     return (
         <div className="space-y-4">
@@ -77,12 +88,14 @@ export function ReferenceDataOverview({departments}: Props) {
                         <p className="font-medium">
                             {isReady
                                 ? "Alle referentiegegevens zijn beschikbaar"
-                                : `${importedCount} van de ${datasets.length} verplichte datasets geïmporteerd`}
+                                : `${importedCount} van de ${requiredDatasets.length} verplichte datasets geïmporteerd`
+                            }
                         </p>
                         <p className="text-sm text-muted-foreground">
                             {isReady
                                 ? "Het systeem is klaar voor gebruik."
-                                : "Importeer alle vier de datasets om te beginnen."}
+                                : "Importeer alle verplichte datasets om te beginnen."
+                            }
                         </p>
                     </div>
                 </div>
@@ -99,6 +112,8 @@ export function ReferenceDataOverview({departments}: Props) {
                             title={dataset.label}
                             count={count}
                             imported={imported}
+                            importedAt={dataset.repository.getImportedAt()}
+                            optional={!dataset.required}
                         >
                             <ReferenceDataFileActions
                                 type={dataset.type}
@@ -113,11 +128,13 @@ export function ReferenceDataOverview({departments}: Props) {
                     title="Routing Expressions"
                     count={expressions.length}
                     imported={expressions.length > 0}
+                    importedAt={expressionRepository.getImportedAt()}
                     optional
                 >
                     <ExpressionFileActions
                         departments={departments}
                         variant="buttons"
+                        onImported={refresh}
                     />
                 </DataManagementCard>
                 <div className="flex flex-col items-center justify-center gap-2 pt-4">

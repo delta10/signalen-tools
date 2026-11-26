@@ -2,10 +2,10 @@ import type {
     AreaTransfer, CategoryTransfer,
     DepartmentTransfer,
     ExpressionTransfer, QuestionsTransfer,
-    RoutingExpressionTransfer,
+    RoutingExpressionTransfer, UserTransfer,
 } from "@/types/import-export/expressions"
 import type { Expression } from "@/types/domain/routing"
-import type {Area, Category, Department, Question} from "@/types/domain/reference-data"
+import type {Area, Category, Department, Question, User} from "@/types/domain/reference-data"
 import {mapCategorySlugsToIds, parseQuestionCategorySlugs} from "@/mappers/question-categories.ts";
 import { isSupportedQuestionType, getAmbiguousCategorySlugs } from "@/utils/questions"
 
@@ -177,7 +177,6 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
             return { ...original }
         }
 
-        // Ontbrekende data niet exporteren
         if (!Array.isArray(question.categoryIds)) {
             throw new Error(
                 `Vraag "${question.key}" heeft geen geldige categoryIds.`
@@ -219,7 +218,6 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
             ? original.categories
             : slugs.join(",")
 
-        // Bewaar onbekende metadata bij bestaande vragen
         let originalMeta: Record<string, unknown> = {}
 
         if (original) {
@@ -255,4 +253,15 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
             }),
         }
     })
+}
+
+export function mapUserTransfersToDomain(users: UserTransfer[]): User[] {
+    return users.map((user) => ({
+        email: user["E-mailadres"],
+        isActive: user.Actief === "Ja",
+        departments: user["Afdeling(en)"]
+            .split(",")
+            .map((department) => department.trim())
+            .filter(Boolean),
+    }))
 }
