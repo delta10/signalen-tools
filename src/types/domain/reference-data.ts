@@ -33,11 +33,17 @@ export type Question = {
     answers: QuestionAnswer[]
     categoryIds: number[]
     nextAnswerValue?: number
+    dependencies?: QuestionDependency[]
 }
 
 export type QuestionAnswer = {
     value: string
     label: string
+}
+
+export type QuestionDependency = {
+    questionKey: string
+    answerValues: string[]
 }
 
 export type User = {

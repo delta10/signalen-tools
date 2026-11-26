@@ -101,6 +101,7 @@ export function QuestionsEditPage() {
                 <QuestionForm
                     key={question.id}
                     question={question}
+                    questions={questions}
                     categories={categories}
                     expressions={expressions}
                     onSave={handleSave}

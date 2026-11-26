@@ -85,7 +85,7 @@ importers:
         specifier: 26.2.0
         version: 26.2.0
       '@types/papaparse':
-        specifier: ^5.5.2
+        specifier: 5.5.2
         version: 5.5.2
       '@types/react':
         specifier: 19.2.18

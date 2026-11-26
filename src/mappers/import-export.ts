@@ -8,6 +8,11 @@ import type { Expression } from "@/types/domain/routing"
 import type {Area, Category, Department, Question, User} from "@/types/domain/reference-data"
 import {mapCategorySlugsToIds, parseQuestionCategorySlugs} from "@/mappers/question-categories.ts";
 import { isSupportedQuestionType, getAmbiguousCategorySlugs } from "@/utils/questions"
+import {
+    mapQuestionDependenciesToDomain,
+    mapQuestionDependenciesToTransfer,
+    areQuestionDependenciesEqual,
+} from "@/mappers/question-dependencies"
 
 /* Import: Transfer models → Domain models */
 export function mapTransfersToDomain(
@@ -127,6 +132,7 @@ export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[], cat
         const meta = parsed as {
             label?: string
             values?: Record<string, string>
+            ifOneOf?: unknown
         }
 
         const supported = isSupportedQuestionType(question.field_type)
@@ -143,6 +149,9 @@ export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[], cat
             categoryIds: supported
                 ? mapCategorySlugsToIds(parseQuestionCategorySlugs(question.categories), categories)
                 : [],
+            dependencies: meta.ifOneOf === undefined
+                ? []
+                : mapQuestionDependenciesToDomain(meta.ifOneOf),
         }
     })
 }
@@ -166,7 +175,6 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
     return questions.map(question => {
         const original = originalQuestions[question.id]
 
-        // Niet-ondersteunde vraagtypes exact behouden
         if (!isSupportedQuestionType(question.fieldType)) {
             if (!original) {
                 throw new Error(
@@ -234,6 +242,30 @@ export function mapQuestionDomainToTransfers(questions: Question[], categories: 
             }
 
             originalMeta = parsed as Record<string, unknown>
+        }
+
+        if (question.dependencies !== undefined) {
+            const originalDependencies =
+                originalMeta.ifOneOf === undefined
+                    ? []
+                    : mapQuestionDependenciesToDomain(originalMeta.ifOneOf)
+
+            if (
+                originalDependencies !== undefined &&
+                !areQuestionDependenciesEqual(
+                    question.dependencies,
+                    originalDependencies
+                )
+            ) {
+                if (question.dependencies.length === 0) {
+                    delete originalMeta.ifOneOf
+                } else {
+                    originalMeta.ifOneOf =
+                        mapQuestionDependenciesToTransfer(
+                            question.dependencies
+                        )
+                }
+            }
         }
 
         return {

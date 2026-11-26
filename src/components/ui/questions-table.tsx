@@ -14,6 +14,7 @@ type QuestionsTableProps = {
     expressions: Expression[]
     onDelete: (question: Question) => void
     globalFilter?: string
+    allQuestions: Question[]
 }
 
 const questionTypeLabels: Record<string, string> = {
@@ -21,7 +22,7 @@ const questionTypeLabels: Record<string, string> = {
     checkbox_input: "Checkbox",
 }
 
-export function QuestionsTable({questions, categories, expressions, onDelete, globalFilter = ""}: QuestionsTableProps) {
+export function QuestionsTable({questions, categories, expressions, onDelete, globalFilter = "", allQuestions}: QuestionsTableProps) {
     const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null)
     const navigate = useNavigate()
     const categoryNames = new Map(
@@ -139,6 +140,7 @@ export function QuestionsTable({questions, categories, expressions, onDelete, gl
             </div>
             <QuestionDetailDialog
                 question={selectedQuestion}
+                questions={allQuestions}
                 categories={categories}
                 expressions={expressions}
                 onClose={() => setSelectedQuestion(null)}

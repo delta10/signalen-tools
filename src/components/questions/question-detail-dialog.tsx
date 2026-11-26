@@ -19,6 +19,8 @@ import type { Expression } from "@/types/domain/routing"
 import { ExpandableCategoryList } from "@/components/ui/category-list"
 import { QuestionDependencyWarning } from "@/components/questions/question-dependency-warning"
 import { getExpressionsUsingQuestion } from "@/utils/questions"
+import {getQuestionsDependingOnQuestion} from "@/utils/question-dependencies.ts";
+import {DependentQuestionsWarning} from "@/components/questions/dependent-question-warning.tsx";
 
 type QuestionDetailDialogProps = {
     question: Question | null
@@ -27,9 +29,10 @@ type QuestionDetailDialogProps = {
     onClose: () => void
     onEdit: (question: Question) => void
     onDelete: (question: Question) => void
+    questions: Question[]
 }
 
-export function QuestionDetailDialog({question, categories, expressions, onClose, onEdit, onDelete}: QuestionDetailDialogProps) {
+export function QuestionDetailDialog({question, categories, expressions, onClose, onEdit, onDelete, questions}: QuestionDetailDialogProps) {
     if (!question) return null
 
     const categoryNames = new Map(
@@ -41,6 +44,7 @@ export function QuestionDetailDialog({question, categories, expressions, onClose
     )
 
     const dependentExpressions = getExpressionsUsingQuestion(question.key, expressions)
+    const dependentQuestions = getQuestionsDependingOnQuestion(question.key, questions)
 
     return (
         <Dialog
@@ -109,6 +113,51 @@ export function QuestionDetailDialog({question, categories, expressions, onClose
                             </div>
                         </DetailField>
                     </div>
+                    <div className="col-span-2">
+                        <DetailField label="Vraagafhankelijkheden">
+                            {question.dependencies === undefined ? (
+                                <p className="text-muted-foreground">
+                                    Niet beschikbaar voor weergave.
+                                </p>
+                            ) : question.dependencies.length === 0 ? (
+                                <p className="text-muted-foreground">
+                                    Geen afhankelijkheden ingesteld.
+                                </p>
+                            ) : (
+                                <div className="flex flex-col gap-3">
+                                    {question.dependencies.map((dependency, index) => {
+                                        const sourceQuestion = questions.find(
+                                            item => item.key === dependency.questionKey
+                                        )
+
+                                        return (
+                                            <div key={dependency.questionKey} className="flex flex-col gap-2">
+                                                {index > 0 && (
+                                                    <span className="text-center text-xs text-muted-foreground">
+                                                        OF
+                                                    </span>
+                                                )}
+                                                <div className="flex flex-col gap-2 rounded-md border p-3">
+                                                    <p className="font-medium">
+                                                        {sourceQuestion?.label ?? dependency.questionKey}
+                                                    </p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {dependency.answerValues.map(value => (
+                                                            <Badge key={value} variant="outline">
+                                                                {sourceQuestion?.answers.find(
+                                                                    answer => answer.value === value
+                                                                )?.label ?? value}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )}
+                        </DetailField>
+                    </div>
                 </div>
                 <DialogFooter className="flex gap-2 sm:justify-between">
                     <AlertDialog>
@@ -139,12 +188,18 @@ export function QuestionDetailDialog({question, categories, expressions, onClose
                                 }.`}
                                 description="Het verwijderen van deze vraag kan ervoor zorgen dat onderstaande routeringen niet meer correct werken."
                             />
+                            <DependentQuestionsWarning
+                                questions={dependentQuestions}
+                                title="Andere vragen zijn afhankelijk van deze vraag."
+                                description="Het verwijderen van deze vraag kan gevolgen hebben voor de zichtbaarheid van onderstaande vragen."
+                            />
                             <AlertDialogFooter>
                                 <AlertDialogCancel>
                                     Annuleren
                                 </AlertDialogCancel>
                                 <AlertDialogAction onClick={() => onDelete(question)}>
-                                    {dependentExpressions.length > 0
+                                    {dependentExpressions.length > 0 ||
+                                    dependentQuestions.length > 0
                                         ? "Toch verwijderen"
                                         : "Verwijderen"}
                                 </AlertDialogAction>
