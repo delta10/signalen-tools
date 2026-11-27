@@ -9,6 +9,15 @@ export const expressionRepository = {
         return stored ? JSON.parse(stored) : []
     },
 
+    existsByName(name: string, excludeId?: string): boolean {
+        return this.getAll().some(
+            (expression) =>
+                expression.id !== excludeId &&
+                expression.name.trim().toLowerCase() ===
+                name.trim().toLowerCase()
+        )
+    },
+
     saveAll(expressions: Expression[]): void {
         localStorage.setItem(
             STORAGE_KEY,

@@ -69,6 +69,7 @@ type Props = {
 
 export function ReferenceDataOverview({departments, signalenUrl}: Props) {
     const [, setRevision] = useState(0)
+    const [importResetKey, setImportResetKey] = useState(0)
     const { data: expressions = [] } = useExpressions()
     const queryClient = useQueryClient()
     const { saveAll } = useExpressionActions()
@@ -81,6 +82,7 @@ export function ReferenceDataOverview({departments, signalenUrl}: Props) {
             })
 
             saveAll([])
+            setImportResetKey((value) => value + 1)
 
             await Promise.all(
                 datasets.map((dataset) =>
@@ -231,6 +233,7 @@ export function ReferenceDataOverview({departments, signalenUrl}: Props) {
                     ]}
                 >
                     <ExpressionFileActions
+                        key={importResetKey}
                         departments={departments}
                         variant="buttons"
                     />

@@ -43,6 +43,7 @@ export function mapTransfersToDomain(
                         isIntern: false,
                     },
                     order: Number(routingExpression.order),
+                    user: routingExpression._user || null,
                 },
             }
         })
@@ -69,7 +70,7 @@ export function mapDomainToTransfers(expressions: Expression[]): {
             .map((expression) => ({
                 _expression: expression.name,
                 _department: expression.routing!.department.code,
-                _user: "",
+                _user: expression.routing!.user ?? "",
                 order: String(expression.routing!.order),
                 is_active: expression.isActive ? "1" : "0",
             })),

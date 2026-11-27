@@ -7,6 +7,7 @@ import {useExpressionActions} from "@/hooks/import-export/use-expressions.ts"
 import {getDepartments} from "@/services/departments.tsx";
 import {mapCreateExpressionFormToDomain} from "@/mappers/create-expression.ts";
 import {getCategories} from "@/services/categories.tsx";
+import {expressionRepository} from "@/repositories/expression-repository.ts";
 
 const defaultValues: RoutingExpressionFormData = {
     name: "",
@@ -14,7 +15,8 @@ const defaultValues: RoutingExpressionFormData = {
     isActive: true,
     department: "",
     conditionGroups: [],
-    conditionOperator: "AND"
+    conditionOperator: "AND",
+    user: ""
 }
 
 export function useRoutingExpressionForm() {
@@ -35,7 +37,17 @@ export function useRoutingExpressionForm() {
         defaultValues,
         onSubmit: async ({ value }) => {
             try {
-                const newExpression = mapCreateExpressionFormToDomain(value, departments, categories)
+                if (expressionRepository.existsByName(value.name)) {
+                    throw new Error(
+                        "Er bestaat al een Routing Expression met deze naam."
+                    )
+                }
+
+                const newExpression = mapCreateExpressionFormToDomain(
+                    value,
+                    departments,
+                    categories
+                )
                 add(newExpression)
 
                 toast.success("Routing Expression succesvol toegevoegd")
