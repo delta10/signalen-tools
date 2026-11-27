@@ -18,6 +18,14 @@ import {
 import {DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
 import type { Expression } from "@/types/domain/routing"
 import { QuestionDependencyWarning } from "./question-dependency-warning"
+import {QuestionDependencyEditor} from "@/components/questions/question-dependency-editor.tsx";
+import {
+    getQuestionsDependingOnQuestion,
+    hasCircularQuestionDependency,
+    validateQuestionDependencies
+} from "@/utils/question-dependencies.ts";
+import {areQuestionDependenciesEqual} from "@/mappers/question-dependencies.ts";
+import {DependentQuestionsWarning} from "@/components/questions/dependent-question-warning.tsx";
 
 export type QuestionFormData = Omit<Question, "id" | "fieldType"> & {
     fieldType: SupportedQuestionType
@@ -29,6 +37,7 @@ type QuestionFormProps = {
     onSave: (question: QuestionFormData) => void
     onCancel: () => void
     expressions?: Expression[]
+    questions: Question[]
 }
 
 const fieldTypes: {
@@ -39,7 +48,7 @@ const fieldTypes: {
     { value: "checkbox_input", label: "Meerdere keuzes (checkbox)" },
 ]
 
-export function QuestionForm({question, categories, expressions = [], onSave, onCancel}: QuestionFormProps) {
+export function QuestionForm({question, categories, expressions = [], onSave, onCancel, questions}: QuestionFormProps) {
     const [form, setForm] = useState<QuestionFormData>({
         key: question?.key ?? "",
         label: question?.label ?? "",
@@ -51,6 +60,12 @@ export function QuestionForm({question, categories, expressions = [], onSave, on
             question?.answers ?? [],
             question?.nextAnswerValue
         ),
+        dependencies: question
+            ? question.dependencies?.map(dependency => ({
+                ...dependency,
+                answerValues: [...dependency.answerValues],
+            }))
+            : [],
     })
     const [error, setError] = useState("")
 
@@ -68,9 +83,46 @@ export function QuestionForm({question, categories, expressions = [], onSave, on
         question && !hasKeyChanged
             ? getExpressionsAffectedByCategoryChanges(question, form.categoryIds, categories, expressions)
             : []
+    const affectedQuestions = question
+        ? getQuestionsDependingOnQuestion(question.key, questions).filter(dependentQuestion => {
+            if (hasKeyChanged) return true
 
-    const hasDependencyWarnings = affectedByKeyChange.length > 0 || affectedByAnswerChanges.length > 0 || affectedByCategoryChanges.length > 0
+            const changedAnswers = question.answers.filter(answer => {
+                const updatedAnswer = form.answers.find(
+                    item => item.value === answer.value
+                )
 
+                return (
+                    !updatedAnswer ||
+                    updatedAnswer.label.trim() !== answer.label.trim()
+                )
+            })
+
+            const removedCategoryIds = question.categoryIds.filter(
+                id => !form.categoryIds.includes(id)
+            )
+
+            const affectedByAnswers = dependentQuestion.dependencies?.some(
+                dependency =>
+                    dependency.questionKey === question.key &&
+                    dependency.answerValues.some(value =>
+                        changedAnswers.some(answer => answer.value === value)
+                    )
+            )
+
+            const affectedByCategories = dependentQuestion.categoryIds.some(
+                id => removedCategoryIds.includes(id)
+            )
+
+            return affectedByAnswers || affectedByCategories
+        })
+        : []
+
+    const hasDependencyWarnings =
+        affectedByKeyChange.length > 0 ||
+        affectedByAnswerChanges.length > 0 ||
+        affectedByCategoryChanges.length > 0 ||
+        affectedQuestions.length > 0
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         setError("")
@@ -114,12 +166,30 @@ export function QuestionForm({question, categories, expressions = [], onSave, on
             return
         }
 
-        onSave({
-            ...form,
-            key,
-            label,
-            answers,
-        })
+        const dependenciesChanged =
+            form.dependencies !== undefined &&
+            !areQuestionDependenciesEqual(
+                form.dependencies,
+                question?.dependencies ?? []
+            )
+
+        if (dependenciesChanged && form.dependencies !== undefined) {
+            const dependencyError = validateQuestionDependencies(key, form.dependencies, questions, question?.key)
+
+            if (dependencyError) {
+                setError(dependencyError)
+                return
+            }
+
+            if (hasCircularQuestionDependency(key, form.dependencies, questions, question?.key)) {
+                setError(
+                    "Deze afhankelijkheid veroorzaakt een circulaire verwijzing."
+                )
+                return
+            }
+        }
+
+        onSave({...form, key, label, answers,})
     }
 
     return (
@@ -134,10 +204,6 @@ export function QuestionForm({question, categories, expressions = [], onSave, on
                             ? "Aanvullende vraag bewerken"
                             : "Aanvullende vraag toevoegen"}
                     </h2>
-
-                    <p className="text-sm text-muted-foreground">
-                        Configureer de vraag, categorieën en antwoorden.
-                    </p>
                 </div>
 
                 <Button
@@ -275,6 +341,35 @@ export function QuestionForm({question, categories, expressions = [], onSave, on
                 }}
             />
 
+            {form.dependencies !== undefined ? (
+                <QuestionDependencyEditor
+                    questions={questions}
+                    currentQuestionKey={form.key.trim()}
+                    currentQuestionLabel={form.label}
+                    originalQuestionKey={question?.key}
+                    categoryIds={form.categoryIds}
+                    dependencies={form.dependencies}
+                    onChange={dependencies =>
+                        setForm(current => ({
+                            ...current,
+                            dependencies,
+                        }))
+                    }
+                />
+            ) : (
+                <div className="flex flex-col gap-2 border-t pt-5">
+                    <h3 className="font-medium">
+                        Vraagafhankelijkheden
+                    </h3>
+
+                    <p className="text-sm text-muted-foreground">
+                        De afhankelijkheden zijn niet beschikbaar voor
+                        bewerking. Importeer indien nodig het originele
+                        vragenbestand opnieuw.
+                    </p>
+                </div>
+            )}
+
             <QuestionAnswerFields
                 answers={form.answers}
                 nextAnswerValue={getNextAnswerValue(form.answers, form.nextAnswerValue)}
@@ -301,6 +396,11 @@ export function QuestionForm({question, categories, expressions = [], onSave, on
                 expressions={affectedByCategoryChanges}
                 title="Verwijderde categoriekoppelingen worden mogelijk gebruikt in bestaande routeringen."
                 description="Door de gewijzigde categoriekoppelingen werken onderstaande routing expressions mogelijk niet meer zoals bedoeld. Controleer deze routeringen na het opslaan."
+            />
+            <DependentQuestionsWarning
+                questions={affectedQuestions}
+                title="Andere vragen zijn afhankelijk van deze vraag."
+                description="De gewijzigde key, antwoordopties of categoriekoppelingen kunnen gevolgen hebben voor onderstaande vragen."
             />
 
             {error && (

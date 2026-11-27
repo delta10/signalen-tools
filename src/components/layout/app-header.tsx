@@ -5,14 +5,22 @@ import {
     BreadcrumbList, BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import {Link, useMatches} from "@tanstack/react-router";
+import {Link, useMatches, useLocation} from "@tanstack/react-router";
 import {Fragment} from "react";
 
 export function AppHeader() {
     const matches = useMatches();
 
+    const pathname = useLocation({
+        select: (location) => location.pathname
+    });
+
+    const isHome = pathname === "/";
+
     const breadcrumbMatches = matches.filter(
-        (match) => match.staticData?.breadcrumb
+        (match) =>
+            match.staticData?.breadcrumb &&
+            match.staticData.breadcrumb.to !== "/"
     )
 
     return(
@@ -21,6 +29,23 @@ export function AppHeader() {
                 <div className="flex items-center gap-1 text-sm lg:gap-2 lg:text-base">
                     <Breadcrumb>
                         <BreadcrumbList>
+                            <BreadcrumbItem>
+                                {isHome ? (
+                                    <BreadcrumbPage className="flex items-center gap-2">
+                                        Home
+                                    </BreadcrumbPage>
+                                ) : (
+                                    <BreadcrumbLink asChild>
+                                        <Link
+                                            to="/"
+                                            className="flex items-center gap-2 hover:underline"
+                                        >
+                                            Home
+                                        </Link>
+                                    </BreadcrumbLink>
+                                )}
+                            </BreadcrumbItem>
+                            {breadcrumbMatches.length > 0 && <BreadcrumbSeparator />}
                             {breadcrumbMatches.map((match, index) => {
                                 const breadcrumb = match.staticData.breadcrumb!
                                 const isLast = index === breadcrumbMatches.length - 1

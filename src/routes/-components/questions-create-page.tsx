@@ -5,7 +5,7 @@ import { QuestionForm } from "@/components/questions/question-form"
 import type { QuestionFormData } from "@/components/questions/question-form"
 import { questionRepository } from "@/repositories/reference-data"
 import { getCategories } from "@/services/categories"
-import { questionsQueryKey } from "@/hooks/questions/use-questions"
+import {questionsQueryKey, useQuestions} from "@/hooks/questions/use-questions"
 import { Skeleton } from "@/components/ui/skeleton"
 import {toast} from "sonner";
 
@@ -18,6 +18,7 @@ export function QuestionsCreatePage() {
         queryKey: ["categories"],
         queryFn: getCategories,
     })
+    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError} = useQuestions()
 
     function handleSave(data: QuestionFormData) {
         setError("")
@@ -52,11 +53,11 @@ export function QuestionsCreatePage() {
         }
     }
 
-    if (isLoading) {
+    if (isLoading || isQuestionsLoading) {
         return <Skeleton className="h-96 w-full max-w-3xl" />
     }
 
-    if (categoriesError) {
+    if (categoriesError || questionsError) {
         return (
             <p className="text-destructive">
                 De categorieën konden niet worden geladen.
@@ -76,6 +77,7 @@ export function QuestionsCreatePage() {
 
             <QuestionForm
                 categories={categories}
+                questions={questions}
                 onSave={handleSave}
                 onCancel={() => navigate({ to: "/questions" })}
             />

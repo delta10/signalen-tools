@@ -8,17 +8,19 @@ import {
     mapAreaTransfersToDomain,
     mapCategoryTransfersToDomain,
     mapDepartmentTransfersToDomain, mapQuestionDomainToTransfers,
-    mapQuestionTransfersToDomain
+    mapQuestionTransfersToDomain, mapUserTransfersToDomain
 } from "@/mappers/import-export.ts"
 import {
     areaRepository,
     categoryRepository,
     departmentRepository,
-    questionRepository
+    questionRepository, userRepository
 } from "@/repositories/reference-data"
 import {downloadJsonFile, getExportFilename, readJsonFile} from "@/utils/expression-files.ts"
 import { validateReferenceData } from "@/utils/reference-data-validation"
 import type {Area, Department, Question} from "@/types/domain/reference-data.ts";
+import {readCsvFile} from "@/utils/csv-files.ts";
+import {validateUserTransfers} from "@/utils/user-data-validation.ts";
 
 // Generic import helper
 async function importReferenceData<TTransfer, TDomain>(
@@ -168,4 +170,12 @@ export function exportQuestions(): void {
         getExportFilename("Question"),
         transfers
     )
+}
+
+export async function importUsers(file: File): Promise<void> {
+    const rows = await readCsvFile(file)
+    const original = validateUserTransfers(rows)
+    const mapped = mapUserTransfersToDomain(original)
+
+    userRepository.saveImported(mapped, original)
 }

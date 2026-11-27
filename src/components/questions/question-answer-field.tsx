@@ -46,10 +46,7 @@ export function QuestionAnswerFields({answers, nextAnswerValue, onChange,}: Ques
         <div className="flex flex-col gap-4 border-t pt-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h3 className="font-medium">Antwoordopties</h3>
-                    <p className="text-sm text-muted-foreground">
-                        Voeg de mogelijke antwoorden op deze vraag toe.
-                    </p>
+                    <h3 className="font-medium">Antwoordopties:</h3>
                 </div>
 
                 <Button

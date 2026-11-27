@@ -24,9 +24,10 @@ type Props = {
         djangoUrl?: string
     }[]
     recommended?: boolean
+    importedAt?: string | null
 }
 
-export function DataManagementCard({title, count, imported, optional = false, children, files, recommended = false}: Props) {
+export function DataManagementCard({title, count, imported, importedAt, optional = false, children, files, recommended = false}: Props) {
     const status = imported
         ? {
             label: "Geïmporteerd",
@@ -56,6 +57,12 @@ export function DataManagementCard({title, count, imported, optional = false, ch
                 }
 
     const StatusIcon = status.icon
+    const formattedImportedAt = importedAt
+        ? new Date(importedAt).toLocaleString("nl-NL", {
+            dateStyle: "short",
+            timeStyle: "short",
+        })
+        : null
 
     return (
         <div className="flex h-full flex-col gap-4 rounded-lg border p-4">
@@ -83,9 +90,14 @@ export function DataManagementCard({title, count, imported, optional = false, ch
                 </TooltipProvider>
             </div>
 
-            <p className={`text-sm font-medium ${status.color}`}>
-                {status.label}
-            </p>
+            <div className="space-y-1">
+                <p className={`text-sm font-medium ${status.color}`}>
+                    {status.label}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                    Laatst geïmporteerd: {formattedImportedAt ?? "—"}
+                </p>
+            </div>
             <div className="space-y-1 text-sm">
                 <p className="text-muted-foreground">
                     Benodigde bestanden:

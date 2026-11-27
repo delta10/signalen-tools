@@ -1,6 +1,7 @@
 import type { Expression } from "@/types/domain/routing"
 
 const STORAGE_KEY = "routing-expressions"
+const IMPORTED_AT_KEY = "routing-expressions-imported-at"
 
 export const expressionRepository = {
     getAll(): Expression[] {
@@ -16,6 +17,20 @@ export const expressionRepository = {
                 expression.name.trim().toLowerCase() ===
                 name.trim().toLowerCase()
         )
+    },
+
+    getImportedAt(): string | null {
+        return localStorage.getItem(IMPORTED_AT_KEY)
+    },
+
+    setImportedAt(): void {
+        localStorage.setItem(
+            IMPORTED_AT_KEY,
+            new Date().toISOString()
+        )
+    },
+    clearImportedAt(): void {
+        localStorage.removeItem(IMPORTED_AT_KEY)
     },
 
     saveAll(expressions: Expression[]): void {

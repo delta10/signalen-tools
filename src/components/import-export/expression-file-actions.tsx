@@ -36,9 +36,10 @@ import {
 type Props = {
     departments: Department[]
     variant?: "dropdown" | "buttons"
+    onImported?: () => void
 }
 
-export function ExpressionFileActions({departments, variant = "dropdown",}: Props) {
+export function ExpressionFileActions({departments, variant = "dropdown", onImported}: Props) {
     const expressionInputRef = useRef<HTMLInputElement>(null)
     const routingInputRef = useRef<HTMLInputElement>(null)
     const [expressions, setExpressions] = useState<ExpressionTransfer[] | null>(null)
@@ -56,6 +57,8 @@ export function ExpressionFileActions({departments, variant = "dropdown",}: Prop
         )
 
         saveAll(domainExpressions)
+        expressionRepository.setImportedAt()
+        onImported?.()
 
         setExpressions(null)
         setRoutingExpressions(null)

@@ -5,7 +5,9 @@ import {
     areaRepository,
     departmentRepository,
     questionRepository,
+    userRepository
 } from "@/repositories/reference-data"
+import { expressionRepository } from "@/repositories/expression-repository.ts"
 import { ReferenceDataFileActions } from "./reference-data-file-actions"
 import {DataManagementCard} from "@/components/import-export/data-management-card.tsx";
 import {ExpressionFileActions} from "@/components/import-export/expression-file-actions.tsx";
@@ -60,6 +62,15 @@ const datasets = [
         fileName: "Question.json",
         djangoPath: "/signals/question/",
     },
+    {
+        type: "users",
+        label: "Gebruikers",
+        repository: userRepository,
+        required: false,
+        recommended: false,
+        fileName: "User.csv",
+        djangoPath: "/auth/user/",
+    },
 ] as const
 
 type Props = {
@@ -82,6 +93,7 @@ export function ReferenceDataOverview({departments, signalenUrl}: Props) {
             })
 
             saveAll([])
+            expressionRepository.clearImportedAt()
             setImportResetKey((value) => value + 1)
 
             await Promise.all(
@@ -112,7 +124,8 @@ export function ReferenceDataOverview({departments, signalenUrl}: Props) {
     const isReady = importedCount === requiredDatasets.length
     const hasAnyData =
         datasets.some((dataset) => dataset.repository.hasData()) ||
-        expressions.length > 0
+        expressions.length > 0 ||
+        expressionRepository.getImportedAt() !== null
 
     return (
         <div className="space-y-4">
@@ -203,6 +216,7 @@ export function ReferenceDataOverview({departments, signalenUrl}: Props) {
                             ]}
                             optional={!dataset.required}
                             recommended={dataset.recommended}
+                            importedAt={dataset.repository.getImportedAt()}
                         >
                             <ReferenceDataFileActions
                                 type={dataset.type}
@@ -231,11 +245,13 @@ export function ReferenceDataOverview({departments, signalenUrl}: Props) {
                                 : undefined,
                         },
                     ]}
+                    importedAt={expressionRepository.getImportedAt()}
                 >
                     <ExpressionFileActions
                         key={importResetKey}
                         departments={departments}
                         variant="buttons"
+                        onImported={refresh}
                     />
                 </DataManagementCard>
             </div>

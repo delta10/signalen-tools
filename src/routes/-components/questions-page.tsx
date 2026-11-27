@@ -143,6 +143,7 @@ export function QuestionsPage() {
                     <>
                         <QuestionsTable
                             questions={filteredQuestions}
+                            allQuestions={questions}
                             globalFilter={globalFilter}
                             categories={categories}
                             expressions={expressions}
