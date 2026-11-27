@@ -4,7 +4,6 @@ import {IconPlus} from '@tabler/icons-react';
 import { IconFlask } from '@tabler/icons-react';
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {getAreas} from "@/services/areas.tsx";
-import {getQuestions} from "@/services/questions-answers.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {mapExpressionsToTableRows} from "@/mappers/routing-expressions-table.ts";
 import {RoutingExpressionsTable} from "@/components/ui/routing-expressions-table.tsx";
@@ -14,6 +13,7 @@ import {ExpressionFileActions} from "@/components/import-export/expression-file-
 import {getDepartments} from "@/services/departments.tsx";
 import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
 import { getReferenceDataStatus } from "@/utils/reference-data-status";
+import {useQuestions} from "@/hooks/questions/use-questions.ts";
 
 
 export function RoutingExpressionsPage() {
@@ -32,10 +32,7 @@ export function RoutingExpressionsPage() {
         queryFn: getDepartments,
     })
 
-    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuery({
-        queryKey: ["questions"],
-        queryFn: getQuestions,
-    })
+    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuestions()
 
     const tableData = mapExpressionsToTableRows(
         expressions,

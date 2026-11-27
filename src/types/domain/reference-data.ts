@@ -31,7 +31,8 @@ export type Question = {
     fieldType: string
     required: boolean
     answers: QuestionAnswer[]
-    categorySlugs: string[]
+    categoryIds: number[]
+    nextAnswerValue?: number
 }
 
 export type QuestionAnswer = {

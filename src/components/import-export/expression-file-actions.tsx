@@ -20,6 +20,18 @@ import {
     importExpressions,
     exportExpressions,
 } from "@/services/expression-import-export.tsx"
+import { questionRepository } from "@/repositories/reference-data.ts"
+import { validateQuestionReferences } from "@/utils/questions.ts"
+import { expressionRepository } from "@/repositories/expression-repository.ts"
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog.tsx"
 
 type Props = {
     departments: Department[]
@@ -32,6 +44,7 @@ export function ExpressionFileActions({departments, variant = "dropdown",}: Prop
     const [expressions, setExpressions] = useState<ExpressionTransfer[] | null>(null)
     const [routingExpressions, setRoutingExpressions] = useState<RoutingExpressionTransfer[] | null>(null)
     const [isImporting, setIsImporting] = useState(false)
+    const [exportWarnings, setExportWarnings] = useState<string[]>([])
 
     const { saveAll } = useExpressionActions()
 
@@ -99,13 +112,40 @@ export function ExpressionFileActions({departments, variant = "dropdown",}: Prop
         }
     }
 
-    function handleExport() {
+    function performExport() {
         try {
             exportExpressions()
+            setExportWarnings([])
+
             toast.success("Expressies succesvol geëxporteerd")
         } catch {
+            toast.error("Er is iets misgegaan tijdens het exporteren.")
+        }
+    }
+
+    function handleExport() {
+        try {
+            const warnings = questionRepository.hasData()
+                ? validateQuestionReferences(
+                    expressionRepository.getAll(),
+                    questionRepository.getAll()
+                )
+                : [
+                    "Er zijn geen vraaggegevens geïmporteerd. " +
+                    "Vraagverwijzingen konden niet worden gecontroleerd."
+                ]
+
+            if (warnings.length > 0) {
+                setExportWarnings(warnings)
+                return
+            }
+
+            performExport()
+        } catch (error) {
             toast.error(
-                "Er is iets misgegaan tijdens het exporteren."
+                error instanceof Error
+                    ? error.message
+                    : "De exportcontrole kon niet worden uitgevoerd."
             )
         }
     }
@@ -205,6 +245,44 @@ export function ExpressionFileActions({departments, variant = "dropdown",}: Prop
                     </DropdownMenuContent>
                 </DropdownMenu>
             )}
+            <AlertDialog
+                open={exportWarnings.length > 0}
+                onOpenChange={open => {
+                    if (!open) setExportWarnings([])
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Mogelijk ongeldige routeringen
+                        </AlertDialogTitle>
+
+                        <AlertDialogDescription>
+                            Tijdens de exportcontrole zijn mogelijk
+                            ongeldige vraag- of antwoordverwijzingen
+                            aangetroffen. Controleer onderstaande
+                            meldingen voordat je verdergaat.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+
+                    <ul className="max-h-60 list-disc space-y-2 overflow-y-auto pl-5 text-sm">
+                        {exportWarnings.map(warning => (
+                            <li key={warning}>
+                                {warning}
+                            </li>
+                        ))}
+                    </ul>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>
+                            Annuleren
+                        </AlertDialogCancel>
+
+                        <Button onClick={performExport}>
+                            Toch exporteren
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     )
 }

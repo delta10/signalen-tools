@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/services/categories.tsx"
 import { Skeleton } from "@/components/ui/skeleton.tsx"
 import { Link } from "@tanstack/react-router"
-import { getQuestions } from "@/services/questions-answers.tsx"
 import { getAreas } from "@/services/areas.tsx"
 import {ConditionGroup} from "@/components/expressions/condition-group.tsx";
 import {ConditionOperators, type ConditionType, ConditionTypes} from "@/types/forms/create-expression.ts";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu.tsx";
+import {useQuestions} from "@/hooks/questions/use-questions.ts";
 
 type ConditionsProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -20,10 +20,7 @@ export function ConditionsBuilder({ form }: ConditionsProps) {
         queryFn: getCategories,
     })
 
-    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuery({
-        queryKey: ["questions"],
-        queryFn: getQuestions,
-    })
+    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuestions()
 
     const {data: areas = [], isLoading: isAreasLoading, error: areasError,} = useQuery({
         queryKey: ["areas"],

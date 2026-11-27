@@ -3,7 +3,6 @@ import {
     mapTransfersToDomain,
     mapDepartmentTransfersToDomain,
     mapAreaTransfersToDomain,
-    mapQuestionTransfersToDomain,
     mapCategoryTransfersToDomain,
 } from "@/mappers/import-export.ts"
 
@@ -12,7 +11,6 @@ import type {
     ExpressionTransfer,
     DepartmentTransfer,
     AreaTransfer,
-    QuestionsTransfer,
     CategoryTransfer,
 } from "@/types/import-export/expressions"
 
@@ -196,92 +194,6 @@ describe("mapAreaTransfersToDomain", () => {
         const result = mapAreaTransfersToDomain(areas)
 
         expect(result.map((area) => area.id)).toEqual([0, 1])
-    })
-})
-
-// Tests for converting question transfers
-describe("mapQuestionTransfersToDomain", () => {
-    const questions = [
-        {
-            key: "Textielcontainer_type_melding",
-            field_type: "radio_input",
-            required: "1",
-            meta: JSON.stringify({
-                label: "Wat is er aan de hand?",
-                values: {
-                    "1": "De container is beschadigd",
-                    "2": "De container is vol",
-                },
-            }),
-            categories: "textielcontainer|True|True, afvalbak|True|True",
-        },
-    ] as QuestionsTransfer[]
-
-    it("maps question properties and extracts metadata", () => {
-        const result = mapQuestionTransfersToDomain(questions)
-
-        expect(result).toEqual([
-            {
-                id: 0,
-                key: "Textielcontainer_type_melding",
-                label: "Wat is er aan de hand?",
-                fieldType: "radio_input",
-                required: true,
-                answers: [
-                    { value: "1", label: "De container is beschadigd" },
-                    { value: "2", label: "De container is vol" },
-                ],
-                categorySlugs: ["textielcontainer", "afvalbak"],
-            },
-        ])
-    })
-
-    it("uses the question key when metadata has no label", () => {
-        const result = mapQuestionTransfersToDomain([
-            {
-                ...questions[0],
-                meta: JSON.stringify({ values: {} }),
-            },
-        ])
-
-        expect(result[0].label).toBe("Textielcontainer_type_melding")
-    })
-
-    it("returns an empty answers array when metadata has no values", () => {
-        const result = mapQuestionTransfersToDomain([
-            {
-                ...questions[0],
-                meta: JSON.stringify({ label: "Testvraag" }),
-            },
-        ])
-
-        expect(result[0].answers).toEqual([])
-    })
-
-    it("converts optional questions to required false", () => {
-        const result = mapQuestionTransfersToDomain([
-            { ...questions[0], required: "0" },
-        ])
-
-        expect(result[0].required).toBe(false)
-    })
-
-    it("removes empty category slugs", () => {
-        const result = mapQuestionTransfersToDomain([
-            {
-                ...questions[0],
-                categories: "afvalbak|True|True, , textielcontainer|True|True",
-            },
-        ])
-
-        expect(result[0].categorySlugs).toEqual([
-            "afvalbak",
-            "textielcontainer",
-        ])
-    })
-
-    it("returns an empty array for empty input", () => {
-        expect(mapQuestionTransfersToDomain([])).toEqual([])
     })
 })
 

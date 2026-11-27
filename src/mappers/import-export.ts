@@ -6,6 +6,8 @@ import type {
 } from "@/types/import-export/expressions"
 import type { Expression } from "@/types/domain/routing"
 import type {Area, Category, Department, Question} from "@/types/domain/reference-data"
+import {mapCategorySlugsToIds, parseQuestionCategorySlugs} from "@/mappers/question-categories.ts";
+import { isSupportedQuestionType, getAmbiguousCategorySlugs } from "@/utils/questions"
 
 /* Import: Transfer models → Domain models */
 export function mapTransfersToDomain(
@@ -99,12 +101,36 @@ export function mapAreaTransfersToDomain(areas: AreaTransfer[]): Area[] {
     }))
 }
 
-export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[]): Question[] {
+export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[], categories: Category[]): Question[] {
+    const keys = new Set<string>()
+
     return questions.map((question, index) => {
-        const meta = JSON.parse(question.meta) as {
+        if (keys.has(question.key)) {
+            throw new Error(
+                `Dubbele vraag-key "${question.key}" in importbestand.`
+            )
+        }
+
+        keys.add(question.key)
+
+        const parsed: unknown = JSON.parse(question.meta)
+
+        if (
+            typeof parsed !== "object" ||
+            parsed === null ||
+            Array.isArray(parsed)
+        ) {
+            throw new Error(
+                `Ongeldige metadata bij vraag "${question.key}".`
+            )
+        }
+
+        const meta = parsed as {
             label?: string
             values?: Record<string, string>
         }
+
+        const supported = isSupportedQuestionType(question.field_type)
 
         return {
             id: index,
@@ -113,15 +139,11 @@ export function mapQuestionTransfersToDomain(questions: QuestionsTransfer[]): Qu
             fieldType: question.field_type,
             required: question.required === "1",
             answers: Object.entries(meta.values ?? {}).map(
-                ([value, label]) => ({
-                    value,
-                    label,
-                })
+                ([value, label]) => ({ value, label })
             ),
-            categorySlugs: question.categories
-                .split(",")
-                .map((category) => category.trim().split("|")[0])
-                .filter(Boolean),
+            categoryIds: supported
+                ? mapCategorySlugsToIds(parseQuestionCategorySlugs(question.categories), categories)
+                : [],
         }
     })
 }
@@ -132,4 +154,106 @@ export function mapCategoryTransfersToDomain(categories: CategoryTransfer[]): Ca
         slug: category.slug,
         name: category.name,
     }))
+}
+
+
+export function mapQuestionDomainToTransfers(questions: Question[], categories: Category[], originalQuestions: QuestionsTransfer[]): QuestionsTransfer[] {
+    const categoryById = new Map(
+        categories.map(category => [category.id, category])
+    )
+
+    const ambiguousSlugs = getAmbiguousCategorySlugs(categories)
+
+    return questions.map(question => {
+        const original = originalQuestions[question.id]
+
+        // Niet-ondersteunde vraagtypes exact behouden
+        if (!isSupportedQuestionType(question.fieldType)) {
+            if (!original) {
+                throw new Error(
+                    `Geen originele gegevens gevonden voor "${question.key}".`
+                )
+            }
+
+            return { ...original }
+        }
+
+        // Ontbrekende data niet exporteren
+        if (!Array.isArray(question.categoryIds)) {
+            throw new Error(
+                `Vraag "${question.key}" heeft geen geldige categoryIds.`
+            )
+        }
+
+        const slugs = question.categoryIds.map(id => {
+            const category = categoryById.get(id)
+
+            if (!category) {
+                throw new Error(
+                    `Categorie-ID ${id} bij vraag "${question.key}" bestaat niet.`
+                )
+            }
+
+            return category.slug
+        })
+
+        const hasDuplicateSlugs = slugs.some(slug =>
+            ambiguousSlugs.has(slug)
+        )
+
+        const originalSlugs = original
+            ? parseQuestionCategorySlugs(original.categories)
+            : []
+
+        const unchangedCategories =
+            original !== undefined &&
+            originalSlugs.length === slugs.length &&
+            originalSlugs.every((slug, i) => slug === slugs[i])
+
+        if (hasDuplicateSlugs && !unchangedCategories) {
+            throw new Error(
+                `Vraag "${question.key}" bevat een niet-unieke categorie-slug.`
+            )
+        }
+
+        const categoriesValue = unchangedCategories
+            ? original.categories
+            : slugs.join(",")
+
+        // Bewaar onbekende metadata bij bestaande vragen
+        let originalMeta: Record<string, unknown> = {}
+
+        if (original) {
+            const parsed: unknown = JSON.parse(original.meta)
+
+            if (
+                typeof parsed !== "object" ||
+                parsed === null ||
+                Array.isArray(parsed)
+            ) {
+                throw new Error(
+                    `Ongeldige metadata bij vraag "${question.key}".`
+                )
+            }
+
+            originalMeta = parsed as Record<string, unknown>
+        }
+
+        return {
+            key: question.key,
+            field_type: question.fieldType,
+            required: question.required ? "1" : "0",
+            categories: categoriesValue,
+            meta: JSON.stringify({
+                ...originalMeta,
+                label: question.label,
+                values: Object.fromEntries(
+                    question.answers.map(answer => [
+                        answer.value,
+                        answer.label,
+                    ])
+                ),
+            }),
+        }
+    })
 }

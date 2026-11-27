@@ -27,7 +27,7 @@ export function AppHeader() {
                                 return (
                                     <Fragment key={match.id}>
                                         <BreadcrumbItem>
-                                            {isLast ? (
+                                            {isLast || !breadcrumb.to ? (
                                                 <BreadcrumbPage>
                                                     {breadcrumb.label}
                                                 </BreadcrumbPage>

@@ -10,20 +10,39 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuestionsRouteImport } from './routes/questions'
 import { Route as RoutingExpressionsRouteImport } from './routes/routing-expressions'
+import { Route as QuestionsIndexRouteImport } from './routes/questions.index'
+import { Route as QuestionsCreateRouteImport } from './routes/questions.create'
 import { Route as RoutingExpressionsIndexRouteImport } from './routes/routing-expressions.index'
 import { Route as RoutingExpressionsCreateRouteImport } from './routes/routing-expressions.create'
 import { Route as RoutingExpressionsSimulateRouteImport } from './routes/routing-expressions.simulate'
+import { Route as QuestionsQuestionIdEditRouteImport } from './routes/questions.$questionId.edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuestionsRoute = QuestionsRouteImport.update({
+  id: '/questions',
+  path: '/questions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoutingExpressionsRoute = RoutingExpressionsRouteImport.update({
   id: '/routing-expressions',
   path: '/routing-expressions',
   getParentRoute: () => rootRouteImport,
+} as any)
+const QuestionsIndexRoute = QuestionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => QuestionsRoute,
+} as any)
+const QuestionsCreateRoute = QuestionsCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => QuestionsRoute,
 } as any)
 const RoutingExpressionsIndexRoute = RoutingExpressionsIndexRouteImport.update({
   id: '/',
@@ -42,53 +61,81 @@ const RoutingExpressionsSimulateRoute =
     path: '/simulate',
     getParentRoute: () => RoutingExpressionsRoute,
   } as any)
+const QuestionsQuestionIdEditRoute = QuestionsQuestionIdEditRouteImport.update({
+  id: '/$questionId/edit',
+  path: '/$questionId/edit',
+  getParentRoute: () => QuestionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/questions': typeof QuestionsRouteWithChildren
   '/routing-expressions': typeof RoutingExpressionsRouteWithChildren
+  '/questions/create': typeof QuestionsCreateRoute
   '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
+  '/questions/': typeof QuestionsIndexRoute
   '/routing-expressions/': typeof RoutingExpressionsIndexRoute
+  '/questions/$questionId/edit': typeof QuestionsQuestionIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/questions/create': typeof QuestionsCreateRoute
   '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
+  '/questions': typeof QuestionsIndexRoute
   '/routing-expressions': typeof RoutingExpressionsIndexRoute
+  '/questions/$questionId/edit': typeof QuestionsQuestionIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/questions': typeof QuestionsRouteWithChildren
   '/routing-expressions': typeof RoutingExpressionsRouteWithChildren
+  '/questions/create': typeof QuestionsCreateRoute
   '/routing-expressions/create': typeof RoutingExpressionsCreateRoute
   '/routing-expressions/simulate': typeof RoutingExpressionsSimulateRoute
+  '/questions/': typeof QuestionsIndexRoute
   '/routing-expressions/': typeof RoutingExpressionsIndexRoute
+  '/questions/$questionId/edit': typeof QuestionsQuestionIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/questions'
     | '/routing-expressions'
+    | '/questions/create'
     | '/routing-expressions/create'
     | '/routing-expressions/simulate'
+    | '/questions/'
     | '/routing-expressions/'
+    | '/questions/$questionId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/questions/create'
     | '/routing-expressions/create'
     | '/routing-expressions/simulate'
+    | '/questions'
     | '/routing-expressions'
+    | '/questions/$questionId/edit'
   id:
     | '__root__'
     | '/'
+    | '/questions'
     | '/routing-expressions'
+    | '/questions/create'
     | '/routing-expressions/create'
     | '/routing-expressions/simulate'
+    | '/questions/'
     | '/routing-expressions/'
+    | '/questions/$questionId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  QuestionsRoute: typeof QuestionsRouteWithChildren
   RoutingExpressionsRoute: typeof RoutingExpressionsRouteWithChildren
 }
 
@@ -101,12 +148,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/questions': {
+      id: '/questions'
+      path: '/questions'
+      fullPath: '/questions'
+      preLoaderRoute: typeof QuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/routing-expressions': {
       id: '/routing-expressions'
       path: '/routing-expressions'
       fullPath: '/routing-expressions'
       preLoaderRoute: typeof RoutingExpressionsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/questions/': {
+      id: '/questions/'
+      path: '/'
+      fullPath: '/questions/'
+      preLoaderRoute: typeof QuestionsIndexRouteImport
+      parentRoute: typeof QuestionsRoute
+    }
+    '/questions/create': {
+      id: '/questions/create'
+      path: '/create'
+      fullPath: '/questions/create'
+      preLoaderRoute: typeof QuestionsCreateRouteImport
+      parentRoute: typeof QuestionsRoute
     }
     '/routing-expressions/': {
       id: '/routing-expressions/'
@@ -129,8 +197,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoutingExpressionsSimulateRouteImport
       parentRoute: typeof RoutingExpressionsRoute
     }
+    '/questions/$questionId/edit': {
+      id: '/questions/$questionId/edit'
+      path: '/$questionId/edit'
+      fullPath: '/questions/$questionId/edit'
+      preLoaderRoute: typeof QuestionsQuestionIdEditRouteImport
+      parentRoute: typeof QuestionsRoute
+    }
   }
 }
+
+interface QuestionsRouteChildren {
+  QuestionsCreateRoute: typeof QuestionsCreateRoute
+  QuestionsIndexRoute: typeof QuestionsIndexRoute
+  QuestionsQuestionIdEditRoute: typeof QuestionsQuestionIdEditRoute
+}
+
+const QuestionsRouteChildren: QuestionsRouteChildren = {
+  QuestionsCreateRoute: QuestionsCreateRoute,
+  QuestionsIndexRoute: QuestionsIndexRoute,
+  QuestionsQuestionIdEditRoute: QuestionsQuestionIdEditRoute,
+}
+
+const QuestionsRouteWithChildren = QuestionsRoute._addFileChildren(
+  QuestionsRouteChildren,
+)
 
 interface RoutingExpressionsRouteChildren {
   RoutingExpressionsCreateRoute: typeof RoutingExpressionsCreateRoute
@@ -149,6 +240,7 @@ const RoutingExpressionsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  QuestionsRoute: QuestionsRouteWithChildren,
   RoutingExpressionsRoute: RoutingExpressionsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

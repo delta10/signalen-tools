@@ -7,7 +7,7 @@ import type {
 import {
     mapAreaTransfersToDomain,
     mapCategoryTransfersToDomain,
-    mapDepartmentTransfersToDomain,
+    mapDepartmentTransfersToDomain, mapQuestionDomainToTransfers,
     mapQuestionTransfersToDomain
 } from "@/mappers/import-export.ts"
 import {
@@ -18,7 +18,7 @@ import {
 } from "@/repositories/reference-data"
 import {downloadJsonFile, getExportFilename, readJsonFile} from "@/utils/expression-files.ts"
 import { validateReferenceData } from "@/utils/reference-data-validation"
-import type {Area, Category, Department, Question} from "@/types/domain/reference-data.ts";
+import type {Area, Department, Question} from "@/types/domain/reference-data.ts";
 
 // Generic import helper
 async function importReferenceData<TTransfer, TDomain>(
@@ -37,14 +37,56 @@ async function importReferenceData<TTransfer, TDomain>(
     save(mapped, data as TTransfer[])
 }
 
+
 export async function importCategories(file: File): Promise<void> {
-    return importReferenceData<CategoryTransfer, Category>(
-        file,
-        "categories",
-        mapCategoryTransfersToDomain,
-        (data, original) =>
-            categoryRepository.saveImported(data, original)
-    )
+    const data = await readJsonFile<unknown>(file)
+    validateReferenceData(data, "categories")
+
+    const original = data as CategoryTransfer[]
+    const mapped = mapCategoryTransfersToDomain(original)
+
+    if (questionRepository.hasData()) {
+        const questions = questionRepository.getAll()
+        const existingCategories = categoryRepository.getAll()
+        const originalCategories = categoryRepository.getOriginal()
+
+        const usedCategoryIds = new Set(
+            questions.flatMap(question => question.categoryIds ?? [])
+        )
+
+        const affectedCategories = [...usedCategoryIds].filter(id => {
+            const existing = existingCategories.find(
+                category => category.id === id
+            )
+
+            const replacement = mapped.find(
+                category => category.id === id
+            )
+
+            if (!existing || !replacement) {
+                return true
+            }
+
+            const existingTransfer = originalCategories[id]
+            const replacementTransfer = original[id]
+
+            return (
+                existing.slug !== replacement.slug ||
+                !existingTransfer ||
+                !replacementTransfer ||
+                existingTransfer.parent !== replacementTransfer.parent
+            )
+        })
+
+        if (affectedCategories.length > 0) {
+            throw new Error(
+                "De categorie-import verandert bestaande categoriekoppelingen " +
+                "van aanvullende vragen. De import is daarom geblokkeerd."
+            )
+        }
+    }
+
+    categoryRepository.saveImported(mapped, original)
 }
 
 export async function importAreas(file: File): Promise<void> {
@@ -67,15 +109,28 @@ export async function importDepartments(file: File): Promise<void> {
     )
 }
 
+
 export async function importQuestions(file: File): Promise<void> {
+    const categories = categoryRepository.getAll()
+
+    if (!categoryRepository.hasData()) {
+        throw new Error(
+            "Importeer eerst de categorieën voordat je vragen importeert."
+        )
+    }
+
     return importReferenceData<QuestionsTransfer, Question>(
         file,
         "questions",
-        mapQuestionTransfersToDomain,
+        data => mapQuestionTransfersToDomain(
+            data,
+            categories
+        ),
         (data, original) =>
             questionRepository.saveImported(data, original)
     )
 }
+
 
 export function exportCategories(): void {
     downloadJsonFile(
@@ -99,8 +154,18 @@ export function exportDepartments(): void {
 }
 
 export function exportQuestions(): void {
+    const questions = questionRepository.getAll()
+    const categories = categoryRepository.getAll()
+    const originalQuestions = questionRepository.getOriginal()
+
+    const transfers = mapQuestionDomainToTransfers(
+        questions,
+        categories,
+        originalQuestions
+    )
+
     downloadJsonFile(
         getExportFilename("Question"),
-        questionRepository.getOriginal()
+        transfers
     )
 }

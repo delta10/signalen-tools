@@ -7,10 +7,11 @@ import {getCategories} from "@/services/categories.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {Link, useNavigate} from "@tanstack/react-router";
 import {getAreas} from "@/services/areas.tsx";
-import {getQuestions} from "@/services/questions-answers.tsx";
+import { useQuestions } from "@/hooks/questions/use-questions"
 import {getSelectedRoutingExpression, simulateRouting} from "@/utils/routing-simulations.ts";
 import type {SimulationFormProps} from "@/types/routing-simulations.ts";
 import {useExpressions} from "@/hooks/import-export/use-expressions.ts";
+import { getQuestionsForCategories } from "@/utils/questions"
 
 export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
     const form = useRoutingSimulationForm()
@@ -28,11 +29,7 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
             queryFn: getAreas,
         })
 
-    const { data: questions = [], isLoading: isQuestionsLoading, error: questionsError,} = useQuery(
-        {
-            queryKey: ["questions"],
-            queryFn: getQuestions,
-        })
+    const {data: questions = [], isLoading: isQuestionsLoading, error: questionsError} = useQuestions()
 
     const { data: expressions = [], isLoading: isExpressionsLoading, error: expressionsError,} = useExpressions()
 
@@ -148,9 +145,7 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                         {(selectedCategory) => (
                             <form.Field name="question">
                                 {(field) => {
-                                    const relevantQuestions = questions.filter((question) =>
-                                        question.categorySlugs.includes(selectedCategory)
-                                    )
+                                    const relevantQuestions = getQuestionsForCategories(questions, categories, [selectedCategory])
 
                                     if (relevantQuestions.length === 0) {
                                         return null

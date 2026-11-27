@@ -5,6 +5,10 @@ const navigationItems = [
     {
         label: "Routing Expressions",
         to: "/routing-expressions"
+    },
+    {
+        label: "Aanvullende vragen",
+        to: "/questions"
     }
 ]
 export function AppSidebar() {
