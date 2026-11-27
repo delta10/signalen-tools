@@ -1,8 +1,17 @@
 import { useQuery } from "@tanstack/react-query"
 import { ReferenceDataOverview } from "@/components/import-export/reference-data-overview"
 import { getDepartments } from "@/services/departments"
+import {useState} from "react";
+import {SignalenEnvironment} from "@/components/import-export/signalen-environment.tsx";
 
 export function HomePage() {
+    const [signalenUrl, setSignalenUrl] = useState(() => localStorage.getItem("signalen-url") ?? "")
+
+    function saveSignalenUrl(url: string) {
+        localStorage.setItem("signalen-url", url)
+        setSignalenUrl(url)
+    }
+
     const { data: departments = [] } = useQuery({
         queryKey: ["departments"],
         queryFn: getDepartments,
@@ -20,7 +29,9 @@ export function HomePage() {
                 </p>
             </div>
 
-            <ReferenceDataOverview departments={departments} />
+            <SignalenEnvironment url={signalenUrl} onSave={saveSignalenUrl} />
+
+            <ReferenceDataOverview departments={departments} signalenUrl={signalenUrl} />
         </div>
     )
 }

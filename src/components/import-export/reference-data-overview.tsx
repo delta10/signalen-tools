@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {IconCheck, IconAlertTriangle, IconArrowRight} from "@tabler/icons-react"
+import {IconCheck, IconAlertTriangle, IconArrowRight, IconTrash} from "@tabler/icons-react"
 import {
     categoryRepository,
     areaRepository,
@@ -12,7 +12,16 @@ import {ExpressionFileActions} from "@/components/import-export/expression-file-
 import type {Department} from "@/types/domain/reference-data.ts";
 import {Link} from "@tanstack/react-router";
 import {Button} from "@/components/ui/button.tsx";
-import { useExpressions } from "@/hooks/import-export/use-expressions"
+import {useExpressionActions, useExpressions} from "@/hooks/import-export/use-expressions"
+import {useQueryClient} from "@tanstack/react-query";
+import {toast} from "sonner";
+import {
+    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "@/components/ui/alert-dialog.tsx";
 
 const datasets = [
     {
@@ -20,51 +29,134 @@ const datasets = [
         label: "Categorieën",
         repository: categoryRepository,
         required: true,
+        recommended: false,
+        fileName: "Category.json",
+        djangoPath: "/signals/category/",
     },
     {
         type: "areas",
         label: "Gebieden",
         repository: areaRepository,
         required: true,
+        recommended: false,
+        fileName: "Area.json",
+        djangoPath: "/signals/area/",
     },
     {
         type: "departments",
         label: "Afdelingen",
         repository: departmentRepository,
         required: true,
+        recommended: false,
+        fileName: "Department.json",
+        djangoPath: "/signals/department/",
     },
     {
         type: "questions",
         label: "Vragen en antwoorden",
         repository: questionRepository,
-        required: true,
+        required: false,
+        recommended: true,
+        fileName: "Question.json",
+        djangoPath: "/signals/question/",
     },
 ] as const
 
 type Props = {
     departments: Department[],
+    signalenUrl: string
 }
 
-export function ReferenceDataOverview({departments}: Props) {
+export function ReferenceDataOverview({departments, signalenUrl}: Props) {
     const [, setRevision] = useState(0)
     const { data: expressions = [] } = useExpressions()
+    const queryClient = useQueryClient()
+    const { saveAll } = useExpressionActions()
 
     const refresh = () => setRevision((value) => value + 1)
+    async function handleClearAll() {
+        try {
+            datasets.forEach((dataset) => {
+                dataset.repository.clear()
+            })
 
-    const importedCount = datasets.filter(
+            saveAll([])
+
+            await Promise.all(
+                datasets.map((dataset) =>
+                    queryClient.invalidateQueries({
+                        queryKey: [dataset.type],
+                    })
+                )
+            )
+
+            refresh()
+
+            toast.success("Alle imports zijn gewist.")
+        } catch {
+            refresh()
+            toast.error("Niet alle gegevens konden worden gewist.")
+        }
+    }
+
+    const requiredDatasets = datasets.filter(
+        (dataset) => dataset.required
+    )
+
+    const importedCount = requiredDatasets.filter(
         (dataset) => dataset.repository.hasData()
     ).length
 
-    const isReady = importedCount === datasets.length
+    const isReady = importedCount === requiredDatasets.length
+    const hasAnyData =
+        datasets.some((dataset) => dataset.repository.hasData()) ||
+        expressions.length > 0
 
     return (
         <div className="space-y-4">
-            <div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-xl font-semibold">
                     Referentiegegevens
                 </h2>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button
+                            variant="outline"
+                            disabled={!hasAnyData}
+                            className="text-destructive"
+                        >
+                            <IconTrash />
+                            Alle imports wissen
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Weet je zeker dat je alle imports wilt wissen?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Alle lokaal opgeslagen referentiegegevens
+                                en routeringsregels worden verwijderd,
+                                inclusief zelf aangemaakte en gewijzigde
+                                regels. Exporteer eventueel eerst je zelf aangemaakte
+                                routeerregels voordat je alle datasets verwijdert.<br />
+                                Deze actie kan niet ongedaan worden gemaakt.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>
+                                Annuleren
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-destructive text-white hover:bg-destructive/90"
+                                onClick={() => void handleClearAll()}
+                            >
+                                Alles wissen
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
-
             <div className="rounded-lg border p-4">
                 <div className="flex items-center gap-3">
                     {isReady ? (
@@ -76,13 +168,13 @@ export function ReferenceDataOverview({departments}: Props) {
                     <div>
                         <p className="font-medium">
                             {isReady
-                                ? "Alle referentiegegevens zijn beschikbaar"
-                                : `${importedCount} van de ${datasets.length} verplichte datasets geïmporteerd`}
+                                ? "Alle verplichte referentiegegevens zijn beschikbaar"
+                                : `${importedCount} van de ${requiredDatasets.length} verplichte datasets geïmporteerd`}
                         </p>
                         <p className="text-sm text-muted-foreground">
                             {isReady
                                 ? "Het systeem is klaar voor gebruik."
-                                : "Importeer alle vier de datasets om te beginnen."}
+                                : "Importeer alle verplichte datasets om te beginnen."}
                         </p>
                     </div>
                 </div>
@@ -99,6 +191,16 @@ export function ReferenceDataOverview({departments}: Props) {
                             title={dataset.label}
                             count={count}
                             imported={imported}
+                            files={[
+                                {
+                                    name: dataset.fileName,
+                                    djangoUrl: signalenUrl
+                                        ? `${signalenUrl}${dataset.djangoPath}`
+                                        : undefined,
+                                },
+                            ]}
+                            optional={!dataset.required}
+                            recommended={dataset.recommended}
                         >
                             <ReferenceDataFileActions
                                 type={dataset.type}
@@ -108,33 +210,46 @@ export function ReferenceDataOverview({departments}: Props) {
                         </DataManagementCard>
                     )
                 })}
-
                 <DataManagementCard
                     title="Routing Expressions"
                     count={expressions.length}
                     imported={expressions.length > 0}
                     optional
+                    files={[
+                        {
+                            name: "Expression.json",
+                            djangoUrl: signalenUrl
+                                ? `${signalenUrl}/signals/expression/`
+                                : undefined,
+                        },
+                        {
+                            name: "RoutingExpression.json",
+                            djangoUrl: signalenUrl
+                                ? `${signalenUrl}/signals/routingexpression/`
+                                : undefined,
+                        },
+                    ]}
                 >
                     <ExpressionFileActions
                         departments={departments}
                         variant="buttons"
                     />
                 </DataManagementCard>
-                <div className="flex flex-col items-center justify-center gap-2 pt-4">
-                    {isReady ? (
-                        <Button asChild>
-                            <Link to="/routing-expressions">
-                                Starten
-                                <IconArrowRight />
-                            </Link>
-                        </Button>
-                    ) : (
-                        <Button disabled>
+            </div>
+            <div className="flex justify-start">
+                {isReady ? (
+                    <Button asChild>
+                        <Link to="/routing-expressions">
                             Starten
                             <IconArrowRight />
-                        </Button>
-                    )}
-                </div>
+                        </Link>
+                    </Button>
+                ) : (
+                    <Button disabled>
+                        Starten
+                        <IconArrowRight />
+                    </Button>
+                )}
             </div>
         </div>
     )

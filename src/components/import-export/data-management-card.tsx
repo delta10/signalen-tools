@@ -1,5 +1,17 @@
 import type { ReactNode } from "react"
-import {IconCircleCheck, IconAlertCircle, IconCircleDashed,} from "@tabler/icons-react"
+import {
+    IconCircleCheck,
+    IconAlertCircle,
+    IconCircleDashed,
+    IconExternalLink,
+    IconInfoCircle,
+} from "@tabler/icons-react"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type Props = {
     title: string
@@ -7,26 +19,41 @@ type Props = {
     imported: boolean
     optional?: boolean
     children: ReactNode
+    files: {
+        name: string
+        djangoUrl?: string
+    }[]
+    recommended?: boolean
 }
 
-export function DataManagementCard({title, count, imported, optional = false, children,}: Props) {
+export function DataManagementCard({title, count, imported, optional = false, children, files, recommended = false}: Props) {
     const status = imported
         ? {
             label: "Geïmporteerd",
             icon: IconCircleCheck,
             color: "text-green-600",
+            description: "Deze gegevens zijn geïmporteerd en beschikbaar voor gebruik.",
         }
-        : optional
+        : recommended
             ? {
-                label: "Optioneel",
-                icon: IconCircleDashed,
-                color: "text-muted-foreground",
+                label: "Aanbevolen",
+                icon: IconInfoCircle,
+                color: "text-blue-600",
+                description: "Importeer deze gegevens voor volledige ondersteuning van aanvullende vraagvoorwaarden en simulaties.",
             }
-            : {
-                label: "Import vereist",
-                icon: IconAlertCircle,
-                color: "text-amber-600",
-            }
+            : optional
+                ? {
+                    label: "Optioneel",
+                    icon: IconCircleDashed,
+                    color: "text-muted-foreground",
+                    description: "Deze gegevens zijn niet vereist om te beginnen.",
+                }
+                : {
+                    label: "Import vereist",
+                    icon: IconAlertCircle,
+                    color: "text-amber-600",
+                    description: "Importeer deze gegevens voordat je kunt beginnen.",
+                }
 
     const StatusIcon = status.icon
 
@@ -38,19 +65,50 @@ export function DataManagementCard({title, count, imported, optional = false, ch
                     <p className="text-sm text-muted-foreground">
                         {imported
                             ? `${count} records beschikbaar`
-                            : optional
-                                ? `${count} routeringsregels beschikbaar`
-                                : "Nog niet geïmporteerd"}
+                            : "Nog niet geïmporteerd"}
                     </p>
                 </div>
 
-                <StatusIcon className={`size-5 ${status.color}`} />
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <StatusIcon
+                                className={`size-5 cursor-help ${status.color}`}
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{status.description}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
 
             <p className={`text-sm font-medium ${status.color}`}>
                 {status.label}
             </p>
+            <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">
+                    Benodigde bestanden:
+                </p>
 
+                {files.map((file) => (
+                    <div key={file.name}>
+                        {file.djangoUrl ? (
+                            <a
+                                href={file.djangoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 font-medium underline"
+                            >
+                                {file.name}
+                                <IconExternalLink className="size-4" />
+                            </a>
+                        ) : (
+                            <span>{file.name}</span>
+                        )}
+                    </div>
+                ))}
+            </div>
             <div className="mt-auto">
                 {children}
             </div>
