@@ -38,13 +38,3 @@ export type QuestionAnswer = {
     value: string
     label: string
 }
-
-// Legacy type used by existing demo/simulation code.
-// Remove after migration to domain Expression is complete.
-export type RoutingExpression = {
-    _expression: string
-    _department: string
-    _user: string
-    order: string
-    is_active: string
-}

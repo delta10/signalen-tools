@@ -1,6 +1,7 @@
 import type {useRoutingExpressionForm} from "@/hooks/forms/routing-expressions.ts";
 import {Input} from "@/components/ui/input.tsx";
 import {Switch} from "@/components/ui/switch.tsx";
+import {expressionRepository} from "@/repositories/expression-repository.ts";
 
 type GeneralFieldsProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -10,8 +11,17 @@ export function GeneralFields({form}: GeneralFieldsProps) {
         <>
             <h2>Informatie</h2>
             <form.Field name={"name"} validators={{
-                onChange: ({ value }) =>
-                    !value.trim() ? "Naam is verplicht" : undefined
+                onChange: ({ value }) => {
+                    if (!value.trim()) {
+                        return "Naam is verplicht"
+                    }
+
+                    if (expressionRepository.existsByName(value)) {
+                        return "Er bestaat al een Routing Expression met deze naam."
+                    }
+
+                    return undefined
+                }
             }}>
                 {(field) => (
                     <div className="w-full max-w-sm">

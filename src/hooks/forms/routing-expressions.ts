@@ -1,10 +1,13 @@
 import { useForm } from "@tanstack/react-form"
 import type { RoutingExpressionFormData } from "@/types/forms/create-expression.ts"
-import {mapCreateExpressionFormToTransfers} from "@/mappers/form-to-transfer.ts";
 import {useNavigate} from "@tanstack/react-router";
-import {useQueryClient} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import {toast} from "sonner";
-import type {ExpressionTransfer, RoutingExpressionTransfer} from "@/types/import-export/expressions.ts";
+import {useExpressionActions} from "@/hooks/import-export/use-expressions.ts"
+import {getDepartments} from "@/services/departments.tsx";
+import {mapCreateExpressionFormToDomain} from "@/mappers/create-expression.ts";
+import {getCategories} from "@/services/categories.tsx";
+import {expressionRepository} from "@/repositories/expression-repository.ts";
 
 const defaultValues: RoutingExpressionFormData = {
     name: "",
@@ -12,53 +15,53 @@ const defaultValues: RoutingExpressionFormData = {
     isActive: true,
     department: "",
     conditionGroups: [],
-    conditionOperator: "AND"
+    conditionOperator: "AND",
+    user: ""
 }
 
 export function useRoutingExpressionForm() {
     const navigate = useNavigate()
-    const queryClient = useQueryClient()
+    const { add } = useExpressionActions()
+
+    const { data: departments = [] } = useQuery({
+        queryKey: ["departments"],
+        queryFn: getDepartments,
+    })
+
+    const { data: categories = [] } = useQuery({
+        queryKey: ["categories"],
+        queryFn: getCategories,
+    })
 
     return useForm({
         defaultValues,
         onSubmit: async ({ value }) => {
-            const result = mapCreateExpressionFormToTransfers(value)
+            try {
+                if (expressionRepository.existsByName(value.name)) {
+                    throw new Error(
+                        "Er bestaat al een Routing Expression met deze naam."
+                    )
+                }
 
-            // Temporary storage
-            const existingExpressions: ExpressionTransfer[] =
-                JSON.parse(localStorage.getItem("newExpressions") ?? "[]")
+                const newExpression = mapCreateExpressionFormToDomain(
+                    value,
+                    departments,
+                    categories
+                )
+                add(newExpression)
 
-            const existingRoutingExpressions: RoutingExpressionTransfer[] =
-                JSON.parse(localStorage.getItem("newRoutingExpressions") ?? "[]")
+                toast.success("Routing Expression succesvol toegevoegd")
 
-            localStorage.setItem(
-                "newExpressions",
-                JSON.stringify([
-                    ...existingExpressions,
-                    result.expression,
-                ])
-            )
-
-            localStorage.setItem(
-                "newRoutingExpressions",
-                JSON.stringify([
-                    ...existingRoutingExpressions,
-                    result.routingExpression,
-                ])
-            )
-
-            await queryClient.invalidateQueries({
-                queryKey: ["expressions"],
-            })
-
-            await queryClient.invalidateQueries({
-                queryKey: ["routing-expressions"],
-            })
-
-            toast.success("Routing Expression succesvol toegevoegd")
-            await navigate({
-                to: "/routing-expressions",
-            })
+                await navigate({
+                    to: "/routing-expressions",
+                })
+            } catch (error) {
+                toast.error(
+                    error instanceof Error
+                        ? error.message
+                        : "Routing Expression kon niet worden toegevoegd."
+                )
+            }
         },
     })
 }

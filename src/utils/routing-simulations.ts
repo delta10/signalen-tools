@@ -79,7 +79,11 @@ export function simulateRouting(
     questions: Question[],
 ): SimulationResult[] {
     return expressions
-        .filter((expression) => expression.routing !== null)
+        .filter(
+            (expression) =>
+                expression.routing !== null &&
+                expression.isActive
+        )
         .map((expression) => {
             const categoryMatches = doesCategoryMatch(
                 simulationData,
