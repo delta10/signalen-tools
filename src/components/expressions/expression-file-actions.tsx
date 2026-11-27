@@ -43,59 +43,48 @@ function isRoutingExpressionTransferArray(value: unknown): value is RoutingExpre
 }
 
 export function ExpressionFileActions({ departments }: Props) {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const expressionInputRef = useRef<HTMLInputElement>(null)
+    const routingInputRef = useRef<HTMLInputElement>(null)
+    const [expressions, setExpressions] = useState<ExpressionTransfer[] | null>(null)
+    const [routingExpressions, setRoutingExpressions] = useState<RoutingExpressionTransfer[] | null>(null)
     const { saveAll } = useExpressionActions()
 
     const [isImporting, setIsImporting] = useState(false)
 
-    async function handleImport(files: FileList | null) {
-        if (!files) return
-
+    async function handleImport(file: File | undefined, type: "expression" | "routing") {
+        if (!file) return
         setIsImporting(true)
 
         try {
-            const selectedFiles = Array.from(files)
+            const parsed = await readJsonFile<unknown>(file)
 
-            if (selectedFiles.length !== 2) {
-                throw new Error(
-                    "Selecteer de 2 JSON bestanden van expressions en RoutingExpressions"
-                )
+            if (type === "expression") {
+                if (!isExpressionTransferArray(parsed)) {
+                    throw new Error(
+                        "Het bestand heeft niet het juiste Expression-formaat."
+                    )
+                }
+
+                setExpressions(parsed)
+
+                if (routingExpressions !== null) {
+                    importExpressions(parsed, routingExpressions)
+                } else {
+                    toast.info("Expression-bestand ingelezen. Importeer nu RoutingExpression.json.")
+                }
+            } else {
+                if (!isRoutingExpressionTransferArray(parsed)) {
+                    throw new Error("Het bestand heeft niet het juiste RoutingExpression-formaat.")
+                }
+
+                setRoutingExpressions(parsed)
+
+                if (expressions !== null) {
+                    importExpressions(expressions, parsed)
+                } else {
+                    toast.info("RoutingExpression-bestand ingelezen. Importeer nu Expression.json.")
+                }
             }
-
-            const parsedFiles = await Promise.all(
-                selectedFiles.map((file) => readJsonFile<unknown>(file))
-            )
-
-            // Identify files by their content
-            const expressions = parsedFiles.find(isExpressionTransferArray)
-            const routingExpressions = parsedFiles.find(isRoutingExpressionTransferArray)
-
-            if (!expressions || !routingExpressions) {
-                throw new Error("De bestanden hebben niet het juiste JSON-formaat.")
-            }
-
-            // Prevent losing unmatched routing expressions
-            const names = new Set(
-                expressions.map((expression) => expression.name)
-            )
-
-            if (routingExpressions.some(
-                    (routing) => !names.has(routing._expression)
-                )
-            ) {
-                throw new Error(
-                    "Niet alle routing expressions hebben een bijbehorende expressie."
-                )
-            }
-
-            const domainExpressions = mapTransfersToDomain(
-                routingExpressions,
-                expressions,
-                departments
-            )
-
-            saveAll(domainExpressions)
-            toast.success(`${domainExpressions.length} expressies succesvol geïmporteerd.`)
         } catch (error) {
             toast.error(
                 error instanceof Error
@@ -105,8 +94,12 @@ export function ExpressionFileActions({ departments }: Props) {
         } finally {
             setIsImporting(false)
 
-            if (inputRef.current) {
-                inputRef.current.value = ""
+            if (expressionInputRef.current) {
+                expressionInputRef.current.value = ""
+            }
+
+            if (routingInputRef.current) {
+                routingInputRef.current.value = ""
             }
         }
     }
@@ -126,17 +119,50 @@ export function ExpressionFileActions({ departments }: Props) {
         }
     }
 
+    function importExpressions(expressions: ExpressionTransfer[], routingExpressions: RoutingExpressionTransfer[]) {
+        const names = new Set(expressions.map((expression) => expression.name))
+
+        if (routingExpressions.some(
+            (routing) => !names.has(routing._expression)
+        )) {
+            throw new Error(
+                "Niet alle routing expressions hebben een bijbehorende expressie."
+            )
+        }
+
+        const domainExpressions = mapTransfersToDomain(routingExpressions, expressions, departments)
+        saveAll(domainExpressions)
+
+        setExpressions(null)
+        setRoutingExpressions(null)
+
+        toast.success(`${domainExpressions.length} expressies succesvol geïmporteerd.`)
+    }
+
     return (
         <>
             <input
-                ref={inputRef}
+                ref={expressionInputRef}
                 type="file"
                 accept=".json,application/json"
-                multiple
                 className="hidden"
-                aria-label="Selecteer beide JSON-bestanden"
                 onChange={(event) => {
-                    void handleImport(event.target.files)
+                    void handleImport(
+                        event.target.files?.[0],
+                        "expression"
+                    )
+                }}
+            />
+            <input
+                ref={routingInputRef}
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                onChange={(event) => {
+                    void handleImport(
+                        event.target.files?.[0],
+                        "routing"
+                    )
                 }}
             />
 
@@ -147,13 +173,18 @@ export function ExpressionFileActions({ departments }: Props) {
                             <IconDots />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                            disabled={isImporting}
-                            onSelect={() => inputRef.current?.click()}
+                    <DropdownMenuContent align="end" className={"min-w-50"}>
+                        <DropdownMenuItem disabled={isImporting}
+                            onSelect={() => expressionInputRef.current?.click()}
                         >
                             <IconUpload />
-                            Importeren
+                            Expression.json importeren
+                        </DropdownMenuItem>
+                        <DropdownMenuItem disabled={isImporting}
+                            onSelect={() => routingInputRef.current?.click()}
+                        >
+                            <IconUpload />
+                            RoutingExpression.json importeren
                         </DropdownMenuItem>
                         <DropdownMenuItem onSelect={handleExport}>
                             <IconDownload />
