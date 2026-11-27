@@ -16,6 +16,6 @@ export function getReferenceDataStatus() {
         areas,
         departments,
         questions,
-        isReady: categories && areas && departments && questions,
+        isReady: categories && areas && departments,
     }
 }

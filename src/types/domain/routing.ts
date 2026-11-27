@@ -12,4 +12,5 @@ export type Expression = {
 export type ExpressionRouting = {
     department: Department
     order: number
+    user: string | null
 }

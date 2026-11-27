@@ -10,6 +10,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
+import {Input} from "@/components/ui/input.tsx";
 
 type DestinationsFieldProps = {
     form: ReturnType<typeof useRoutingExpressionForm>
@@ -47,39 +48,57 @@ export function DestinationsField({form}: DestinationsFieldProps) {
     return(
         <>
             <h2>Dan...</h2>
-            <form.Field name={"department"}>
-                {(field) => {
-                    const selectedDepartment = departments.find(
-                        (department) => department.code === field.state.value
-                    )
+            <div className={"flex justify-start gap-4"}>
+                <form.Field name={"department"}>
+                    {(field) => {
+                        const selectedDepartment = departments.find(
+                            (department) => department.code === field.state.value
+                        )
 
-                    return (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                >
-                                    {selectedDepartment?.name ??
-                                        "Selecteer afdeling"}
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                {departments.map((department) => (
-                                    <DropdownMenuItem
-                                        key={department.code}
-                                        onSelect={() =>
-                                            field.handleChange(department.code)
-                                        }
+                        return (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
                                     >
-                                        {department.name}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )
-                }}
-            </form.Field>
+                                        {selectedDepartment?.name ??
+                                            "Selecteer afdeling"}
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    {departments.map((department) => (
+                                        <DropdownMenuItem
+                                            key={department.code}
+                                            onSelect={() =>
+                                                field.handleChange(department.code)
+                                            }
+                                        >
+                                            {department.name}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )
+                    }}
+                </form.Field>
+                <form.Field name="user">
+                    {(field) => (
+                        <div className="space-y-2 min-w-60">
+                            <Input
+                                id={field.name}
+                                type="email"
+                                placeholder="naam@organisatie.nl (optioneel)"
+                                value={field.state.value}
+                                onBlur={field.handleBlur}
+                                onChange={(e) =>
+                                    field.handleChange(e.target.value)
+                                }
+                            />
+                        </div>
+                    )}
+                </form.Field>
+            </div>
         </>
     )
 }

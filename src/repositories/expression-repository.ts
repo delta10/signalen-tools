@@ -10,6 +10,15 @@ export const expressionRepository = {
         return stored ? JSON.parse(stored) : []
     },
 
+    existsByName(name: string, excludeId?: string): boolean {
+        return this.getAll().some(
+            (expression) =>
+                expression.id !== excludeId &&
+                expression.name.trim().toLowerCase() ===
+                name.trim().toLowerCase()
+        )
+    },
+
     getImportedAt(): string | null {
         return localStorage.getItem(IMPORTED_AT_KEY)
     },
@@ -19,6 +28,9 @@ export const expressionRepository = {
             IMPORTED_AT_KEY,
             new Date().toISOString()
         )
+    },
+    clearImportedAt(): void {
+        localStorage.removeItem(IMPORTED_AT_KEY)
     },
 
     saveAll(expressions: Expression[]): void {
