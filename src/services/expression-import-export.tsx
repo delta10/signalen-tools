@@ -42,31 +42,35 @@ function isRoutingExpressionTransferArray(
 }
 
 // Import: read, validate and map the selected files
-export async function importExpressions(
-    files: FileList,
-    departments: Department[]
-): Promise<Expression[]> {
-    const selectedFiles = Array.from(files)
+export async function readExpressionFile(file: File): Promise<ExpressionTransfer[]> {
+    const parsed = await readJsonFile<unknown>(file)
 
-    if (selectedFiles.length !== 2) {
+    if (!isExpressionTransferArray(parsed)) {
         throw new Error(
-            "Selecteer de 2 JSON bestanden van expressions en RoutingExpressions"
+            "Het bestand heeft niet het juiste Expression-formaat."
         )
     }
 
-    const parsedFiles = await Promise.all(
-        selectedFiles.map((file) => readJsonFile<unknown>(file))
-    )
+    return parsed
+}
 
-    const expressions = parsedFiles.find(isExpressionTransferArray)
-    const routingExpressions = parsedFiles.find(
-        isRoutingExpressionTransferArray
-    )
+export async function readRoutingExpressionFile(file: File): Promise<RoutingExpressionTransfer[]> {
+    const parsed = await readJsonFile<unknown>(file)
 
-    if (!expressions || !routingExpressions) {
-        throw new Error("De bestanden hebben niet het juiste JSON-formaat.")
+    if (!isRoutingExpressionTransferArray(parsed)) {
+        throw new Error(
+            "Het bestand heeft niet het juiste RoutingExpression-formaat."
+        )
     }
 
+    return parsed
+}
+
+export function importExpressions(
+    expressions: ExpressionTransfer[],
+    routingExpressions: RoutingExpressionTransfer[],
+    departments: Department[]
+): Expression[] {
     const names = new Set(
         expressions.map((expression) => expression.name)
     )
