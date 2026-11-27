@@ -68,6 +68,7 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
     const queryClient = useQueryClient()
 
     const action = actions[type]
+    const fileType = action.accept.split(",")[0]
 
     async function handleImport(file: File | undefined) {
         if (!file) return
@@ -115,7 +116,7 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
     }
 
     return (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
             <input
                 ref={inputRef}
                 type="file"
@@ -134,7 +135,7 @@ export function ReferenceDataFileActions({type, hasData, onImported,}: Props) {
                 onClick={() => inputRef.current?.click()}
             >
                 <IconUpload />
-                {isImporting ? "Importeren..." : "Importeren"}
+                {isImporting ? "Importeren..." : `Importeren (${fileType})`}
             </Button>
 
             {action.export && (
