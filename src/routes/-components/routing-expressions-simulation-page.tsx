@@ -2,6 +2,7 @@ import {SimulationForm} from "@/components/routing-simulation/simulation-form.ts
 import {useState} from "react";
 import {RoutingSimulationFlow} from "@/components/routing-simulation/simulation-flow.tsx";
 import type {RoutingSimulationFormData, SimulationResult} from "@/types/routing-simulations.ts";
+import {SimulationSummary} from "@/components/routing-simulation/simulation-summary.tsx";
 
 export function RoutingExpressionsSimulationPage() {
     const [simulationData, setSimulationData] = useState<RoutingSimulationFormData | null>(null)
@@ -21,6 +22,12 @@ export function RoutingExpressionsSimulationPage() {
                     setSimulationResults(results)
                     setSelectedRoutingExpression(selected)
                 }} />
+                {simulationData && (
+                    <SimulationSummary
+                        results={simulationResults}
+                        selectedRoutingExpression={selectedRoutingExpression}
+                    />
+                )}
             </section>
         </div>
     )

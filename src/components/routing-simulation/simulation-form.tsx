@@ -63,10 +63,10 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
 
     return(
         <>
-            <div className="flex h-full flex-col">
-                <h1>Melding maken</h1>
+            <div className="flex flex-col">
+                <h1 className={"text-xl"}>Melding maken</h1>
 
-                <Separator className={"my-4"}/>
+                <Separator className={"my-2"}/>
 
                 <form className={"flex flex-col flex-1 gap-4"}
                       onSubmit={(e) => {
@@ -236,8 +236,6 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                         }}
                     </form.Subscribe>
 
-                    <Separator className={"my-4"}/>
-
                     <div className="mt-auto flex items-center justify-center gap-4">
                         <Button type="button" size="lg" className="flex-1" onClick={() => {
                                 const value = form.state.values
@@ -261,6 +259,8 @@ export function SimulationForm({onSimulationComplete, }: SimulationFormProps) {
                         }}
                         >Annuleren</Button>
                     </div>
+
+                    <Separator className={"my-2"} />
                 </form>
             </div>
         </>
